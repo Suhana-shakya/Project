@@ -1,0 +1,272 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+body{
+    min-height:100vh;
+    background:
+    linear-gradient(
+    135deg,
+    #9e8eaa,
+    #494e8d,
+    #0d0d1d);
+    color:white;
+}
+nav{
+    width:100%;
+    height:80px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 80px;
+    background:rgba(0,0,0,0.25);
+}
+
+.nav i{
+    color:white;
+    cursor:pointer;
+    font-size:18px;
+}
+.logo{
+    font-size:28px;
+    font-weight:bold;
+    color:#fff;
+}
+
+nav ul{
+    display:flex;
+    list-style:none;
+    gap:40px;
+}
+
+nav ul li a{
+    text-decoration:none;
+    color:white;
+    font-weight:500;
+}
+
+.login{
+    background:#d31a45;
+    color:white;
+    border:none;
+    padding:10px 25px;
+    border-radius:25px;
+    cursor:pointer;
+}
+
+.movie-link{
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+.now-showing{
+    width:90%;
+    margin:auto;
+    padding:40px 0;
+}
+
+.heading h1{
+    color:#ff2a55;
+    font-size:48px;
+    margin-bottom:25px;
+}
+
+.movie-container{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(260px,1fr));
+
+    gap:30px;
+}
+
+.movie-card{
+    background:#081328;
+    padding:12px;
+    border-radius:8px;
+}
+
+.movie-card img{
+    width:100%;
+    height:450px;
+    object-fit:cover;
+    border-radius:6px;
+}
+
+.movie-card h3{
+    margin-top:15px;
+    font-size:28px;
+}
+
+.movie-card p{
+    color:#a6a6a6;
+}
+
+.movie-card:hover{
+    transform:translateY(-5px);
+    transition:.3s;
+}
+
+
+
+.hero{
+
+    height:100vh;
+
+    background:url("./TheLastRule.jfif") center center/cover no-repeat;
+    position:relative;
+
+    display:flex;
+    align-items:center;
+}
+
+.overlay{
+
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.55);
+
+}
+
+.content{
+    position:relative;
+    z-index:2;
+    margin-left:90px;
+    color:white;
+}
+
+.content h1{
+
+    font-size:90px;
+    color:#8f3668;
+    margin-bottom:20px;
+}
+
+.info{
+
+    display:flex;
+    gap:40px;
+    margin-bottom:35px;
+}
+
+.info span{
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:bold;
+}
+
+.info i{
+
+    color:#FFD700;
+}
+
+.buttons{
+
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.watch{
+
+    width:250px;
+    padding:18px;
+
+    text-decoration:none;
+
+    color:white;
+
+    border:2px solid rgba(255,255,255,.6);
+
+    border-radius:40px;
+
+    font-size:24px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:15px;
+
+    backdrop-filter:blur(10px);
+
+    transition:.3s;
+}
+
+.watch:hover{
+
+    background:white;
+    color:black;
+}
+
+.book{
+
+    width:200px;
+    text-align:center;
+
+    text-decoration:none;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    background:rgba(130,50,90,.45);
+
+    color:#c28aa8;
+
+    border:1px solid rgba(255,255,255,.15);
+
+    font-size:22px;
+
+    transition:.3s;
+}
+
+.book:hover{
+
+    background:#8d3465;
+    color:white;
+}
+
+/* Responsive */
+
+@media(max-width:900px){
+
+nav{
+
+padding:0 30px;
+
+}
+
+nav ul{
+
+display:none;
+
+}
+
+.content{
+
+margin-left:40px;
+
+}
+
+.content h1{
+
+font-size:55px;
+
+}
+
+.watch{
+
+width:220px;
+font-size:18px;
+
+}
+
+.book{
+
+font-size:18px;
+width:180px;
+}

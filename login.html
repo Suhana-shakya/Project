@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Booking Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+<nav>
+    <div class="logo">
+        HiMovie
+    </div>
+
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="movies.html">Now Showing</a></li>
+        <li><a href="upcomingMovies.html">Upcoming</a></li>
+        <li><a href="#">Actors</a></li>
+    </ul>
+
+    <button class="login-btn">Login</button>
+</nav>
+
+<div class="container">
+
+    <div class="tabs">
+        <button class="active">SIGN IN</button>
+        <button class="nonactive"><a href="register.html">SIGN UP</a></button>
+    </div>
+
+    <div class="login-box">
+
+        <form action="login.php" method="post">
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter your Email"
+                required>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter your Password"
+                required>
+
+            <button type="submit" class="signin">
+                SIGN IN
+            </button>
+
+            <a href="#">Forgot Password?</a>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

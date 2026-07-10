@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            background:
+            linear-gradient(
+            135deg,
+            #9e8eaa,
+            #494e8d,
+            #0d0d1d);
+            color:white;
+        }
+
+        /* Form Box */
+
+        .register-box{
+            padding:56px;
+        }
+
+        .register-box h2{
+            margin-bottom:25px;
+            font-size:28px;
+            text-align: center;
+        }
+
+        .form-row input{
+            width:100%;
+            margin-bottom: 10px;
+        }
+
+        input{
+            padding:15px;
+            border:none;
+            border-radius:5px;
+            background:#9d90ad;
+            color:white;
+            font-size:16px;
+        }
+
+        input::placeholder{
+            color: white;
+        }
+
+        /* Button */
+
+        .signup-btn{
+            background:#d11845;
+            color:white;
+            border:none;
+            padding:12px 35px;
+            font-size:18px;
+            cursor:pointer;
+            border-radius:4px;
+            margin-top:10px;
+        }
+
+        .signup-btn:hover{
+            background:#b31239;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-box">
+        <h2>Complete The Form for Sign Up</h2>
+        <form action="register_process.php" method="post">
+
+            <div class="form-row">
+                <input type="text" name="fname" placeholder="Enter your First Name *" required><br />
+
+                <input type="text" name="lname" placeholder="Enter your Last Name *" required><br />
+            
+                <input type="email" name="email" placeholder="Enter your Email *" required><br />
+
+                <input type="text" name="mobile" placeholder="Enter your Mobile Number *" required><br />
+           
+                <input type="password" name="password" placeholder="Enter your Password *" required><br />
+
+                <input type="password" name="confirm" placeholder="Confirm Password *" required><br />
+            </div>
+
+            <button class="signup-btn">
+                Sign Up
+            </button>
+
+        </form>
+
+    </div>
+
+
+
+
+
+</body>
+</html>

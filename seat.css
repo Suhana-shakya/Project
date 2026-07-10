@@ -1,0 +1,248 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+}
+
+body{
+
+    background:#111;
+
+    color:white;
+
+}
+
+.container{
+
+    width:90%;
+
+    margin:50px auto;
+
+    display:flex;
+
+    gap:50px;
+
+}
+
+/* LEFT */
+
+.movie-info{
+
+    width:280px;
+
+    text-align:center;
+
+}
+
+.movie-info img{
+
+    width:100%;
+
+    border-radius:15px;
+
+}
+
+.movie-info p{
+
+    margin-top:20px;
+
+    color:#ccc;
+
+}
+
+.movie-info h2{
+
+    margin-top:10px;
+
+}
+
+/* RIGHT */
+
+.seat-area{
+
+    flex:1;
+
+    background:#1f1f29;
+
+    padding:35px;
+
+    border-radius:15px;
+
+}
+
+.seat-area h2{
+
+    margin-bottom:30px;
+
+}
+
+.seat-area h2 span{
+
+    color:#ff3366;
+
+    border:2px solid #ff3366;
+
+    padding:5px 15px;
+
+    border-radius:10px;
+
+}
+
+.seat-area h3{
+
+    text-align:center;
+
+    margin:20px 0;
+
+    color:#ddd;
+
+}
+
+/* SCREEN */
+
+.screen{
+
+    height:3px;
+
+    background:white;
+
+    margin-bottom:30px;
+
+}
+
+/* SEATS */
+
+.seats{
+
+    display:grid;
+
+    grid-template-columns:repeat(11,35px);
+
+    gap:15px;
+
+    justify-content:center;
+
+    margin-bottom:50px;
+
+}
+
+.gap{
+
+    width:35px;
+
+}
+
+.seat{
+
+    width:30px;
+
+    height:25px;
+
+    background:#94396d;
+
+    border-radius:8px 8px 3px 3px;
+
+    cursor:pointer;
+
+}
+
+.seat:hover{
+
+    transform:scale(1.15);
+
+}
+
+.selected{
+
+    background:#d8b18a;
+
+}
+
+.taken{
+
+    background:#ff2d55;
+
+}
+
+/* LEGEND */
+
+.legend{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:40px;
+
+    margin-bottom:30px;
+
+}
+
+.legend div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.available,
+.taken-box,
+.selected-box{
+
+    width:15px;
+
+    height:15px;
+
+    border-radius:50%;
+
+}
+
+.available{
+
+    background:#94396d;
+
+}
+
+.taken-box{
+
+    background:#ff2d55;
+
+}
+
+.selected-box{
+
+    background:#d8b18a;
+
+}
+
+button{
+
+    display:block;
+
+    margin:auto;
+
+    padding:12px 40px;
+
+    background:transparent;
+
+    border:2px solid #ff3366;
+
+    color:white;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:17px;
+
+}
+
+button:hover{
+
+    background:#ff3366;
+
+}
