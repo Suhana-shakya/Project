@@ -2,17 +2,58 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Poppins,sans-serif;
+    font-family:'Segoe UI',sans-serif;
 }
-
 body{
-
-    background:#111;
-
+    min-height:100vh;
+    background:
+    linear-gradient(
+    135deg,
+    #9e8eaa,
+    #494e8d,
+    #0d0d1d);
     color:white;
-
+}
+nav{
+    width:100%;
+    height:80px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 80px;
+    background:rgba(0,0,0,0.25);
 }
 
+.nav i{
+    color:white;
+    cursor:pointer;
+    font-size:18px;
+}
+.logo{
+    font-size:28px;
+    font-weight:bold;
+    color:#fff;
+}
+
+nav ul{
+    display:flex;
+    list-style:none;
+    gap:40px;
+}
+
+nav ul li a{
+    text-decoration:none;
+    color:white;
+    font-weight:500;
+}
+.login{
+    background:#d31a45;
+    color:white;
+    border:none;
+    padding:10px 25px;
+    border-radius:25px;
+    cursor:pointer;
+}
 .container{
 
     width:90%;
@@ -198,26 +239,16 @@ body{
     height:15px;
 
     border-radius:50%;
-
 }
 
 .available{
-
     background:#94396d;
-
 }
 
 .taken-box{
-
     background:#ff2d55;
-
 }
 
-.selected-box{
-
-    background:#d8b18a;
-
-}
 
 button{
 
@@ -245,4 +276,31 @@ button:hover{
 
     background:#ff3366;
 
+}
+.confirm{
+    margin-top:10px;
+    text-align:right;
+}
+
+.confirm-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:15px 35px;
+    background:#8d3c69;
+    color:white;
+    text-decoration:none;
+    border-radius:30px;
+    font-size:18px;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.confirm-btn:hover{
+    background:#b65287;
+    transform:translateY(-2px);
+}
+
+.confirm-btn i{
+    font-size:16px;
 }

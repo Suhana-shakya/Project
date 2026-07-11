@@ -1,0 +1,122 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+body{
+    min-height:100vh;
+    background:
+    linear-gradient(
+    135deg,
+    #9e8eaa,
+    #494e8d,
+    #0d0d1d);
+    color:white;
+}
+nav{
+    width:100%;
+    height:80px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 80px;
+    background:rgba(0,0,0,0.25);
+}
+
+.nav i{
+    color:white;
+    cursor:pointer;
+    font-size:18px;
+}
+.logo{
+    font-size:28px;
+    font-weight:bold;
+    color:#fff;
+}
+
+nav ul{
+    display:flex;
+    list-style:none;
+    gap:40px;
+}
+
+nav ul li a{
+    text-decoration:none;
+    color:white;
+    font-weight:500;
+}
+
+.login{
+    background:#d31a45;
+    color:white;
+    border:none;
+    padding:10px 25px;
+    border-radius:25px;
+    cursor:pointer;
+}
+/* Confirmation */
+
+.confirmation{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:60px 20px;
+}
+
+.card{
+    width:650px;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(15px);
+    border-radius:20px;
+    padding:45px;
+    text-align:center;
+}
+
+.success-icon{
+    font-size:80px;
+    color:#2ecc71;
+    margin-bottom:20px;
+}
+
+.card h1{
+    margin-bottom:10px;
+}
+
+.message{
+    color:#dddddd;
+    margin-bottom:35px;
+}
+
+.ticket-details{
+    text-align:left;
+    margin-bottom:35px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid rgba(255,255,255,.15);
+}
+
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+}
+
+.home-btn,
+.ticket-btn{
+    text-decoration:none;
+    color:white;
+    background:#8d3c69;
+    padding:15px 30px;
+    border-radius:30px;
+    transition:.3s;
+}
+
+.home-btn:hover,
+.ticket-btn:hover{
+    background:#b65287;
+}
