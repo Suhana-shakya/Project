@@ -4,57 +4,18 @@
     box-sizing:border-box;
     font-family:'Segoe UI',sans-serif;
 }
+
 body{
-    min-height:100vh;
-    background:
-    linear-gradient(
-    135deg,
-    #9e8eaa,
-    #494e8d,
-    #0d0d1d);
-    color:white;
+     padding-top:80px; 
+    background:linear-gradient(
+        to bottom,
+        #0b0b0b,
+        #16162d,
+        #2d2b55
+    );
 }
-nav{
-    width:100%;
-    height:80px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:0 80px;
-    background:rgba(0,0,0,0.25);
-}
+   
 
-.nav i{
-    color:white;
-    cursor:pointer;
-    font-size:18px;
-}
-.logo{
-    font-size:28px;
-    font-weight:bold;
-    color:#fff;
-}
-
-nav ul{
-    display:flex;
-    list-style:none;
-    gap:40px;
-}
-
-nav ul li a{
-    text-decoration:none;
-    color:white;
-    font-weight:500;
-}
-
-.login{
-    background:#d31a45;
-    color:white;
-    border:none;
-    padding:10px 25px;
-    border-radius:25px;
-    cursor:pointer;
-}
 
 .movie-link{
     text-decoration: none;
@@ -68,7 +29,7 @@ nav ul li a{
 }
 
 .heading h1{
-    color:#ff2a55;
+    color: #8f3668;
     font-size:48px;
     margin-bottom:25px;
 }
@@ -111,35 +72,42 @@ nav ul li a{
 
 
 .hero{
+    height: 100vh;
+    position: relative;
 
-    height:100vh;
+    background-image: url("./images/obsession.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 
-    background:url("./TheLastRule.jfif") center center/cover no-repeat;
-    position:relative;
-
-    display:flex;
-    align-items:center;
+    display: flex;
+    align-items: center;
 }
 
 .overlay{
+    position: absolute;
+    inset:0;
 
-    position:absolute;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,.55);
-
+    background: linear-gradient(
+        90deg,
+        rgba(0,0,0,.75) 0%,
+        rgba(0,0,0,.45) 40%,
+        rgba(0,0,0,.15) 100%
+    );
 }
 
 .content{
-    position:relative;
-    z-index:2;
-    margin-left:90px;
-    color:white;
+    position: relative;
+    z-index: 2;
+    color: white;
+    max-width: 500px;
+
+    margin-left: 100px;
+    margin-top: 120px;
 }
 
 .content h1{
-
-    font-size:90px;
+    font-size:72px;
     color:#8f3668;
     margin-bottom:20px;
 }
@@ -269,4 +237,5 @@ font-size:18px;
 
 font-size:18px;
 width:180px;
+}
 }
