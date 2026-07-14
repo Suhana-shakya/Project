@@ -1,0 +1,121 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#eef2f7;
+}
+
+.container{
+    display:flex;
+}
+
+/* Sidebar */
+
+.sidebar{
+    width:250px;
+    min-height:100vh;
+    background:#232946;
+    color:white;
+    padding:30px 20px;
+}
+
+.sidebar h2{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.sidebar ul{
+    list-style:none;
+}
+
+.sidebar li{
+    margin:18px 0;
+}
+
+.sidebar a{
+    display:block;
+    text-decoration:none;
+    color:white;
+    padding:12px;
+    border-radius:8px;
+}
+
+.sidebar a:hover,
+.sidebar .active a{
+    background:#8d3c69;
+}
+
+.sidebar i{
+    margin-right:10px;
+}
+
+/* Main */
+
+.main{
+    flex:1;
+    padding:40px;
+}
+
+.main h1{
+    margin-bottom:30px;
+}
+
+form{
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 3px 10px rgba(0,0,0,.1);
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:600;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:15px;
+}
+
+textarea{
+    resize:none;
+}
+
+.row{
+    display:flex;
+    gap:20px;
+}
+
+.row .form-group{
+    flex:1;
+}
+
+.save-btn{
+    background:#8d3c69;
+    color:white;
+    border:none;
+    padding:14px 30px;
+    border-radius:30px;
+    font-size:16px;
+    cursor:pointer;
+    margin-top:10px;
+    transition:.3s;
+}
+
+.save-btn:hover{
+    background:#b65287;
+}

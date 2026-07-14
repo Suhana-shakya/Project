@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Showtimes</title>
+
+<link rel="stylesheet" href="manageShowtimes.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <h2>HiMovie</h2>
+
+        <ul>
+
+            <li><a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+
+            <li><a href="manageMovies.html"><i class="fa-solid fa-film"></i> Manage Movies</a></li>
+
+            <li class="active">
+                <a href="manageShowtimes.html">
+                    <i class="fa-solid fa-clock"></i> Showtimes
+                </a>
+            </li>
+
+            <li><a href="manageHalls.html"><i class="fa-solid fa-building"></i> Cinema Halls</a></li>
+
+            <li><a href="manageBookings.html"><i class="fa-solid fa-ticket"></i> Bookings</a></li>
+
+            <li><a href="manageUsers.html"><i class="fa-solid fa-users"></i> Users</a></li>
+
+            <li><a href="adminLogin.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main -->
+
+    <main class="main">
+
+        <div class="top">
+
+            <h1>Manage Showtimes</h1>
+
+            <a href="addShowtime.html" class="add-btn">
+                <i class="fa-solid fa-plus"></i>
+                Add Showtime
+            </a>
+
+        </div>
+
+        <table>
+
+            <tr>
+                <th>Movie</th>
+                <th>Cinema Hall</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+
+            <tr>
+
+                <td>Obsession</td>
+                <td>Civil Mall</td>
+                <td>15 May 2026</td>
+                <td>10:30 AM</td>
+                <td>Rs.500</td>
+
+                <td>
+
+                    <a href="editShowtime.html" class="edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <a href="#" class="delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>Dhamaal 4</td>
+                <td>Labim Mall</td>
+                <td>20 June 2026</td>
+                <td>1:00 PM</td>
+                <td>Rs.450</td>
+
+                <td>
+
+                    <a href="editShowtime.html" class="edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <a href="deleteShowtime.html" class="delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>The Odyssey</td>
+                <td>Ranjana Mall</td>
+                <td>28 July 2026</td>
+                <td>5:30 PM</td>
+                <td>Rs.550</td>
+
+                <td>
+
+                    <a href="editShowtime.html" class="edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <a href="deleteShowtime.html" class="delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    </main>
+
+</div>
+
+</body>
+</html>

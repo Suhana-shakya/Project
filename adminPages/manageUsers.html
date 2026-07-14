@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+
+    <link rel="stylesheet" href="manageMovies.css">
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+
+<div class="sidebar">
+
+    <h2>HiMovie</h2>
+
+    <ul>
+
+        <li><a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+
+        <li><a href="manageMovies.html"><i class="fa-solid fa-film"></i> Manage Movies</a></li>
+
+        <li><a href="manageShowtimes.html"><i class="fa-solid fa-clock"></i> Showtimes</a></li>
+
+        <li><a href="manageCinema.html"><i class="fa-solid fa-building"></i> Cinema Halls</a></li>
+
+        <li><a href="manageBookings.html"><i class="fa-solid fa-ticket"></i> Bookings</a></li>
+
+        <li class="active"><a href="manageUsers.html"><i class="fa-solid fa-users"></i> Users</a></li>
+
+        <li><a href="adminLogin.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+
+    </ul>
+
+</div>
+
+<div class="main">
+
+    <div class="top">
+    <h1>Manage Users</h1>
+
+    <div class="search-box">
+        <input type="text" placeholder="Search user...">
+        <button>
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </div>
+</div>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Joined</th>
+                <th>Status</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+
+                <td>U001</td>
+                <td>Ram Sharma</td>
+                <td>ram@gmail.com</td>
+                <td>9812345678</td>
+                <td>15 May 2026</td>
+                <td><span class="active-user">Active</span></td>
+
+            </tr>
+
+            <tr>
+
+                <td>U002</td>
+                <td>Sita Rai</td>
+                <td>sita@gmail.com</td>
+                <td>9801122334</td>
+                <td>22 May 2026</td>
+                <td><span class="active-user">Active</span></td>
+
+            </tr>
+
+            <tr>
+
+                <td>U003</td>
+                <td>Hari Karki</td>
+                <td>hari@gmail.com</td>
+                <td>9865432198</td>
+                <td>30 May 2026</td>
+                <td><span class="inactive-user">Inactive</span></td>
+
+            </tr>
+
+            <tr>
+
+                <td>U004</td>
+                <td>Anita Thapa</td>
+                <td>anita@gmail.com</td>
+                <td>9845678901</td>
+                <td>5 June 2026</td>
+                <td><span class="active-user">Active</span></td>
+
+            </tr>
+
+            <tr>
+
+                <td>U005</td>
+                <td>Rohan Shrestha</td>
+                <td>rohan@gmail.com</td>
+                <td>9856789012</td>
+                <td>14 June 2026</td>
+                <td><span class="inactive-user">Inactive</span></td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</body>
+</html>

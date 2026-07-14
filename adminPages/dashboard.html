@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HiMovie Admin Dashboard</title>
+
+    <link rel="stylesheet" href="dashboard.css">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <h2>HiMovie</h2>
+
+        <ul>
+
+            <li><a href="#"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+
+            <li><a href="manageMovies.html"><i class="fa-solid fa-film"></i> Manage Movies</a></li>
+
+            <li><a href="manageShowtimes.html"><i class="fa-solid fa-clock"></i> Showtimes</a></li>
+
+            <li><a href="manageHalls.html"><i class="fa-solid fa-building"></i> Cinema Halls</a></li>
+
+            <li><a href="manageBookings.html"><i class="fa-solid fa-ticket"></i> Bookings</a></li>
+
+            <li><a href="manageUsers.html"><i class="fa-solid fa-users"></i> Users</a></li>
+
+            <li><a href="adminLogin.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+
+        </ul>
+
+    </aside>
+
+
+    <!-- Main Content -->
+
+    <main class="main">
+
+        <header>
+
+            <h1>Dashboard</h1>
+
+            <div class="admin">
+                Welcome, Admin
+            </div>
+
+        </header>
+
+
+        <!-- Cards -->
+
+        <div class="cards">
+
+            <div class="card">
+                <i class="fa-solid fa-film"></i>
+                <h2>7</h2>
+                <p>Total Movies</p>
+            </div>
+
+            <div class="card">
+                <i class="fa-solid fa-users"></i>
+                <h2>20</h2>
+                <p>Registered Users</p>
+            </div>
+
+            <div class="card">
+                <i class="fa-solid fa-ticket"></i>
+                <h2>15</h2>
+                <p>Today's Bookings</p>
+            </div>
+
+            <div class="card">
+                <i class="fa-solid fa-building"></i>
+                <h2>3</h2>
+                <p>Cinema Halls</p>
+            </div>
+
+        </div>
+
+
+        <!-- Recent Bookings -->
+
+        <div class="table-box">
+
+            <h2>Recent Bookings</h2>
+
+            <table>
+
+                <tr>
+                    <th>Booking ID</th>
+                    <th>User</th>
+                    <th>Movie</th>
+                    <th>Hall</th>
+                    <th>Seats</th>
+                </tr>
+
+                <tr>
+                    <td>B001</td>
+                    <td>Ram Sharma</td>
+                    <td>Obsession</td>
+                    <td>Civil Mall</td>
+                    <td>D4, D5</td>
+                </tr>
+
+                <tr>
+                    <td>B002</td>
+                    <td>Sita Rai</td>
+                    <td>Dhamaal 4</td>
+                    <td>Labim Mall</td>
+                    <td>A2, A3</td>
+                </tr>
+
+                <tr>
+                    <td>B003</td>
+                    <td>Hari Karki</td>
+                    <td>The Odyssey</td>
+                    <td>Ranjana</td>
+                    <td>F6</td>
+                </tr>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

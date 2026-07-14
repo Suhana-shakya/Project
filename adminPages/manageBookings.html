@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Manage Bookings</title>
+
+<link rel="stylesheet" href="manageBookings.css">
+<link rel="stylesheet" href="manageMovies.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <h2>HiMovie</h2>
+
+        <ul>
+
+            <li><a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+
+            <li><a href="manageMovies.html"><i class="fa-solid fa-film"></i> Manage Movies</a></li>
+
+            <li><a href="manageShowtimes.html"><i class="fa-solid fa-clock"></i> Showtimes</a></li>
+
+            <li><a href="manageHalls.html"><i class="fa-solid fa-building"></i> Cinema Halls</a></li>
+
+            <li class="active">
+                <a href="manageBookings.html">
+                    <i class="fa-solid fa-ticket"></i> Bookings
+                </a>
+            </li>
+
+            <li><a href="manageUsers.html"><i class="fa-solid fa-users"></i> Users</a></li>
+
+            <li><a href="adminLogin.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main -->
+
+    <main class="main">
+
+        <div class="top">
+
+            <h1>Manage Bookings</h1>
+
+        </div>
+
+        <div class="search-box">
+
+            <input type="text" placeholder="Search booking...">
+
+            <button>
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+        </div>
+
+        <table>
+
+            <tr>
+
+                <th>Booking ID</th>
+                <th>Customer</th>
+                <th>Movie</th>
+                <th>Cinema Hall</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Seats</th>
+                <th>Amount</th>
+                <th>Status</th>
+
+            </tr>
+
+            <tr>
+
+                <td>B001</td>
+                <td>Ram Sharma</td>
+                <td>Obsession</td>
+                <td>Civil Mall</td>
+                <td>15 May 2026</td>
+                <td>10:30 AM</td>
+                <td>D4, D5</td>
+                <td>Rs.1000</td>
+                <td><span class="confirmed">Confirmed</span></td>
+
+            </tr>
+
+            <tr>
+
+                <td>B002</td>
+                <td>Sita Rai</td>
+                <td>Dhamaal 4</td>
+                <td>Labim Mall</td>
+                <td>20 June 2026</td>
+                <td>1:00 PM</td>
+                <td>A3, A4</td>
+                <td>Rs.900</td>
+                <td><span class="confirmed">Confirmed</span></td>
+
+            </tr>
+
+            <tr>
+
+                <td>B003</td>
+                <td>Hari Karki</td>
+                <td>The Odyssey</td>
+                <td>Ranjana Mall</td>
+                <td>28 July 2026</td>
+                <td>5:30 PM</td>
+                <td>F8</td>
+                <td>Rs.550</td>
+                <td><span class="cancelled">Cancelled</span></td>
+
+            </tr>
+
+        </table>
+
+    </main>
+
+</div>
+
+</body>
+</html>

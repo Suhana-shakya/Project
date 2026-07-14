@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Manage Movies</title>
+
+<link rel="stylesheet" href="manageMovies.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <h2>HiMovie</h2>
+
+        <ul>
+
+            <li><a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+
+            <li class="active">
+                <a href="manageMovies.html">
+                    <i class="fa-solid fa-film"></i> Manage Movies
+                </a>
+            </li>
+
+            <li><a href="manageShowtimes.html"><i class="fa-solid fa-clock"></i> Showtimes</a></li>
+
+            <li><a href="manageHalls.html"><i class="fa-solid fa-building"></i> Cinema Halls</a></li>
+
+            <li><a href="manageBookings.html"><i class="fa-solid fa-ticket"></i> Bookings</a></li>
+
+            <li><a href="manageUsers.html"><i class="fa-solid fa-users"></i> Users</a></li>
+
+            <li><a href="adminLogin.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main -->
+
+    <main class="main">
+
+        <div class="top">
+
+            <h1>Manage Movies</h1>
+
+            <a href="addMovie.html" class="add-btn">
+                <i class="fa-solid fa-plus"></i>
+                Add Movie
+            </a>
+
+        </div>
+
+        <div class="search-box">
+
+            <input type="text" placeholder="Search movie...">
+
+            <button>
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+        </div>
+
+        <table>
+
+            <tr>
+
+                <th>Poster</th>
+                <th>Movie Name</th>
+                <th>Genre</th>
+                <th>Duration</th>
+                <th>Release</th>
+                <th>Action</th>
+
+            </tr>
+
+            <tr>
+
+                <td><img src="../images/obsession.jpg"></td>
+
+                <td>Obsession</td>
+
+                <td>Thriller, Drama, Mistery</td>
+
+                <td>1h 55m</td>
+
+                <td>15 May 2026</td>
+
+                <td>
+
+                    <a href="editMovie.html" class="edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <a href="#" class="delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td><img src="../images/dhamaal.jfif"></td>
+
+                <td>Dhamaal 4</td>
+
+                <td>Comedy</td>
+
+                <td>2h 09m</td>
+
+                <td>20 June 2026</td>
+
+                <td>
+
+                    <a href="editMovie.html" class="edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <a href="#" class="delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td><img src="../images/odyssey.jfif"></td>
+
+                <td>The Odyssey</td>
+
+                <td>Adventure, Drama, Fantasy</td>
+
+                <td>2h 22m</td>
+
+                <td>28 July 2026</td>
+
+                <td>
+
+                    <a href="editMovie.html" class="edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <a href="#" class="delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td><img src="../images/welcomeToTheJungle.avif"></td>
+
+                <td>Welcome To The Jungle</td>
+
+                <td>Adventure, Comedy, Action</td>
+
+                <td>2h 22m</td>
+
+                <td>28 July 2026</td>
+
+                <td>
+
+                    <a href="editMovie.html" class="edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <a href="#" class="delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td><img src="../images/matrubhumi.jpg"></td>
+
+                <td>Matrubhumi</td>
+
+                <td>Drama, Social, Dystopian</td>
+
+                <td>2h 22m</td>
+
+                <td>28 July 2026</td>
+
+                <td>
+
+                    <a href="editMovie.html" class="edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <a href="#" class="delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td><img src="../images/drishyam.jpg"></td>
+
+                <td>Drishyam</td>
+
+                <td>Drama, Crime, Mystery, Thriller</td>
+
+                <td>2h 22m</td>
+
+                <td>28 July 2026</td>
+
+                <td>
+
+                    <a href="editMovie.html" class="edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <a href="#" class="delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td><img src="../images/spiderman.jpg"></td>
+
+                <td>SpiderMan</td>
+
+                <td>Action, Adventure, Science Fiction</td>
+
+                <td>2h 22m</td>
+
+                <td>28 July 2026</td>
+
+                <td>
+
+                    <a href="editMovie.html" class="edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <a href="#" class="delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                </td>
+
+            </tr>
+
+
+
+        </table>
+
+    </main>
+
+</div>
+
+</body>
+</html>

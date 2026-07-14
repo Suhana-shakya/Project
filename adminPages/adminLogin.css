@@ -1,0 +1,161 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#9e8eaa,#494e8d,#0d0d1d);
+    color:white;
+}
+
+/* Header */
+
+header{
+    height:80px;
+    display:flex;
+    align-items:center;
+    padding:0 70px;
+    background:rgba(0,0,0,.25);
+    backdrop-filter:blur(10px);
+}
+
+.logo{
+    font-size:32px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:#d58ab5;
+}
+
+/* Login Section */
+
+.login-section{
+    height:calc(100vh - 80px);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* Login Box */
+
+.login-box{
+
+    width:420px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:20px;
+
+    padding:45px;
+
+    text-align:center;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+.login-box h2{
+
+    font-size:32px;
+
+    margin-bottom:10px;
+}
+
+.login-box p{
+
+    color:#d9d9d9;
+
+    margin-bottom:30px;
+}
+
+/* Input */
+
+.input-box{
+
+    display:flex;
+
+    align-items:center;
+
+    background:rgba(255,255,255,.12);
+
+    border-radius:30px;
+
+    padding:0 18px;
+
+    margin-bottom:20px;
+}
+
+.input-box i{
+
+    color:white;
+
+    font-size:18px;
+}
+
+.input-box input{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    outline:none;
+
+    background:transparent;
+
+    color:white;
+
+    font-size:16px;
+}
+
+.input-box input::placeholder{
+
+    color:#cccccc;
+}
+
+/* Button */
+
+button{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:30px;
+
+    background:#8d3c69;
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+button:hover{
+
+    background:#b65287;
+}
+
+/* Footer Text */
+
+small{
+
+    display:block;
+
+    margin-top:25px;
+
+    color:#cfcfcf;
+}

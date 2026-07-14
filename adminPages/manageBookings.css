@@ -1,0 +1,25 @@
+.confirmed{
+
+    background:#2ecc71;
+
+    color:white;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    font-size:14px;
+}
+
+.cancelled{
+
+    background:#e74c3c;
+
+    color:white;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    font-size:14px;
+}
