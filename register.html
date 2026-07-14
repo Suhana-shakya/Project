@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Register</title>
-    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         *{
             margin:0;
@@ -22,57 +22,135 @@
             color:white;
             padding-top: 80px;
         }
+        nav{
+            position: fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:80px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding: 0 5%;
+            background:rgba(0,0,0,.3);
+            backdrop-filter:blur(8px);
+            z-index:100;
+        }
+        .nav i{
+            color:white;
+            cursor:pointer;
+            font-size:18px;
+        }
+        .logo{
+            font-size:40px;
+            font-weight:bold;
+            color:#fff;
+        }
+
+        nav ul{
+            display:flex;
+            align-items:center;
+            gap:40px;
+            font-size:18px;
+            list-style:none;   /* Removes bullets */
+            margin:0;
+            padding:0;
+        }
+
+        nav ul li a{
+            text-decoration:none;
+            color:white;
+            font-weight:500;
+        }
+        nav ul li a:hover{
+            color:#d58ab5;
+        }
+
+        .search-box{
+            display:flex;
+            align-items:center;
+            background:white;
+            padding:0 15px;
+            border-radius:25px;
+            height:42px;
+        }
+
+        .search-box i{
+            color:#666;
+            margin-right:10px;
+        }
+
+        .search-box input{
+            border:none;
+            outline:none;
+            background:transparent;
+            font-size:15px;
+            width:180px;
+        }
+        .login{
+            background:#8f3668;
+            color:white;
+            border:none;
+            padding:10px 25px;
+            border-radius:25px;
+            cursor:pointer;
+        }
 
         /* Form Box */
 
         .register-box{
-            padding:56px;
-        }
+            width:600px;
+            margin:60px auto;
+            background:rgba(255,255,255,.08);
+            backdrop-filter:blur(15px);
+            border-radius:20px;
+            padding:40px;
+            box-shadow:0 10px 30px rgba(0,0,0,.35);
+            }
 
-        .register-box h2{
-            margin-bottom:25px;
-            font-size:28px;
-            text-align: center;
-        }
+            .register-box h2{
+            text-align:center;
+            margin-bottom:30px;
+            font-size:34px;
+            }
 
-        .form-row input{
+            .form-row input{
             width:100%;
-            margin-bottom: 10px;
-        }
-
-        input{
-            padding:15px;
+            margin-bottom:18px;
+            padding:16px 20px;
             border:none;
-            border-radius:5px;
-            background:#9d90ad;
+            border-radius:30px;
+            background:rgba(255,255,255,.12);
             color:white;
             font-size:16px;
-        }
+            }
 
-        input::placeholder{
-            color: white;
-        }
+            .form-row input::placeholder{
+            color:#d8d8d8;
+            }
 
-        /* Button */
-
-        .signup-btn{
-            background:#d11845;
-            color:white;
+            .signup-btn{
+            display:block;
+            width:100%;
+            margin:15px 0 0;
+            padding:16px;
             border:none;
-            padding:12px 35px;
+            border-radius:30px;
+            background:#8d3c69;
+            color:white;
             font-size:18px;
+            font-weight:600;
             cursor:pointer;
-            border-radius:4px;
-            margin-top:10px;
-        }
+            transition:.3s;
+            }
 
-        .signup-btn:hover{
-            background:#b31239;
-        }
+            .signup-btn:hover{
+            background:#b65287;
+            }
     </style>
 </head>
 <body>
-    <nav>
+<nav>
     <div class="logo">
         HiMovie
     </div>
@@ -87,33 +165,28 @@
         <li class="login"><a href="login.html">Login</a></li>
     </ul>
 </nav>
-    <div class="register-box">
-        <h2>Complete The Form for Sign Up</h2>
-        <form action="register_process.php" method="post">
+<div class="register-box">
+    <h2>Complete The Form for Sign Up</h2>
+    <form action="register_process.php" method="post">
 
-            <div class="form-row">
-                <input type="text" name="name" placeholder="Enter your Full Name *" required><br />
-            
-                <input type="email" name="email" placeholder="Enter your Email *" required><br />
+        <div class="form-row">
+            <input type="text" name="name" placeholder="Enter your Full Name *" required><br />
+        
+            <input type="email" name="email" placeholder="Enter your Email *" required><br />
 
-                <input type="text" name="mobile" placeholder="Enter your Mobile Number *" required><br />
-           
-                <input type="password" name="password" placeholder="Enter your Password *" required><br />
+            <input type="text" name="mobile" placeholder="Enter your Mobile Number *" required><br />
+        
+            <input type="password" name="password" placeholder="Enter your Password *" required><br />
 
-                <input type="password" name="confirm" placeholder="Confirm Password *" required><br />
-            </div>
+            <input type="password" name="confirm" placeholder="Confirm Password *" required><br />
+        </div>
 
-            <button class="signup-btn">
-                Sign Up
-            </button>
+        <button class="signup-btn">
+            Sign Up
+        </button>
 
-        </form>
-
-    </div>
-
-
-
-
+    </form>
+</div>
 
 </body>
 </html>
