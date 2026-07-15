@@ -6,6 +6,7 @@
 }
 
 body{
+    padding-top:80px;
     min-height:100vh;
     background:linear-gradient(135deg,#9e8eaa,#494e8d,#0d0d1d);
     color:white;
@@ -16,7 +17,7 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    padding:100px 0;
+    padding:70px 5%;
     position:relative;
 }
 
@@ -29,8 +30,10 @@ body{
 .container{
     position:relative;
     z-index:2;
-    width:1100px;
+    width:90%;
     display:flex;
+    max-width:1200px;
+    margin:auto; 
     gap:50px;
     padding:40px;
     background:rgba(255,255,255,.08);
@@ -99,7 +102,7 @@ hr{
     border-top:1px solid rgba(255,255,255,.2);
     margin:30px 0;
 }
-.buttons{
+.trailer-buttons{
     display:flex;
     gap:20px;
     margin-top:35px;
@@ -121,26 +124,42 @@ hr{
 
     background:#b25288;
 }
-/* Booking */
+.seat-button{
+    margin-top:35px;
+}
 
-.booking h2,
-.cinema h2{
+.seat-note{
+    color:#ddd;
+    font-size:18px;
+    margin-bottom:30px;
+    line-height:1.6;
+    text-align:center;
+}
+
+.options{
+    margin-bottom:35px;
+}
+
+.options h2{
     font-size:24px;
     margin-bottom:18px;
+    color:white;
+    font-weight:600;
 }
 
-.showtime,
-.time,
-.cinema{
-    margin-bottom:30px;
-}
-
-/* Buttons */
-
-button{
-    padding:12px 22px;
+.option{
+    display:inline-block;
     margin-right:12px;
     margin-bottom:12px;
+}
+
+.option input{
+    display:none;
+}
+
+.option span{
+    padding:10px 35px;
+    text-decoration:none;
     border:none;
     border-radius:30px;
     background:#8d3c69;
@@ -149,33 +168,39 @@ button{
     transition:.3s;
 }
 
-button:hover{
-    background:#b25288;
+.option span:hover{
+    background:#b65287;
+    transform:translateY(-1px);
 }
+
+.option input:checked + span{
+    background:#bb499b;
+    color:white;
+    border: 1px solid rgb(172, 172, 158);
+    box-shadow:0 0 15px rgba(182,82,135,.8);
+}
+
 .select-seat{
-    margin-top:10px;
-    text-align:right;
+    margin-top:40px;
+    display:flex;
+    justify-content:flex-end;
 }
 
 .seat-btn{
-    display:inline-flex;
+    display:flex;
     align-items:center;
     gap:10px;
-    padding:15px 35px;
+    padding:15px 38px;
+    border-radius:30px;
     background:#8d3c69;
     color:white;
     text-decoration:none;
-    border-radius:30px;
     font-size:18px;
     font-weight:600;
-    transition:0.3s;
+    transition:.3s;
 }
 
 .seat-btn:hover{
     background:#b65287;
     transform:translateY(-2px);
-}
-
-.seat-btn i{
-    font-size:16px;
 }

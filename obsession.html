@@ -43,85 +43,116 @@
 
             <div class="movie-info">
 
-            <div class="info-row">
-                <span class="label">Director :</span>
-                <span class="value">Curry Barker</span>
-            </div>
-
-            <div class="info-row">
-                <span class="label">Cast :</span>
-                <span class="value"> Michael JohnstonInde NavarretteCooper Tomlinson</span>
-            </div>
-
-            <div class="info-row">
-                <span class="label">Release Date :</span>
-                <span class="value">15 May 2026</span>
-            </div>
-
-            <div class="info-row">
-                <span class="label">Duration :</span>
-                <span class="value">1 Hour 55 Minutes</span>
-            </div>
-
-        </div>
-        <div class="buttons">
-            <a href="https://youtu.be/QparPBLUeEI?si=DkYiPlm6TKbSirXy"
-            target="_blank"
-            class="watch">
-                <i class="fa-solid fa-play"></i>
-                WATCH TRAILER
-            </a>
-        </div>
-
-            <hr>
-
-            <div class="booking">
-
-                <div class="showtime">
-
-                    <h2>SELECT SHOWTIME</h2>
-
-                    <button>Today</button>
-                    <button>Tomorrow</button>
-                    <button>Jun 28</button>
-                    <button>Jun 29</button>
-
+                <div class="info-row">
+                    <span class="label">Director :</span>
+                    <span class="value">Curry Barker</span>
                 </div>
 
-                <div class="time">
-
-                    <h2>SELECT TIME</h2>
-
-                    <button>10:30AM</button>
-                    <button>1:00PM</button>
-                    <button>5:30PM</button>
-
+                <div class="info-row">
+                    <span class="label">Cast :</span>
+                    <span class="value"> Michael JohnstonInde NavarretteCooper Tomlinson</span>
                 </div>
 
+                <div class="info-row">
+                    <span class="label">Release Date :</span>
+                    <span class="value">15 May 2026</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="label">Duration :</span>
+                    <span class="value">1 Hour 55 Minutes</span>
+                </div>
             </div>
-
-            <div class="cinema">
-
-                <h2>SELECT CINEMA HALL</h2>
-
-                <button>Civil Mall</button>
-                <button>Ranjana Mall</button>
-                <button>Labim Mall</button>
-
-            </div>
-
-            <div class="select-seat">
-
-                <a href="seat.html" class="seat-btn">
-                    SELECT SEAT
-                    <i class="fa-solid fa-arrow-right"></i>
+            <div class="trailer-buttons">
+                <a href="https://youtu.be/QparPBLUeEI?si=DkYiPlm6TKbSirXy"
+                target="_blank"
+                class="watch">
+                    <i class="fa-solid fa-play"></i>
+                    WATCH TRAILER
                 </a>
+            </div>
+            <hr>
+            <div class="seat-button">
+                <p class="seat-note">
+                    Please select your preferred showtime, time, and cinema hall before proceeding.
+                </p>
+                <form action="seat.html">
+                    <!-- All your radio buttons -->
+                    <div class="options">
+                        <h2>SELECT SHOWTIME</h2>
+                        <label class="option">
+                            <input type="radio" name="showtime" checked>
+                            <span>Today</span>
+                        </label>
+
+                        <label class="option">
+                            <input type="radio" name="showtime">
+                            <span>Tomorrow</span>
+                        </label>
+
+                        <label class="option">
+                            <input type="radio" name="showtime">
+                            <span>Jun 28</span>
+                        </label>
+
+                        <label class="option">
+                            <input type="radio" name="showtime">
+                            <span>Jun 29</span>
+                        </label>
+                    </div>
+                    <div class="options">
+
+                        <h2>SELECT TIME</h2>
+
+                        <label class="option">
+                            <input type="radio" name="time" checked>
+                            <span>10:30 AM</span>
+                        </label>
+
+                        <label class="option">
+                            <input type="radio" name="time">
+                            <span>1:00 PM</span>
+                        </label>
+
+                        <label class="option">
+                            <input type="radio" name="time">
+                            <span>5:30 PM</span>
+                        </label>
+
+                    </div>
+                    <div class="options">
+
+                        <h2>SELECT CINEMA HALL</h2>
+
+                        <label class="option">
+                            <input type="radio" name="cinema" checked>
+                            <span>Civil Mall</span>
+                        </label>
+
+                        <label class="option">
+                            <input type="radio" name="cinema">
+                            <span>Ranjana Mall</span>
+                        </label>
+
+                        <label class="option">
+                            <input type="radio" name="cinema">
+                            <span>Labim Mall</span>
+                        </label>
+                    </div>
+                </form>
+
+                <div class="select-seat">
+
+                    <a href="seat.html" class="seat-btn">
+                        SELECT SEAT
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
 
             </div>
 
         </div>
-
-    </div>
 
 </section>
 

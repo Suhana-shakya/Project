@@ -73,40 +73,74 @@
             </a>
         </div>
             <hr>
-            <div class="booking">
+            <div class="seat-button">
+                <p class="seat-note">
+                    Please select your preferred showtime, time, and cinema hall before proceeding.
+                </p>
+                <form action="seat.html">
+                    <!-- All your radio buttons -->
+                    <div class="options">
+                        <h2>SELECT SHOWTIME</h2>
+                        <label class="option">
+                            <input type="radio" name="showtime" checked>
+                            <span>Today</span>
+                        </label>
 
-                <div class="showtime">
+                        <label class="option">
+                            <input type="radio" name="showtime">
+                            <span>Tomorrow</span>
+                        </label>
 
-                    <h2>SELECT SHOWTIME</h2>
+                        <label class="option">
+                            <input type="radio" name="showtime">
+                            <span>Jun 28</span>
+                        </label>
 
-                    <button>Today</button>
-                    <button>Tomorrow</button>
-                    <button>Jun 28</button>
-                    <button>Jun 29</button>
+                        <label class="option">
+                            <input type="radio" name="showtime">
+                            <span>Jun 29</span>
+                        </label>
+                    </div>
+                    <div class="options">
 
-                </div>
+                        <h2>SELECT TIME</h2>
 
-                <div class="time">
+                        <label class="option">
+                            <input type="radio" name="time" checked>
+                            <span>12:30 PM</span>
+                        </label>
 
-                    <h2>SELECT TIME</h2>
+                        <label class="option">
+                            <input type="radio" name="time">
+                            <span>5:45 PM</span>
+                        </label>
 
-                    <button>10:30AM</button>
-                    <button>2:00PM</button>
-                    <button>8:15PM</button>
+                        <label class="option">
+                            <input type="radio" name="time">
+                            <span>11:30 PM</span>
+                        </label>
 
-                </div>
+                    </div>
+                    <div class="options">
 
-            </div>
+                        <h2>SELECT CINEMA HALL</h2>
 
-            <div class="cinema">
+                        <label class="option">
+                            <input type="radio" name="cinema" checked>
+                            <span>Civil Mall</span>
+                        </label>
 
-                <h2>SELECT CINEMA HALL</h2>
+                        <label class="option">
+                            <input type="radio" name="cinema">
+                            <span>Ranjana Mall</span>
+                        </label>
 
-                <button>Civil Mall</button>
-                <button>Ranjana Mall</button>
-                <button>Labim Mall</button>
-
-            </div>
+                        <label class="option">
+                            <input type="radio" name="cinema">
+                            <span>Labim Mall</span>
+                        </label>
+                    </div>
+                </form>
             <div class="select-seat">
 
                 <a href="seat.html" class="seat-btn">
