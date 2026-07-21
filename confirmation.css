@@ -1,123 +1,596 @@
+/* ===========================
+   RESET
+=========================== */
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
+    font-family:"Segoe UI",sans-serif;
 }
+
 body{
+
     min-height:100vh;
+
+    color:white;
+
     background:
-    linear-gradient(
-    135deg,
-    #9e8eaa,
-    #494e8d,
-    #0d0d1d);
-    color:white;
-    padding-top:80px;
-}
-nav{
-    width:100%;
-    height:80px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:0 80px;
-    background:rgba(0,0,0,0.25);
+    radial-gradient(circle at top right,#7c3aed55 0%,transparent 30%),
+    radial-gradient(circle at bottom left,#ec489955 0%,transparent 30%),
+    linear-gradient(135deg,#111827,#1e1b4b,#4c1d95);
+
+    padding-top:90px;
+
 }
 
-.nav i{
-    color:white;
-    cursor:pointer;
-    font-size:18px;
-}
-.logo{
-    font-size:28px;
-    font-weight:bold;
-    color:#fff;
+/* ===========================
+   PAGE
+=========================== */
+
+.confirmation-page{
+
+    width:92%;
+
+    max-width:1450px;
+
+    margin:auto;
+
+    padding:40px 0 80px;
+
 }
 
-nav ul{
-    display:flex;
-    list-style:none;
-    gap:40px;
-}
+.confirmation-page h1{
 
-nav ul li a{
-    text-decoration:none;
-    color:white;
-    font-weight:500;
-}
-
-.login{
-    background:#d31a45;
-    color:white;
-    border:none;
-    padding:10px 25px;
-    border-radius:25px;
-    cursor:pointer;
-}
-/* Confirmation */
-
-.confirmation{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:60px 20px;
-}
-
-.card{
-    width:650px;
-    background:rgba(255,255,255,.08);
-    backdrop-filter:blur(15px);
-    border-radius:20px;
-    padding:45px;
     text-align:center;
+
+    font-size:46px;
+
+    margin-bottom:45px;
+
 }
 
-.success-icon{
-    font-size:80px;
-    color:#2ecc71;
-    margin-bottom:20px;
+/* ===========================
+   LAYOUT
+=========================== */
+
+.confirmation-container{
+
+    display:grid;
+
+    grid-template-columns:350px 1fr;
+
+    gap:35px;
+
+    align-items:start;
+
 }
 
-.card h1{
-    margin-bottom:10px;
+/* ===========================
+   MOVIE CARD
+=========================== */
+
+.movie-card{
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(18px);
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+
+    top:100px;
+
 }
 
-.message{
-    color:#dddddd;
-    margin-bottom:35px;
+.poster{
+
+    position:relative;
+
 }
 
-.ticket-details{
-    text-align:left;
-    margin-bottom:35px;
+.poster img{
+
+    width:100%;
+
+    height:470px;
+
+    object-fit:cover;
+
+    display:block;
+
 }
 
-.row{
+.badge{
+
+    position:absolute;
+
+    left:20px;
+
+    bottom:20px;
+
+    background:#22c55e;
+
+    padding:10px 18px;
+
+    border-radius:40px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+.movie-content{
+
+    padding:28px;
+
+}
+
+.movie-content h2{
+
+    font-size:34px;
+
+    margin-bottom:8px;
+
+}
+
+.genre{
+
+    color:#d5d5d5;
+
+    margin-bottom:25px;
+
+}
+
+.rating{
+
     display:flex;
+
     justify-content:space-between;
-    padding:12px 0;
-    border-bottom:1px solid rgba(255,255,255,.15);
+
+    margin-bottom:28px;
+
+    color:#FFD166;
+
+    font-weight:600;
+
 }
+
+.movie-info{
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+    padding-top:25px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.info{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+.icon{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    background:#ec4899;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.info h4{
+
+    margin-bottom:4px;
+
+}
+
+.info p{
+
+    color:#d5d5d5;
+
+}
+
+/* ===========================
+   RIGHT CARD
+=========================== */
+
+.ticket-card{
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(18px);
+
+    border-radius:28px;
+
+    padding:40px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+
+}
+
+/* ===========================
+   SUCCESS
+=========================== */
+
+.success{
+
+    text-align:center;
+
+    margin-bottom:40px;
+
+}
+
+.success-circle{
+
+    width:95px;
+
+    height:95px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    background:#22c55e;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:40px;
+
+    margin-bottom:20px;
+
+    box-shadow:0 0 30px rgba(34,197,94,.5);
+
+}
+
+.success h2{
+
+    font-size:40px;
+
+    margin-bottom:10px;
+
+}
+
+.success p{
+
+    color:#d5d5d5;
+
+    font-size:17px;
+
+}
+
+/* ===========================
+   DIGITAL TICKET
+=========================== */
+
+.ticket{
+
+    position:relative;
+
+    background:rgba(255,255,255,.05);
+
+    border-radius:25px;
+
+    padding:30px;
+
+    margin-bottom:35px;
+
+    overflow:hidden;
+
+}
+
+/* Ticket Cut */
+
+.ticket::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:36px;
+
+    height:36px;
+
+    background:#221c4e;
+
+    border-radius:50%;
+
+    left:-18px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+}
+
+.ticket::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:36px;
+
+    height:36px;
+
+    background:#221c4e;
+
+    border-radius:50%;
+
+    right:-18px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+}
+
+.ticket-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+.ticket-header h3{
+
+    font-size:28px;
+
+    margin-bottom:6px;
+
+}
+
+.ticket-header p{
+
+    color:#d5d5d5;
+
+}
+
+.paid{
+
+    background:#22c55e;
+
+    padding:10px 20px;
+
+    border-radius:30px;
+
+    font-weight:bold;
+
+}
+
+/* ===========================
+   DETAILS
+=========================== */
+
+.ticket-details div{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    padding:15px 0;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.ticket-details span{
+
+    color:#d5d5d5;
+
+}
+
+.total{
+
+    margin-top:10px;
+
+    border:none !important;
+
+    color:#FFD166;
+
+    font-size:24px;
+
+    font-weight:bold;
+
+}
+
+
+
+/* ===========================
+   BUTTONS
+=========================== */
 
 .buttons{
+
     display:flex;
+
     justify-content:center;
+
     gap:20px;
+
+    flex-wrap:wrap;
+
 }
 
-.home-btn,
-.ticket-btn{
+.buttons a{
+
     text-decoration:none;
+
     color:white;
-    background:#8d3c69;
-    padding:15px 30px;
-    border-radius:30px;
-    transition:.3s;
+
+    padding:18px 28px;
+
+    border-radius:50px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    font-weight:600;
+
+    transition:.35s;
+
 }
 
-.home-btn:hover,
-.ticket-btn:hover{
-    background:#b65287;
+.home-btn{
+
+    background:linear-gradient(135deg,#ec4899,#c026d3);
+
+}
+
+.download-btn{
+
+    background:linear-gradient(135deg,#7c3aed,#9333ea);
+
+}
+
+.book-btn{
+
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+
+}
+
+.buttons a:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 15px 30px rgba(0,0,0,.35);
+
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:1100px){
+
+.confirmation-container{
+
+    grid-template-columns:1fr;
+
+}
+
+.movie-card{
+
+
+    max-width:380px;
+
+    margin:auto;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.ticket-card{
+
+    padding:25px;
+
+}
+
+.ticket-header{
+
+    flex-direction:column;
+
+    gap:18px;
+
+    text-align:center;
+
+}
+
+
+.success h2{
+
+    font-size:32px;
+
+}
+
+.confirmation-page h1{
+
+    font-size:36px;
+
+}
+
+}
+.ticket-note{
+
+    margin-top:30px;
+
+    display:flex;
+
+    gap:18px;
+
+    align-items:flex-start;
+
+    background:rgba(255,255,255,.05);
+
+    padding:20px;
+
+    border-radius:18px;
+
+}
+
+.ticket-note i{
+
+    font-size:28px;
+
+    color:#FFD166;
+
+    margin-top:4px;
+
+}
+
+.ticket-note h4{
+
+    margin-bottom:8px;
+
+    font-size:18px;
+
+}
+
+.ticket-note p{
+
+    color:#d6d6d6;
+
+    line-height:1.7;
+
 }

@@ -1,110 +1,270 @@
+/* ==========================
+        RESET
+========================== */
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
+    font-family:"Segoe UI",sans-serif;
 }
 
 body{
-    background:#eef2f7;
+    min-height:100vh;
+    color:white;
+    background:
+    radial-gradient(circle at top right,#7c3aed55 0%,transparent 35%),
+    radial-gradient(circle at bottom left,#ec489955 0%,transparent 35%),
+    linear-gradient(135deg,#111827,#1e1b4b,#4c1d95);
 }
 
 .container{
     display:flex;
 }
 
+/* ==========================
+        SIDEBAR
+========================== */
+
 .sidebar{
-    width:250px;
+
+    width:260px;
     min-height:100vh;
-    background:#232946;
-    color:white;
-    padding:30px 20px;
+    background:rgba(17,24,39,.75);
+    backdrop-filter:blur(18px);
+    border-right:1px solid rgba(255,255,255,.08);
+    padding:35px 20px;
+
 }
 
 .sidebar h2{
+
     text-align:center;
-    margin-bottom:40px;
+    margin-bottom:45px;
+    font-size:34px;
+    color:white;
+
 }
 
 .sidebar ul{
+
     list-style:none;
+
 }
 
 .sidebar li{
-    margin:18px 0;
+
+    margin:12px 0;
+
 }
 
 .sidebar a{
-    display:block;
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:15px 18px;
+    border-radius:15px;
     text-decoration:none;
     color:white;
-    padding:12px;
-    border-radius:8px;
+    transition:.3s;
+
 }
 
 .sidebar a:hover,
 .sidebar .active a{
-    background:#8d3c69;
+
+    background:linear-gradient(135deg,#ec4899,#9333ea);
+
 }
 
 .sidebar i{
-    margin-right:10px;
+
+    width:22px;
+
 }
+
+/* ==========================
+        MAIN
+========================== */
 
 .main{
+
     flex:1;
-    padding:35px;
+    padding:45px;
+
+}
+.main h1{
+    font-size:42px;
+    margin-bottom:30px;
 }
 
-.top{
+/* Toolbar */
+
+.toolbar{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:25px;
+    margin-bottom:30px;
+    gap:20px;
 }
+
+/* Search */
+
+.search-box{
+    display:flex;
+    width:380px;
+    align-items:center;
+}
+
+.search-box input{
+    flex:1;
+    padding:14px 18px;
+    border:none;
+    outline:none;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(15px);
+    color:white;
+    border-radius:30px 0 0 30px;
+}
+.search-box input::placeholder{
+    color:#d5d5d5;
+}
+
+.search-box button{
+    width:50px;
+    height:45px;
+    border:none;
+    color:white;
+    background:linear-gradient(135deg,#ec4899,#9333ea);
+    border-radius:0 30px 30px 0;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.search-box button:hover{
+    opacity:.9;
+}
+
+/* Add Button */
 
 .add-btn{
+    display:flex;
+    align-items:center;
+    gap:10px;
     text-decoration:none;
-    background:#8d3c69;
+    padding:15px 28px;
+    border-radius:50px;
+    background:linear-gradient(135deg,#ec4899,#9333ea);
     color:white;
-    padding:12px 22px;
-    border-radius:30px;
+    font-weight:600;
+    transition:.35s;
 }
 
+.add-btn:hover{
+    box-shadow:0 15px 30px rgba(236,72,153,.35);
+    transform:translateY(-2px);
+}
+
+/* ==========================
+        TABLE
+========================== */
 table{
     width:100%;
     border-collapse:collapse;
-    background:white;
-    border-radius:10px;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:22px;
     overflow:hidden;
-    box-shadow:0 5px 15px rgba(0,0,0,.1);
+    box-shadow:0 20px 45px rgba(0,0,0,.25);
 }
 
 th{
-    background:#8d3c69;
-    color:white;
-    padding:15px;
+    background:rgba(255,255,255,.08);
+    padding:18px;
+    font-size:17px;
+    text-align:center;
 }
 
 td{
-    padding:15px;
+    padding:18px;
     text-align:center;
-    border-bottom:1px solid #ddd;
+    border-top:1px solid rgba(255,255,255,.08);
 }
 
-.edit,
-.delete{
+tr:hover{
+    background:rgba(255,255,255,.05);
+}
+
+
+
+/* ==========================
+        STATUS
+========================== */
+
+.status{
+
     display:inline-block;
-    padding:8px 12px;
-    border-radius:6px;
+    padding:8px 18px;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:600;
+
+}
+
+.active-status{
+
+    background:#22c55e;
+
+}
+
+.ended-status{
+
+    background:#f59e0b;
+
+}
+
+/* ==========================
+        ACTIONS
+========================== */
+
+.actions{
+
+    display:flex;
+    justify-content:center;
+    gap:12px;
+
+}
+
+.actions a{
+
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-decoration:none;
     color:white;
-    margin:0 5px;
+    transition:.3s;
+
 }
 
 .edit{
-    background:#3498db;
+
+    background:#3b82f6;
+
 }
 
 .delete{
-    background:#e74c3c;
+
+    background:#ef4444;
+
+}
+
+.actions a:hover{
+
+    transform:scale(1.12);
+
 }

@@ -1,206 +1,580 @@
+/* ==========================================
+                RESET
+========================================== */
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
+    font-family:"Segoe UI",sans-serif;
 }
 
 body{
-    padding-top:80px;
+
     min-height:100vh;
-    background:linear-gradient(135deg,#9e8eaa,#494e8d,#0d0d1d);
+
     color:white;
+
+    background:
+    radial-gradient(circle at top right,#7c3aed55 0%,transparent 30%),
+    radial-gradient(circle at bottom left,#ec489955 0%,transparent 30%),
+    linear-gradient(135deg,#111827,#1e1b4b,#4c1d95);
+
+    padding-top:90px;
+
 }
 
-.movie-details{
-    min-height:calc(100vh - 80px);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:70px 5%;
-    position:relative;
+/* ==========================================
+                PAGE
+========================================== */
+
+.movie-page{
+
+    width:92%;
+
+    max-width:1450px;
+
+    margin:auto;
+
+    padding:40px 0 80px;
+
 }
 
-.overlay{
-    position:absolute;
-    inset:0;
-    background:rgba(0,0,0,.55);
-}
+/* ==========================================
+            MOVIE CONTAINER
+========================================== */
 
-.container{
-    position:relative;
-    z-index:2;
-    width:90%;
-    display:flex;
-    max-width:1200px;
-    margin:auto; 
-    gap:50px;
-    padding:40px;
+.movie-container{
+
+    display:grid;
+
+    grid-template-columns:330px 1fr;
+
+    gap:40px;
+
     background:rgba(255,255,255,.08);
-    backdrop-filter:blur(15px);
-    border-radius:20px;
+
+    backdrop-filter:blur(18px);
+
+    border-radius:30px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+
+    padding:35px;
+
+    margin-bottom:40px;
+
 }
 
-/* Poster */
+/* ==========================================
+                POSTER
+========================================== */
+
+.poster{
+
+    position:relative;
+
+}
 
 .poster img{
-    width:260px;
-    height:380px;
+
+    width:100%;
+
+    height:615px;
+
     object-fit:cover;
-    border-radius:15px;
+
+    border-radius:20px;
+
+    display:block;
+
 }
 
-/* Details */
+.badge{
+
+    position:absolute;
+
+    left:18px;
+
+    bottom:18px;
+
+    background:#ec4899;
+
+    color:white;
+
+    padding:10px 20px;
+
+    border-radius:40px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+                DETAILS
+========================================== */
 
 .details{
-    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
 }
 
 .details h1{
-    font-size:48px;
-    font-weight:700;
-    margin-bottom:20px;
-}
 
-.rating{
-    display:flex;
-    gap:40px;
-    margin-bottom:25px;
-    font-weight:600;
+    font-size:58px;
+
+    margin-bottom:20px;
+
 }
 
 .description{
-    line-height:32px;
+
+    color:#d8d8d8;
+
+    line-height:1.9;
+
     font-size:17px;
-    color:#ececec;
-    margin-bottom:30px;
+
+    margin-bottom:35px;
+
 }
 
-/* Movie Info */
+/* ==========================================
+                STATS
+========================================== */
+
+.stats{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+
+    margin-bottom:35px;
+
+}
+
+.stats span{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:12px 22px;
+
+    border-radius:40px;
+
+    background:rgba(255,255,255,.05);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    font-weight:600;
+
+}
+
+.stats i{
+
+    color:#FFD166;
+
+}
+
+/* ==========================================
+            MOVIE INFO
+========================================== */
+
+.details h2{
+
+    margin-bottom:25px;
+
+    font-size:30px;
+
+}
 
 .movie-info{
-    margin:30px 0;
+
+    background:rgba(255,255,255,.05);
+
+    border-radius:20px;
+
+    padding:25px;
+
 }
 
 .info-row{
+
     display:flex;
-    margin-bottom:16px;
+
+    justify-content:space-between;
+
+    gap:35px;
+
+    padding:18px 0;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
 }
 
-.label{
-    width:160px;
-    font-weight:600;
+.info-row:last-child{
+
+    border:none;
+
 }
 
-.value{
+.title{
+
+    width:180px;
+
+    color:#FFD166;
+
+    font-weight:700;
+
+}
+
+.info-row span:last-child{
+
     flex:1;
-    color:#ddd;
+
+    color:#d6d6d6;
+
+    line-height:1.7;
+
 }
 
-hr{
-    border:none;
-    border-top:1px solid rgba(255,255,255,.2);
-    margin:30px 0;
-}
-.trailer-buttons{
+/* ==========================================
+                BUTTONS
+========================================== */
+
+.buttons{
+
     display:flex;
-    gap:20px;
+
+    gap:18px;
+
     margin-top:35px;
+
 }
 
-.watch{
-    padding:15px 35px;
+.watch-btn,
+.book-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    padding:18px 30px;
+
+    border-radius:50px;
+
     text-decoration:none;
-    font-weight:bold;
-    border:none;
-    border-radius:30px;
-    background:#8d3c69;
+
     color:white;
-    cursor:pointer;
-    transition:.3s;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    transition:.35s;
+
 }
 
-.watch:hover{
+.watch-btn{
 
-    background:#b25288;
-}
-.seat-button{
-    margin-top:35px;
-}
+    background:rgba(255,255,255,.08);
 
-.seat-note{
-    color:#ddd;
-    font-size:18px;
-    margin-bottom:30px;
-    line-height:1.6;
-    text-align:center;
+    border:1px solid rgba(255,255,255,.12);
+
 }
 
-.options{
+.book-btn{
+
+    background:linear-gradient(135deg,#ec4899,#9333ea);
+
+}
+
+.watch-btn:hover,
+.book-btn:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 18px 40px rgba(0,0,0,.35);
+
+}
+
+/* ==========================================
+            BOOKING CONTAINER
+========================================== */
+
+.booking-container{
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(18px);
+
+    border-radius:30px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+
+    padding:40px;
+
+}
+
+.booking-container h2{
+
+    font-size:36px;
+
     margin-bottom:35px;
+
 }
 
-.options h2{
-    font-size:24px;
+.booking-box{
+
+    margin-bottom:35px;
+
+}
+
+.booking-box h3{
+
     margin-bottom:18px;
-    color:white;
-    font-weight:600;
+
+    font-size:22px;
+
 }
 
-.option{
-    display:inline-block;
-    margin-right:12px;
-    margin-bottom:12px;
+/* ==========================================
+            OPTIONS
+========================================== */
+
+.option-group{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+
 }
 
-.option input{
+.option-group input{
+
     display:none;
+
 }
 
-.option span{
-    padding:10px 35px;
-    text-decoration:none;
-    border:none;
-    border-radius:30px;
-    background:#8d3c69;
-    color:white;
+.option-group label{
+
+    padding:15px 28px;
+
+    background:rgba(255,255,255,.05);
+
+    border:2px solid transparent;
+
+    border-radius:40px;
+
     cursor:pointer;
-    transition:.3s;
+
+    transition:.35s;
+
+    font-weight:600;
+
 }
 
-.option span:hover{
-    background:#b65287;
-    transform:translateY(-1px);
+.option-group label:hover{
+
+    border-color:#ec4899;
+
+    transform:translateY(-3px);
+
 }
 
-.option input:checked + span{
-    background:#bb499b;
-    color:white;
-    border: 1px solid rgb(172, 172, 158);
-    box-shadow:0 0 15px rgba(182,82,135,.8);
+.option-group input:checked+label{
+
+    background:#ec4899;
+
+    border-color:#ec4899;
+
 }
+
+/* ==========================================
+            SELECT SEAT
+========================================== */
 
 .select-seat{
-    margin-top:40px;
-    display:flex;
-    justify-content:flex-end;
+
+    margin-top:20px;
+
+    text-align:right;
+
 }
 
 .seat-btn{
-    display:flex;
+
+    display:inline-flex;
+
     align-items:center;
-    gap:10px;
-    padding:15px 38px;
-    border-radius:30px;
-    background:#8d3c69;
-    color:white;
+
+    gap:12px;
+
     text-decoration:none;
+
+    color:white;
+
+    padding:18px 35px;
+
+    border-radius:50px;
+
+    background:linear-gradient(135deg,#ec4899,#c026d3);
+
     font-size:18px;
-    font-weight:600;
-    transition:.3s;
+
+    font-weight:700;
+
+    transition:.35s;
+
 }
 
 .seat-btn:hover{
-    background:#b65287;
-    transform:translateY(-2px);
+
+    transform:translateY(-5px);
+
+    box-shadow:0 20px 45px rgba(236,72,153,.45);
+
+}
+
+/* ==========================================
+            RESPONSIVE
+========================================== */
+
+@media(max-width:1100px){
+
+.movie-container{
+
+    grid-template-columns:1fr;
+
+}
+
+.poster{
+
+    max-width:340px;
+
+    margin:auto;
+
+}
+
+.details{
+
+    text-align:center;
+
+}
+
+.stats{
+
+    justify-content:center;
+
+}
+
+.buttons{
+
+    justify-content:center;
+
+}
+
+.info-row{
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.title{
+
+    width:auto;
+
+}
+
+.select-seat{
+
+    text-align:center;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.details h1{
+
+    font-size:42px;
+
+}
+
+.description{
+
+    font-size:16px;
+
+}
+
+.option-group{
+
+    flex-direction:column;
+
+}
+
+.option-group label{
+
+    width:100%;
+
+    text-align:center;
+
+}
+
+.buttons{
+
+    flex-direction:column;
+
+}
+
+.watch-btn,
+.book-btn{
+
+    width:100%;
+
+}
+
+.seat-btn{
+
+    width:100%;
+
+    justify-content:center;
+
+}
+
+.booking-container{
+
+    padding:25px;
+
+}
+
+.movie-container{
+
+    padding:25px;
+
+}
+
 }

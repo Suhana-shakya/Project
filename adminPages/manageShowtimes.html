@@ -47,10 +47,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     <!-- Main -->
 
     <main class="main">
+        <h1>Manage Showtimes</h1>
+        <div class="toolbar">
 
-        <div class="top">
-
-            <h1>Manage Showtimes</h1>
+            <div class="search-box">
+                <input type="text" placeholder="Search showtime...">
+                <button>
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
 
             <a href="addShowtime.html" class="add-btn">
                 <i class="fa-solid fa-plus"></i>
@@ -59,14 +64,17 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         </div>
 
-        <table>
+        <div class="table-card">
+
+            <table>
 
             <tr>
                 <th>Movie</th>
                 <th>Cinema Hall</th>
                 <th>Date</th>
                 <th>Time</th>
-                <th>Price</th>
+                <th>Ticket Price</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
 
@@ -77,17 +85,21 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                 <td>15 May 2026</td>
                 <td>10:30 AM</td>
                 <td>Rs.500</td>
-
                 <td>
-
+                    <span class="status cancelled-status">
+                    Cancelled   
+                    </span>
+                </td>
+                <td>
+                <div class="actions">
                     <a href="editShowtime.html" class="edit">
                         <i class="fa-solid fa-pen"></i>
                     </a>
 
-                    <a href="#" class="delete">
+                    <a href="deleteShowtime.html" class="delete">
                         <i class="fa-solid fa-trash"></i>
                     </a>
-
+                </div>
                 </td>
 
             </tr>
@@ -101,7 +113,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                 <td>Rs.450</td>
 
                 <td>
-
+                    <span class="status cancelled-status">
+                    Cancelled   
+                    </span>
+                </td>
+                <td>
+                <div class="actions">
                     <a href="editShowtime.html" class="edit">
                         <i class="fa-solid fa-pen"></i>
                     </a>
@@ -109,9 +126,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                     <a href="deleteShowtime.html" class="delete">
                         <i class="fa-solid fa-trash"></i>
                     </a>
-
+                </div>
                 </td>
-
             </tr>
 
             <tr>
@@ -121,22 +137,28 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                 <td>28 July 2026</td>
                 <td>5:30 PM</td>
                 <td>Rs.550</td>
-
+                
                 <td>
-
+                    <span class="status active-status">
+                    Active
+                    </span>
+                </td>
+                <td>
+                <div class="actions">
                     <a href="editShowtime.html" class="edit">
                         <i class="fa-solid fa-pen"></i>
                     </a>
 
-                    <a href="deleteShowtime.html" class="delete">
+                    <a href="#" class="delete">
                         <i class="fa-solid fa-trash"></i>
                     </a>
 
+                </div>
                 </td>
-
             </tr>
 
         </table>
+    </div>
 
     </main>
 

@@ -2,30 +2,37 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
+    font-family:"Segoe UI",sans-serif;
 }
 
 body{
-    background:#eef2f7;
+    min-height:100vh;
+    color:white;
+    background:
+    radial-gradient(circle at top right,#7c3aed55 0%,transparent 35%),
+    radial-gradient(circle at bottom left,#ec489955 0%,transparent 35%),
+    linear-gradient(135deg,#111827,#1e1b4b,#4c1d95);
 }
 
 .container{
     display:flex;
 }
 
-/* Sidebar */
+/* ================= Sidebar ================= */
 
 .sidebar{
-    width:250px;
+    width:260px;
     min-height:100vh;
-    background:#232946;
-    color:white;
-    padding:30px 20px;
+    background:rgba(17,24,39,.75);
+    backdrop-filter:blur(18px);
+    border-right:1px solid rgba(255,255,255,.08);
+    padding:35px 20px;
 }
 
 .sidebar h2{
     text-align:center;
-    margin-bottom:40px;
+    font-size:34px;
+    margin-bottom:45px;
 }
 
 .sidebar ul{
@@ -33,83 +40,103 @@ body{
 }
 
 .sidebar li{
-    margin:20px 0;
+    margin:12px 0;
 }
 
 .sidebar a{
+    display:flex;
+    align-items:center;
+    gap:12px;
     text-decoration:none;
     color:white;
-    display:block;
-    padding:12px;
-    border-radius:8px;
+    padding:15px 18px;
+    border-radius:15px;
     transition:.3s;
 }
 
-.sidebar a:hover{
-    background:#8d3c69;
+.sidebar a:hover,
+.sidebar .active a{
+    background:linear-gradient(135deg,#ec4899,#9333ea);
 }
 
 .sidebar i{
-    margin-right:12px;
+    width:22px;
 }
 
-/* Main */
+/* ================= Main ================= */
 
 .main{
     flex:1;
-    padding:30px;
+    padding:45px;
 }
 
 header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:30px;
+    margin-bottom:40px;
 }
 
 .admin{
-    font-weight:bold;
-    font-size:28px;
+    font-size:42px;
+    font-weight:700;
 }
 
-/* Cards */
+/* ================= Cards ================= */
 
 .cards{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
     margin-bottom:40px;
 }
 
 .card{
-    background:white;
-    padding:25px;
-    border-radius:12px;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:22px;
+    padding:30px;
     text-align:center;
-    box-shadow:0 3px 10px rgba(0,0,0,.1);
+    transition:.35s;
+    box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 25px 50px rgba(0,0,0,.35);
 }
 
 .card i{
-    font-size:35px;
-    color:#8d3c69;
-    margin-bottom:15px;
+    font-size:42px;
+    color:#ec4899;
+    margin-bottom:18px;
 }
 
 .card h2{
+    font-size:34px;
     margin-bottom:10px;
 }
 
-/* Table */
+.card p{
+    color:#d7d7d7;
+    font-size:16px;
+}
+
+/* ================= Table ================= */
 
 .table-box{
-    background:white;
-    padding:25px;
-    border-radius:12px;
-    box-shadow:0 3px 10px rgba(0,0,0,.1);
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 20px 45px rgba(0,0,0,.25);
 }
 
 .table-box h2{
-    margin-bottom:20px;
+    padding:25px;
+    font-size:28px;
 }
 
 table{
@@ -117,14 +144,43 @@ table{
     border-collapse:collapse;
 }
 
-table th,
-table td{
-    padding:15px;
+th{
+    background:rgba(255,255,255,.08);
+    padding:18px;
     text-align:left;
-    border-bottom:1px solid #ddd;
+    font-size:17px;
 }
 
-table th{
-    background:#8d3c69;
-    color:white;
+td{
+    padding:18px;
+    border-top:1px solid rgba(255,255,255,.08);
+}
+
+tr:hover{
+    background:rgba(255,255,255,.05);
+}
+
+/* ================= Responsive ================= */
+
+@media(max-width:900px){
+
+.container{
+    flex-direction:column;
+}
+
+.sidebar{
+    width:100%;
+    min-height:auto;
+}
+
+header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:15px;
+}
+
+.admin{
+    font-size:32px;
+}
+
 }

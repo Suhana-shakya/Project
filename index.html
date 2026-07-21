@@ -1,161 +1,523 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Movie Ticket Booking System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="navbar.css">
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HiMovie</title>
+
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="index.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 </head>
+
 <body>
+
+<!-- ================= NAVBAR ================= -->
+
+
+
 <nav>
-    <div class="logo">
-        HiMovie
-    </div>
+
+ <a href="index.html" class="logo">
+
+    <i class="fa-solid fa-clapperboard"></i>
+
+    <span>HiMovie</span>
+
+</a>
+
     <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="movies.html">Now Showing</a></li>
-        <li><a href="upcomingMovies.html">Upcoming</a></li>
-        <li class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search movies...">
+
+        <li>
+            <a href="index.html" class="active">Home</a>
         </li>
-        <li class="login"><a href="login.html">Login</a></li>
+
+        <li>
+            <a href="movies.html">Now Showing</a>
+        </li>
+
+        <li>
+            <a href="upcomingMovies.html">Upcoming</a>
+        </li>
+
+        <li class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+            type="text"
+            placeholder="Search movies...">
+
+        </li>
+
+        <li>
+
+            <a href="login.html" class="login-btn">
+
+                <i class="fa-solid fa-user"></i>
+
+                Login
+
+            </a>
+
+        </li>
+
     </ul>
+
 </nav>
+</nav>
+
+<!-- ================= HERO ================= -->
+
 <section class="hero">
 
-    <div class="overlay"></div>
+<div class="hero-overlay"></div>
 
-    <div class="content">
+<div class="hero-content">
 
-        <h1>Obsession</h1>
+<span class="badge">
 
-        <div class="info">
+NOW STREAMING
 
-            <span>
-                <i class="fa-solid fa-star"></i>
-                8.7/10
-            </span>
+</span>
 
-            <span>
-                <i class="fa-regular fa-clock"></i>
-                3HR 29MIN
-            </span>
+<h1>
 
-        </div>
+OBSESSION
 
-        <div class="buttons">
+</h1>
 
-            <a href="https://youtu.be/QparPBLUeEI?si=DkYiPlm6TKbSirXy" class="watch">
-                <i class="fa-solid fa-play"></i>
-                WATCH TRAILER
-            </a>
+<p>
 
-            <a href="obsession.html" class="book">
-                BOOK NOW
-            </a>
+A psychological thriller where obsession and reality become impossible to separate. Every decision comes with consequences.
 
-        </div>
+</p>
 
-    </div>
+<div class="hero-info">
+
+<span>
+
+<i class="fa-solid fa-star"></i>
+
+8.7/10
+
+</span>
+
+<span>
+
+<i class="fa-regular fa-clock"></i>
+
+2h 18m
+
+</span>
+
+<span>
+
+<i class="fa-solid fa-film"></i>
+
+Thriller
+
+</span>
+
+</div>
+
+<div class="hero-buttons">
+
+<a href="https://youtu.be/QparPBLUeEI?si=DkYiPlm6TKbSirXy" class="watch-btn" target="_blank">
+
+<i class="fa-solid fa-play"></i>
+
+Watch Trailer
+
+</a>
+
+<a href="obsession.html" class="book-btn">
+
+<i class="fa-solid fa-ticket"></i>
+
+Book Tickets
+
+</a>
+
+</div>
+
+</div>
 
 </section>
-<section class="now-showing">
 
-    <div class="heading">
-        <h1>NOW SHOWING MOVIES</h1>
-    </div>
+<!-- ================= NOW SHOWING ================= -->
 
-    <div class="movie-container">
-        <a href="obsession.html" class="movie-link">
-        <div class="movie-card">
+<section class="movies-section">
 
-            <img src="./images/obsession.jpg" href="obsession.html">
+<div class="section-header">
 
-            <h3>Obsession</h3>
+<h2>Now Showing</h2>
 
-            <p>2 Hours 18 Mins</p>
+<p>
 
-        </div>
-        </a>
-        <a href="dhamaal.html" class="movie-link">
-        <div class="movie-card">
+Experience today's biggest blockbusters.
 
-            <img src="./images/dhamaal.jfif">
+</p>
 
-            <h3>Dhamaal 4</h3>
+</div>
 
-            <p>2 Hours 09 Mins</p>
+<div class="movie-grid">
 
-        </div>
-        </a>
-        <a href="welcome.html" class="movie-link">
-        <div class="movie-card">
+<a href="obsession.html" class="movie-link">
 
-            <img src="./images/welcomeToTheJungle.avif">
+<div class="movie-card">
 
-            <h3>Welcome to the Jungle</h3>
+<div class="poster">
 
-            <p>3 Hours 29 Mins</p>
+<img src="images/obsession.jpg">
 
-        </div>
-        </a>
-        <a href="odyssey.html" class="movie-link">
-          <div class="movie-card">
+<span class="rating">
 
-            <img src="./images/odyssey.jfif">
+⭐ 8.7
 
-            <h3>The Odyssey</h3>
+</span>
 
-            <p>2 Hours 22 Mins</p>
+</div>
 
-           </div>
-           </a>
-    </div>
+<div class="movie-content">
+
+<h3>Obsession</h3>
+
+<p>Thriller • Mystery</p>
+
+<div class="bottom">
+
+<span>
+
+<i class="fa-regular fa-clock"></i>
+
+2h 18m
+
+</span>
+
+<span>
+
+View Details →
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</a>
+
+<a href="dhamaal.html" class="movie-link">
+
+<div class="movie-card">
+
+<div class="poster">
+
+<img src="images/dhamaal.jfif">
+
+<span class="rating">
+
+⭐ 8.1
+
+</span>
+
+</div>
+
+<div class="movie-content">
+
+<h3>Dhamaal 4</h3>
+
+<p>Comedy</p>
+
+<div class="bottom">
+
+<span>
+
+<i class="fa-regular fa-clock"></i>
+
+2h 09m
+
+</span>
+
+<span>
+
+View Details →
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</a>
+
+<a href="welcome.html" class="movie-link">
+
+<div class="movie-card">
+
+<div class="poster">
+
+<img src="images/welcomeToTheJungle.avif">
+
+<span class="rating">
+
+⭐ 8.5
+
+</span>
+
+</div>
+
+<div class="movie-content">
+
+<h3>Welcome To Jungle</h3>
+
+<p>Adventure</p>
+
+<div class="bottom">
+
+<span>
+
+<i class="fa-regular fa-clock"></i>
+
+3h 29m
+
+</span>
+
+<span>
+
+View Details →
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</a>
+
+<a href="odyssey.html" class="movie-link">
+
+<div class="movie-card">
+
+<div class="poster">
+
+<img src="images/odyssey.jfif">
+
+<span class="rating">
+
+⭐ 9.0
+
+</span>
+
+</div>
+
+<div class="movie-content">
+
+<h3>The Odyssey</h3>
+
+<p>Fantasy</p>
+
+<div class="bottom">
+
+<span>
+
+<i class="fa-regular fa-clock"></i>
+
+2h 22m
+
+</span>
+
+<span>
+
+View Details →
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</a>
+
+</div>
+
 </section>
 
-<section class="now-showing">
+<!-- ================= UPCOMING ================= -->
 
-    <div class="heading">
-        <h1>UPCOMING MOVIES</h1>
-    </div> 
-    <div class="movie-container">
-        <a href="matrubhumi.html" class="movie-link">
-        <div class="movie-card">
+<section class="movies-section">
 
-            <img src="./images/matrubhumi.jpg">
+<div class="section-header">
 
-            <h3>Matrubhumi</h3>
+<h2>Upcoming Movies</h2>
 
-            <p>1 Hour 58 Mins</p>
+<p>
 
-        </div>
-        </a>
-        <a href="drishyam.html" class="movie-link">
-        <div class="movie-card">
+Movies arriving soon in theatres.
 
-            <img src="./images/drishyam.jpg">
+</p>
 
-            <h3>Drishyam 3</h3>
+</div>
 
-            <p>3 Hours 00 Mins</p>
+<div class="movie-grid">
 
-        </div>
-        </a>
-        <a href="spiderman.html" class="movie-link">
-        <div class="movie-card">
+<a href="matrubhumi.html" class="movie-link">
 
-            <img src="./images/spiderman.jpg">
+<div class="movie-card">
 
-            <h3>Spider-man:Brand New Day</h3>
+<div class="poster">
 
-            <p>2 Hours 14 Mins</p>
+<img src="images/matrubhumi.jpg">
 
-        </div>
-        </a>
-    </div>
+<span class="coming">
+
+COMING SOON
+
+</span>
+
+</div>
+
+<div class="movie-content">
+
+<h3>Matrubhumi</h3>
+
+<p>Drama</p>
+
+<div class="bottom">
+
+<span>
+
+<i class="fa-regular fa-clock"></i>
+
+1h 58m
+
+</span>
+
+<span>
+
+View Details →
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</a>
+
+<a href="drishyam.html" class="movie-link">
+
+<div class="movie-card">
+
+<div class="poster">
+
+<img src="images/drishyam.jpg">
+
+<span class="coming">
+
+COMING SOON
+
+</span>
+
+</div>
+
+<div class="movie-content">
+
+<h3>Drishyam 3</h3>
+
+<p>Crime Thriller</p>
+
+<div class="bottom">
+
+<span>
+
+<i class="fa-regular fa-clock"></i>
+
+3h 00m
+
+</span>
+
+<span>
+
+View Details →
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</a>
+
+<a href="spiderman.html" class="movie-link">
+
+<div class="movie-card">
+
+<div class="poster">
+
+<img src="images/spiderman.jpg">
+
+<span class="coming">
+
+COMING SOON
+
+</span>
+
+</div>
+
+<div class="movie-content">
+
+<h3>Spider-Man</h3>
+
+<p>Action</p>
+
+<div class="bottom">
+
+<span>
+
+<i class="fa-regular fa-clock"></i>
+
+2h 14m
+
+</span>
+
+<span>
+
+View Details →
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</a>
+
+</div>
 
 </section>
 
 </body>
+
 </html>

@@ -1,80 +1,256 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Movie Ticket Booking System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="navbar.css">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Now Showing | HiMovie</title>
+
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="movies.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 </head>
+
 <body>
 
-
 <nav>
-    <div class="logo">
-        HiMovie
-    </div>
 
-    <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="movies.html">Now Showing</a></li>
-        <li><a href="upcomingMovies.html">Upcoming</a></li>
-        <li class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search movies...">
-        </li>
-        <li class="login"><a href="login.html">Login</a></li>
-    </ul>
+<a href="index.html" class="logo">
 
-    
+<i class="fa-solid fa-clapperboard"></i>
+
+<span>HiMovie</span>
+
+</a>
+
+<ul>
+
+<li><a href="index.html">Home</a></li>
+
+<li><a href="movies.html" class="active">Now Showing</a></li>
+
+<li><a href="upcomingMovies.html">Upcoming</a></li>
+
+<li class="search-box">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input type="text" placeholder="Search movies...">
+
+</li>
+
+<li>
+
+<a href="login.html" class="login-btn">
+
+<i class="fa-solid fa-user"></i>
+
+Login
+
+</a>
+
+</li>
+
+</ul>
+
 </nav>
 
-<section class="now-showing">
+<section class="hero">
 
-    <div class="heading">
-        <h1>NOW SHOWING</h1>
-    </div>
+<h1>Now Showing</h1>
 
-    <div class="movie-container">
+<p>
+Book your tickets for the latest movies playing in theatres now.
+</p>
 
-        <div class="movie-card">
+</section>
 
-            <img src="./images/obsession.jpg">
+<section class="movie-list">
+    <div class="movie-card">
 
-            <h3>Obsession</h3>
+<div class="poster">
 
-            <p>2 Hours 18 Mins</p>
+<img src="images/obsession.jpg">
 
-        </div>
+<span class="badge">
+Now Showing
+</span>
 
-        <div class="movie-card">
+</div>
 
-            <img src="./images/dhamaal.jfif">
+<div class="details">
 
-            <h3>Dhamaal 4</h3>
+<h2>Obsession</h2>
 
-            <p>2 Hours 09 Mins</p>
+<div class="info">
 
-        </div>
+<span><i class="fa-solid fa-star"></i>7.8/10</span>
 
-        <div class="movie-card">
+<span><i class="fa-solid fa-film"></i>Horror • Thriller</span>
 
-            <img src="./images/welcomeToTheJungle.avif">
+<span><i class="fa-regular fa-clock"></i>1h 55m</span>
 
-            <h3>Welcome to the Jungle</h3>
+</div>
 
-            <p>3 Hours 29 Mins</p>
+<p>
 
-        </div>
+After breaking the mysterious One Wish Willow,
+a hopeless romantic discovers that getting what
+he wished for comes with terrifying consequences.
 
-        <div class="movie-card">
+</p>
 
-            <img src="./images/odyssey.jfif">
+<a href="obsession.html" class="btn">
 
-            <h3>The Odyssey</h3>
+Book Now
 
-            <p>2 Hours 22 Mins</p>
-        </div>
-    </div>
+<i class="fa-solid fa-ticket"></i>
+
+</a>
+
+</div>
+
+</div>
+<div class="movie-card">
+
+<div class="poster">
+
+<img src="images/dhamaal.jfif">
+
+<span class="badge">
+Now Showing
+</span>
+
+</div>
+
+<div class="details">
+
+<h2>Dhamaal 4</h2>
+
+<div class="info">
+
+<span><i class="fa-solid fa-star"></i>8.1/10</span>
+
+<span><i class="fa-solid fa-film"></i>Comedy</span>
+
+<span><i class="fa-regular fa-clock"></i>2h 09m</span>
+
+</div>
+
+<p>
+
+The hilarious gang returns for another wild
+treasure hunt packed with comedy,
+confusion and nonstop adventure.
+
+</p>
+
+<a href="dhamaal.html" class="btn">
+
+Book Now
+
+<i class="fa-solid fa-ticket"></i>
+
+</a>
+
+</div>
+
+</div>
+<div class="movie-card">
+
+<div class="poster">
+
+<img src="images/welcomeToTheJungle.avif">
+
+<span class="badge">
+Now Showing
+</span>
+
+</div>
+
+<div class="details">
+
+<h2>Welcome to the Jungle</h2>
+
+<div class="info">
+
+<span><i class="fa-solid fa-star"></i>8.7/10</span>
+
+<span><i class="fa-solid fa-film"></i>Action • Comedy</span>
+
+<span><i class="fa-regular fa-clock"></i>3h 29m</span>
+
+</div>
+
+<p>
+
+A group of eccentric adventurers embark on
+an action-packed mission full of danger,
+humour and unexpected twists.
+
+</p>
+
+<a href="welcome.html" class="btn">
+
+Book Now
+
+<i class="fa-solid fa-ticket"></i>
+
+</a>
+
+</div>
+
+</div>
+<div class="movie-card">
+
+<div class="poster">
+
+<img src="images/odyssey.jfif">
+
+<span class="badge">
+Now Showing
+</span>
+
+</div>
+
+<div class="details">
+
+<h2>The Odyssey</h2>
+
+<div class="info">
+
+<span><i class="fa-solid fa-star"></i>8.9/10</span>
+
+<span><i class="fa-solid fa-film"></i>Adventure • Fantasy</span>
+
+<span><i class="fa-regular fa-clock"></i>2h 22m</span>
+
+</div>
+
+<p>
+
+A legendary warrior struggles to return home
+after an epic journey filled with mythical
+creatures and impossible challenges.
+
+</p>
+
+<a href="odyssey.html" class="btn">
+
+Book Now
+
+<i class="fa-solid fa-ticket"></i>
+
+</a>
+
+</div>
+
+</div>
 
 </section>
 

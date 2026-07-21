@@ -1,161 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <title>Movie Detail</title>
-    <link rel="stylesheet" href="movieDetail.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="navbar.css">
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Obsession | HiMovie</title>
+
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="movieDetail.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 </head>
+
 <body>
 
+<!-- ================= NAVBAR ================= -->
+
 <nav>
-    <div class="logo">
-        HiMovie
-    </div>
-    <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="movies.html">Now Showing</a></li>
-        <li><a href="upcomingMovies.html">Upcoming</a></li>
-        <li class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search movies...">
+
+<a href="index.html" class="logo">
+
+    <i class="fa-solid fa-clapperboard"></i>
+
+    <span>HiMovie</span>
+
+</a>
+<ul>
+
+<li><a href="index.html">Home</a></li>
+
+<li><a href="movies.html">Now Showing</a></li>
+
+<li><a href="upcomingMovies.html">Upcoming</a></li>
+
+<li class="search-box">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input type="text" placeholder="Search movies...">
+
+</li>
+
+        <li>
+
+            <a href="login.html" class="login-btn">
+
+                <i class="fa-solid fa-user"></i>
+
+                Login
+
+            </a>
+
         </li>
-        <li class="login"><a href="login.html">Login</a></li>
-    </ul>
+
+
+</ul>
+
 </nav>
 
-<section class="movie-details">
 
-    <div class="overlay"></div>
 
-    <div class="container">
+<section class="movie-page">
 
-        <div class="poster">
-            <img src="./images/matrubhumi.jpg" alt="">
-        </div>
 
-        <div class="details">
-            <h1>MATRUBHUMI</h1>
-            <div class="rating">
-                <span>⭐ 8.6/10</span>
-            </div>
-            <p class="description">
-                Based on the events that took place between the Indian and Chinese troops at the Galwan region on June 15, 2020 when 200 Indian soldiers bravely defended their territory against a force of 1200 Chinese Liberation Army soldiers
-            </p>
+<div class="movie-container">
 
-            <div class="movie-info">
+<div class="poster">
 
-            <div class="info-row">
-                <span class="label">Director :</span>
-                <span class="value">Apoorva Lakhia</span>
-            </div>
+<img src="images/matrubhumi.jpg" alt="Matrubhumi">
 
-            <div class="info-row">
-                <span class="label">Cast :</span>
-                <span class="value">Salman Khan, Ankur Bhatia, Chitragandha Singh</span>
-            </div>
+<span class="badge">
 
-            <div class="info-row">
-                <span class="label">Release Date :</span>
-                <span class="value">14 August 2026</span>
-            </div>
+NOW SHOWING
 
-            <div class="info-row">
-                <span class="label">Duration :</span>
-                <span class="value">3 Hours 29 Minutes</span>
-            </div>
+</span>
 
-            </div>
-            <div class="buttons">
-            <a href="https://youtu.be/WWthtnGbxUM?si=Kx3thk5-VpJE6L-T"
-            target="_blank"
-            class="watch">
-                <i class="fa-solid fa-play"></i>
-                WATCH TRAILER
-            </a>
-        </div>
-            <hr>
+</div>
 
-            <div class="seat-button">
-                <p class="seat-note">
-                    Please select your preferred showtime, time, and cinema hall before proceeding.
-                </p>
-                <form action="seat.html">
-                    <!-- All your radio buttons -->
-                    <div class="options">
-                        <h2>SELECT SHOWTIME</h2>
-                        <label class="option">
-                            <input type="radio" name="showtime" checked>
-                            <span>Today</span>
-                        </label>
+<!-- RIGHT -->
 
-                        <label class="option">
-                            <input type="radio" name="showtime">
-                            <span>Tomorrow</span>
-                        </label>
+<div class="details">
 
-                        <label class="option">
-                            <input type="radio" name="showtime">
-                            <span>Jun 28</span>
-                        </label>
+<h1>
 
-                        <label class="option">
-                            <input type="radio" name="showtime">
-                            <span>Jun 29</span>
-                        </label>
-                    </div>
-                    <div class="options">
+Matrubhumi
 
-                        <h2>SELECT TIME</h2>
+</h1>
 
-                        <label class="option">
-                            <input type="radio" name="time" checked>
-                            <span>10:30 AM</span>
-                        </label>
+<div class="stats">
 
-                        <label class="option">
-                            <input type="radio" name="time">
-                            <span>2:45 PM</span>
-                        </label>
 
-                        <label class="option">
-                            <input type="radio" name="time">
-                            <span>6:30 PM</span>
-                        </label>
+<span>
 
-                    </div>
-                    <div class="options">
+<i class="fa-regular fa-clock"></i>
 
-                        <h2>SELECT CINEMA HALL</h2>
+1h 58m
 
-                        <label class="option">
-                            <input type="radio" name="cinema" checked>
-                            <span>Civil Mall</span>
-                        </label>
+</span>
 
-                        <label class="option">
-                            <input type="radio" name="cinema">
-                            <span>Ranjana Mall</span>
-                        </label>
+<span>
 
-                        <label class="option">
-                            <input type="radio" name="cinema">
-                            <span>Labim Mall</span>
-                        </label>
-                    </div>
-                </form>
-            <div class="select-seat">
+<i class="fa-solid fa-film"></i>
 
-                <a href="seat.html" class="seat-btn">
-                    SELECT SEAT
-                    <i class="fa-solid fa-arrow-right"></i>
-                </a>
+Drama, Action
 
-            </div>
-            
+</span>
+
+<span>
+
+<i class="fa-solid fa-language"></i>
+
+Hindi
+
+</span>
+
+</div>
+
+<p class="description">
+Based on the events that took place between the Indian and Chinese troops at the Galwan region on June 15, 2020 when 200 Indian soldiers bravely defended their territory against a force of 1200 Chinese Liberation Army soldiers
+
+</p>
+
+<!-- ================= INFORMATION ================= -->
+
+<h2>
+
+Movie Information
+
+</h2>
+
+<div class="movie-info">
+
+<div class="info-row">
+
+<span class="title">
+
+Director
+
+</span>
+
+<span>
+
+Apoorva Lakhia
+
+</span>
+
+</div>
+
+<div class="info-row">
+
+<span class="title">
+
+Cast
+
+</span>
+
+<span>
+
+Salman Khan, Ankur Bhatia, Chitragandha Singh
+
+</span>
+
+</div>
+
+<div class="info-row">
+
+<span class="title">
+
+Release Date
+
+</span>
+
+<span>
+
+14 Aug 2026
+
+</span>
+
+</div>
+
+
+
+</div>
+
+<div class="buttons">
+
+<a href="https://youtu.be/WWthtnGbxUM?si=Kx3thk5-VpJE6L-T"
+target="_blank"
+class="watch-btn">
+
+<i class="fa-solid fa-play"></i>
+
+Watch Trailer
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ===================================================
+                BOOKING CONTAINER
+=================================================== -->
+
+<div class="booking-container" id="booking">
+
+    <h2>Book Your Ticket</h2>
+
+    <!-- DATE -->
+
+    <div class="booking-box">
+
+        <h3>Select Date</h3>
+
+        <div class="option-group">
+
+            <input type="radio" id="today" name="date">
+            <label for="today">Today</label>
+
+            <input type="radio" id="tomorrow" name="date">
+            <label for="tomorrow">Tomorrow</label>
+
+            <input type="radio" id="jun28" name="date">
+            <label for="jun28">Jun 28</label>
+
+            <input type="radio" id="jun29" name="date">
+            <label for="jun29">Jun 29</label>
 
         </div>
 
     </div>
+
+    <!-- CINEMA -->
+
+    <div class="booking-box">
+
+        <h3>Choose Cinema</h3>
+
+        <div class="option-group">
+
+            <input type="radio" id="ranjana" name="cinema">
+            <label for="ranjana">Ranjana Cineplex</label>
+
+            <input type="radio" id="civil" name="cinema">
+            <label for="civil">QFX Civil Mall</label>
+
+            <input type="radio" id="labim" name="cinema">
+            <label for="labim">FCube Cinemas</label>
+
+        </div>
+
+    </div>
+
+    <!-- HALL -->
+
+    <div class="booking-box">
+
+        <h3>Choose Hall</h3>
+
+        <div class="option-group">
+
+            <input type="radio" id="hall1" name="hall">
+            <label for="hall1">Hall 1</label>
+
+            <input type="radio" id="hall2" name="hall">
+            <label for="hall2">Hall 2</label>
+
+            <input type="radio" id="hall3" name="hall">
+            <label for="hall3">Hall 3</label>
+
+        </div>
+
+    </div>
+
+    <!-- SHOWTIME -->
+
+    <div class="booking-box">
+
+        <h3>Select Showtime</h3>
+
+        <div class="option-group">
+
+            <input type="radio" id="time1" name="time">
+            <label for="time1">8:45 AM</label>
+
+            <input type="radio" id="time2" name="time">
+            <label for="time2">2:30 PM</label>
+
+            <input type="radio" id="time3" name="time">
+            <label for="time3">9:15 PM</label>
+
+        </div>
+
+    </div>
+
+    <!-- BUTTON -->
+
+    <div class="select-seat">
+
+        <a href="seat.html" class="seat-btn">
+
+            Select Seats
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+        </a>
+
+    </div>
+
+</div>
+
+</div>
 
 </section>
 
 </body>
+
+</html>

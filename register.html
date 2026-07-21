@@ -1,192 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Register</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:'Segoe UI',sans-serif;
-        }
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="register.css">
 
-        body{
-            min-height:100vh;
-            background:
-            linear-gradient(
-            135deg,
-            #9e8eaa,
-            #494e8d,
-            #0d0d1d);
-            color:white;
-            padding-top: 80px;
-        }
-        nav{
-            position: fixed;
-            top:0;
-            left:0;
-            width:100%;
-            height:80px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            padding: 0 5%;
-            background:rgba(0,0,0,.3);
-            backdrop-filter:blur(8px);
-            z-index:100;
-        }
-        .nav i{
-            color:white;
-            cursor:pointer;
-            font-size:18px;
-        }
-        .logo{
-            font-size:40px;
-            font-weight:bold;
-            color:#fff;
-        }
-
-        nav ul{
-            display:flex;
-            align-items:center;
-            gap:40px;
-            font-size:18px;
-            list-style:none;   /* Removes bullets */
-            margin:0;
-            padding:0;
-        }
-
-        nav ul li a{
-            text-decoration:none;
-            color:white;
-            font-weight:500;
-        }
-        nav ul li a:hover{
-            color:#d58ab5;
-        }
-
-        .search-box{
-            display:flex;
-            align-items:center;
-            background:white;
-            padding:0 15px;
-            border-radius:25px;
-            height:42px;
-        }
-
-        .search-box i{
-            color:#666;
-            margin-right:10px;
-        }
-
-        .search-box input{
-            border:none;
-            outline:none;
-            background:transparent;
-            font-size:15px;
-            width:180px;
-        }
-        .login{
-            background:#8f3668;
-            color:white;
-            border:none;
-            padding:10px 25px;
-            border-radius:25px;
-            cursor:pointer;
-        }
-
-        /* Form Box */
-
-        .register-box{
-            width:600px;
-            margin:60px auto;
-            background:rgba(255,255,255,.08);
-            backdrop-filter:blur(15px);
-            border-radius:20px;
-            padding:40px;
-            box-shadow:0 10px 30px rgba(0,0,0,.35);
-            }
-
-            .register-box h2{
-            text-align:center;
-            margin-bottom:30px;
-            font-size:34px;
-            }
-
-            .form-row input{
-            width:100%;
-            margin-bottom:18px;
-            padding:16px 20px;
-            border:none;
-            border-radius:30px;
-            background:rgba(255,255,255,.12);
-            color:white;
-            font-size:16px;
-            }
-
-            .form-row input::placeholder{
-            color:#d8d8d8;
-            }
-
-            .signup-btn{
-            display:block;
-            width:100%;
-            margin:15px 0 0;
-            padding:16px;
-            border:none;
-            border-radius:30px;
-            background:#8d3c69;
-            color:white;
-            font-size:18px;
-            font-weight:600;
-            cursor:pointer;
-            transition:.3s;
-            }
-
-            .signup-btn:hover{
-            background:#b65287;
-            }
-    </style>
 </head>
+
 <body>
+
 <nav>
-    <div class="logo">
-        HiMovie
-    </div>
+<a href="index.html" class="logo">
+
+    <i class="fa-solid fa-clapperboard"></i>
+
+    <span>HiMovie</span>
+
+</a>
+
     <ul>
+
         <li><a href="index.html">Home</a></li>
         <li><a href="movies.html">Now Showing</a></li>
         <li><a href="upcomingMovies.html">Upcoming</a></li>
+
         <li class="search-box">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" placeholder="Search movies...">
         </li>
-        <li class="login"><a href="login.html">Login</a></li>
+
+        <li>
+            <a href="login.html" class="login-btn">
+                <i class="fa-solid fa-user"></i>
+                Login
+            </a>
+        </li>
+
     </ul>
+
 </nav>
+
+<section class="register-section">
+
 <div class="register-box">
-    <h2>Complete The Form for Sign Up</h2>
-    <form action="register_process.php" method="post">
 
-        <div class="form-row">
-            <input type="text" name="name" placeholder="Enter your Full Name *" required><br />
-        
-            <input type="email" name="email" placeholder="Enter your Email *" required><br />
+<i class="fa-solid fa-user-plus register-icon"></i>
 
-            <input type="text" name="mobile" placeholder="Enter your Mobile Number *" required><br />
-        
-            <input type="password" name="password" placeholder="Enter your Password *" required><br />
+<h2>Create Account</h2>
 
-            <input type="password" name="confirm" placeholder="Confirm Password *" required><br />
-        </div>
+<p class="subtitle">
+Join HiMovie and start booking your favorite movies.
+</p>
 
-        <button class="signup-btn">
-            Sign Up
-        </button>
+<form action="register_process.php" method="post">
 
-    </form>
+<input
+type="text"
+name="fullname"
+placeholder="Full Name"
+required>
+
+<input
+type="email"
+name="email"
+placeholder="Email Address"
+required>
+
+<input
+type="text"
+name="username"
+placeholder="Username"
+required>
+
+<input
+type="password"
+name="password"
+placeholder="Password"
+required>
+
+<input
+type="password"
+name="confirm_password"
+placeholder="Confirm Password"
+required>
+
+<button type="submit" class="register-btn">
+Create Account
+</button>
+
+<p class="login-link">
+Already have an account?
+<a href="login.html">Login</a>
+</p>
+
+</form>
+
 </div>
+
+</section>
 
 </body>
 </html>

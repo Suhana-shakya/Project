@@ -1,163 +1,296 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Select Seats</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select Seats | HiMovie</title>
 
-    <link rel="stylesheet" href="seat.css">
-    <link rel="stylesheet" href="navbar.css">
-    <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="seat.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
-
 <body>
+
 <nav>
-    <div class="logo">
-        HiMovie
-    </div>
+
+  <a href="index.html" class="logo">
+
+    <i class="fa-solid fa-clapperboard"></i>
+
+    <span>HiMovie</span>
+
+</a>
     <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="movies.html">Now Showing</a></li>
-        <li><a href="upcomingMovies.html">Upcoming</a></li>
-        <li class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search movies...">
+
+        <li>
+            <a href="index.html">Home</a>
         </li>
-        <li class="login"><a href="login.html">Login</a></li>
+
+        <li>
+            <a href="movies.html">Now Showing</a>
+        </li>
+
+        <li>
+            <a href="upcomingMovies.html">Upcoming</a>
+        </li>
+
+        <li class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+            type="text"
+            placeholder="Search movies...">
+
+        </li>
+
+        <li>
+
+            <a href="login.html" class="login-btn">
+
+                <i class="fa-solid fa-user"></i>
+
+                Login
+
+            </a>
+
+        </li>
+
     </ul>
+
 </nav>
-<div class="container">
 
-    <!-- Left Side -->
-
-    <div class="movie-info">
-
-        <img src="./images/obsession.jpg">
-
-        <p>Now Showing</p>
-
-        <h2>OBSESSION</h2>
-
-    </div>
-
-    <!-- Right Side -->
-
-    <div class="seat-area">
-
-        <h2>
-            Seat :
-        </h2>
-
-        <h3>PLATINUM - NPR 440</h3>
-
-        <div class="screen"></div>
-
-        <div class="seats">
-
-            <!-- Row 1 -->
-
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-
-            <div class="gap"></div>
-
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat taken"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-
-            <!-- Row 2 -->
-
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-
-            <div class="gap"></div>
-
-            <div class="seat"></div>
-            <div class="seat taken"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-
-            <!-- Row 3 -->
-
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-
-            <div class="gap"></div>
-
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-
-        </div>
-
-        <h3>PREMIUM - NPR 550</h3>
-
-        <div class="screen"></div>
-
-        <div class="seats">
-
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-
-            <div class="gap"></div>
-
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat"></div>
-            <div class="seat taken"></div>
-            <div class="seat"></div>
-
-        </div>
-
-        <div class="legend">
-
-            <div>
-                <span class="available"></span>
-                Available
-            </div>
-
-            <div>
-                <span class="taken-box"></span>
-                Taken
-            </div>
+<section class="seat-page">
 
 
-        </div>
 
-        <!-- <button>
-            Confirm
-        </button> -->
-        <div class="confirm">
+<div class="seat-container">
 
-                <a href="payment.html" class="confirm-btn">
-                    BOOK NOW
-                </a>
+<!---------------- LEFT ---------------->
 
-        </div>
+<div class="movie-card">
 
-    </div>
+<img src="images/obsession.jpg">
+
+<div class="movie-content">
+
+<span class="tag">NOW SHOWING</span>
+
+<h2>Obsession</h2>
+
+<p>Thriller • Mystery</p>
+
+<div class="movie-info">
+
+<div>
+<i class="fa-solid fa-star"></i>
+8.6/10
+</div>
+
+<div>
+<i class="fa-regular fa-clock"></i>
+2h 18m
+</div>
 
 </div>
 
-</body>
+<div class="details">
 
+<div class="detail">
+<span>Cinema</span>
+<strong>Ranjana Cineplex</strong>
+</div>
+
+<div class="detail">
+<span>Date</span>
+<strong>Tomorrow</strong>
+</div>
+
+<div class="detail">
+<span>Time</span>
+<strong>5:30 PM</strong>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!---------------- RIGHT ---------------->
+
+<div class="booking-panel">
+
+<div class="top-bar">
+
+<div>
+<h2>Select Seats</h2>
+<p>Choose your preferred seats</p>
+</div>
+
+<div class="price-box">
+
+<span>Ticket</span>
+
+<h3>Rs.450</h3>
+
+</div>
+
+</div>
+
+<div class="screen-area">
+
+<div class="screen-light"></div>
+
+<div class="screen">
+SCREEN
+</div>
+
+</div>
+
+<h3 class="section-title">PLATINUM</h3>
+
+<div class="seat-grid">
+
+<div class="row-label">A</div>
+
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+
+<div class="space"></div>
+
+<div class="seat"></div>
+<div class="seat taken"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+
+<div class="row-label">B</div>
+
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat selected"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+
+<div class="space"></div>
+
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat taken"></div>
+<div class="seat"></div>
+
+<div class="row-label">C</div>
+
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+
+<div class="space"></div>
+
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat selected"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+
+</div>
+
+<h3 class="section-title">PREMIUM</h3>
+
+<div class="seat-grid premium">
+
+<div class="row-label">D</div>
+
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+
+<div class="space"></div>
+
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat taken"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+
+<div class="row-label">E</div>
+
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+
+<div class="space"></div>
+
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+<div class="seat"></div>
+
+</div>
+
+<div class="legend">
+
+<div>
+<div class="box available"></div>
+Available
+</div>
+
+<div>
+<div class="box selected-box"></div>
+Selected
+</div>
+
+<div>
+<div class="box taken-box"></div>
+Booked
+</div>
+
+</div>
+
+<div class="summary">
+
+<div class="summary-left">
+
+<h3>Booking Summary</h3>
+
+<p>D4, D5</p>
+
+</div>
+
+<div class="summary-right">
+
+<h2>Rs.900</h2>
+
+<a href="payment.html">
+
+Continue
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</body>
 </html>

@@ -1,25 +1,30 @@
-.confirmed{
+.confirmed,
+.cancelled{
 
-    background:#2ecc71;
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:30px;
+
+    font-size:14px;
+
+    font-weight:600;
 
     color:white;
 
-    padding:6px 12px;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
 
-    border-radius:20px;
+}
 
-    font-size:14px;
+.confirmed{
+
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+
 }
 
 .cancelled{
 
-    background:#e74c3c;
+    background:linear-gradient(135deg,#ef4444,#dc2626);
 
-    color:white;
-
-    padding:6px 12px;
-
-    border-radius:20px;
-
-    font-size:14px;
 }

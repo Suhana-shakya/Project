@@ -1,67 +1,284 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Movie Ticket Booking System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="navbar.css">
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Upcoming Movies | HiMovie</title>
+
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="upcoming.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 </head>
+
 <body>
+
 <nav>
-    <div class="logo">
-        HiMovie
-    </div>
+
+<a href="index.html" class="logo">
+
+    <i class="fa-solid fa-clapperboard"></i>
+
+    <span>HiMovie</span>
+
+</a>
+
     <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="movies.html">Now Showing</a></li>
-        <li><a href="upcomingMovies.html">Upcoming</a></li>
-        <li class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search movies...">
+
+        <li>
+            <a href="index.html">Home</a>
         </li>
-        <li class="login"><a href="login.html">Login</a></li>
+
+        <li>
+            <a href="movies.html">Now Showing</a>
+        </li>
+
+        <li>
+            <a href="upcomingMovies.html" class="active">Upcoming</a>
+        </li>
+
+        <li class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+            type="text"
+            placeholder="Search movies...">
+
+        </li>
+
+        <li>
+
+            <a href="login.html" class="login-btn">
+
+                <i class="fa-solid fa-user"></i>
+
+                Login
+
+            </a>
+
+        </li>
+
     </ul>
+
 </nav>
 
-<section class="now-showing">
+<section class="hero">
 
-    <div class="heading">
-        <h1>UPCOMING MOVIES</h1>
-    </div> 
-    <div class="movie-container">
-        <div class="movie-card">
+<h1>Upcoming Movies</h1>
 
-            <img src="./images/matrubhumi.jpg">
+<p>
+Discover the biggest movies arriving in theatres soon.
+</p>
 
-            <h3>Matrubhumi</h3>
+</section>
 
-            <p>1 Hour 58 Mins</p>
+<section class="movie-list">
 
-        </div>
+<!-- ================= MOVIE 1 ================= -->
 
-        <div class="movie-card">
+<div class="movie-card">
 
-            <img src="./images/drishyam.jpg">
+<div class="poster">
 
-            <h3>Drishyam 3</h3>
+<img src="images/matrubhumi.jpg" alt="Matrubhumi">
 
-            <p>3 Hours 00 Mins</p>
+<span class="badge">
+Coming Soon
+</span>
 
-        </div>
+</div>
 
-        <div class="movie-card">
+<div class="details">
 
-            <img src="./images/spiderman.jpg">
+<h2>Matrubhumi</h2>
 
-            <h3>Spider-man:Brand New Day</h3>
+<div class="info">
 
-            <p>2 Hours 14 Mins</p>
-            
-        </div>
+<span>
 
-    </div>
+<i class="fa-solid fa-calendar"></i>
+
+15 August 2026
+
+</span>
+
+<span>
+
+<i class="fa-solid fa-film"></i>
+
+Drama
+
+</span>
+
+<span>
+
+<i class="fa-regular fa-clock"></i>
+
+1h 58m
+
+</span>
+
+</div>
+
+<p>
+
+A powerful drama exploring family, sacrifice and identity,
+following the emotional journey of people fighting for
+their homeland.
+
+</p>
+
+<a href="matrubhumi.html" class="btn">
+
+More Details
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</a>
+
+</div>
+
+</div>
+
+<!-- ================= MOVIE 2 ================= -->
+
+<div class="movie-card">
+
+<div class="poster">
+
+<img src="images/drishyam.jpg" alt="Drishyam 3">
+
+<span class="badge">
+Coming Soon
+</span>
+
+</div>
+
+<div class="details">
+
+<h2>Drishyam 3</h2>
+
+<div class="info">
+
+<span>
+
+<i class="fa-solid fa-calendar"></i>
+
+22 September 2026
+
+</span>
+
+<span>
+
+<i class="fa-solid fa-film"></i>
+
+Thriller
+
+</span>
+
+<span>
+
+<i class="fa-regular fa-clock"></i>
+
+3h 00m
+
+</span>
+
+</div>
+
+<p>
+
+The mystery continues as Vijay Salgaonkar faces
+his biggest challenge yet in another gripping thriller.
+
+</p>
+
+<a href="drishyam.html" class="btn">
+
+More Details
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</a>
+
+</div>
+
+</div>
+
+<!-- ================= MOVIE 3 ================= -->
+
+<div class="movie-card">
+
+<div class="poster">
+
+<img src="images/spiderman.jpg" alt="Spider-Man">
+
+<span class="badge">
+Coming Soon
+</span>
+
+</div>
+
+<div class="details">
+
+<h2>Spider-Man: Brand New Day</h2>
+
+<div class="info">
+
+<span>
+
+<i class="fa-solid fa-calendar"></i>
+
+10 October 2026
+
+</span>
+
+<span>
+
+<i class="fa-solid fa-film"></i>
+
+Action • Adventure
+
+</span>
+
+<span>
+
+<i class="fa-regular fa-clock"></i>
+
+2h 14m
+
+</span>
+
+</div>
+
+<p>
+
+Peter Parker returns in an exciting new adventure
+filled with action, mystery and unexpected enemies.
+
+</p>
+
+<a href="spiderman.html" class="btn">
+
+More Details
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</a>
+
+</div>
+
+</div>
 
 </section>
 
 </body>
+
 </html>

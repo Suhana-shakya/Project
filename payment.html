@@ -1,107 +1,421 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment | HiMovie</title>
 
-    <link rel="stylesheet" href="payment.css">
-    <link rel="stylesheet" href="navbar.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="payment.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 </head>
+
 <body>
+
+<!-- ===================== NAVIGATION ===================== -->
 
 <nav>
 
-    <div class="logo">HiMovie</div>
+ <a href="index.html" class="logo">
+
+    <i class="fa-solid fa-clapperboard"></i>
+
+    <span>HiMovie</span>
+
+</a>
 
     <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="movies.html">Now Showing</a></li>
-        <li><a href="upcomingMovies.html">Upcoming</a></li>
-        <li class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search movies...">
+
+        <li>
+            <a href="index.html">Home</a>
         </li>
-        <li class="login"><a href="login.html">Login</a></li>
+
+        <li>
+            <a href="movies.html">Now Showing</a>
+        </li>
+
+        <li>
+            <a href="upcomingMovies.html">Upcoming</a>
+        </li>
+
+        <li class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+            type="text"
+            placeholder="Search movies...">
+
+        </li>
+
+        <li>
+
+            <a href="login.html" class="login-btn">
+
+                <i class="fa-solid fa-user"></i>
+
+                Login
+
+            </a>
+
+        </li>
+
     </ul>
 
 </nav>
 
-<section class="payment">
+<!-- ===================== PAYMENT PAGE ===================== -->
 
-    <div class="payment-card">
+<section class="payment-page">
 
-        <h1>PAYMENT DETAILS</h1>
 
-        <div class="summary">
 
-            <h2>Booking Summary</h2>
+<div class="payment-container">
 
-            <div class="row">
-                <span>Movie</span>
-                <span>Obsession</span>
-            </div>
+<!-- ===================== LEFT SIDE ===================== -->
 
-            <div class="row">
-                <span>Cinema</span>
-                <span>Ranjana Cineplex</span>
-            </div>
+<aside class="movie-card">
 
-            <div class="row">
-                <span>Date</span>
-                <span>Tomorrow</span>
-            </div>
+<div class="poster">
 
-            <div class="row">
-                <span>Time</span>
-                <span>5:30 PM</span>
-            </div>
+<img src="images/obsession.jpg" alt="Obsession">
 
-            <div class="row">
-                <span>Seats</span>
-                <span>D4, D5</span>
-            </div>
+<span class="badge">
+READY TO PAY
+</span>
 
-            <div class="row total">
-                <span>Total</span>
-                <span>Rs. 900</span>
-            </div>
+</div>
 
-        </div>
+<div class="movie-details">
 
-        <div class="methods">
+<h2>Obsession</h2>
 
-            <h2>Select Payment Method</h2>
+<p class="genre">
+Thriller • Mystery
+</p>
 
-            <label>
-                <input type="radio" name="payment">
-                eSewa
-            </label>
+<div class="movie-stats">
 
-            <label>
-                <input type="radio" name="payment">
-                Khalti
-            </label>
+<div>
 
-            <label>
-                <input type="radio" name="payment">
-                IME Pay
-            </label>
+<i class="fa-solid fa-star"></i>
 
-            <label>
-                <input type="radio" name="payment">
-                Debit / Credit Card
-            </label>
+<span>8.6</span>
 
-        </div>
+</div>
 
-        <a href="confirmation.html" class="pay-btn">
-            <i class="fa-solid fa-credit-card"></i>
-            PAY NOW
-        </a>
+<div>
 
-    </div>
+<i class="fa-regular fa-clock"></i>
+
+<span>2h 18m</span>
+
+</div>
+
+</div>
+
+<div class="booking-details">
+
+<div class="info-box">
+
+<div class="icon">
+
+<i class="fa-solid fa-location-dot"></i>
+
+</div>
+
+<div>
+
+<h4>Cinema</h4>
+
+<p>Ranjana Cineplex</p>
+
+</div>
+
+</div>
+
+<div class="info-box">
+
+<div class="icon">
+
+<i class="fa-solid fa-calendar"></i>
+
+</div>
+
+<div>
+
+<h4>Date</h4>
+
+<p>Tomorrow</p>
+
+</div>
+
+</div>
+
+<div class="info-box">
+
+<div class="icon">
+
+<i class="fa-solid fa-clock"></i>
+
+</div>
+
+<div>
+
+<h4>Time</h4>
+
+<p>5:30 PM</p>
+
+</div>
+
+</div>
+
+<div class="info-box">
+
+<div class="icon">
+
+<i class="fa-solid fa-couch"></i>
+
+</div>
+
+<div>
+
+<h4>Seats</h4>
+
+<p>D4 • D5</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</aside>
+
+<!-- ===================== RIGHT SIDE ===================== -->
+
+<div class="payment-card">
+
+<!-- HEADER -->
+
+<div class="payment-header">
+
+<div>
+
+<h2>Payment Details</h2>
+
+<p>
+Complete your booking securely
+</p>
+
+</div>
+
+<div class="price-card">
+
+<h3>Total</h3>
+
+<h1>Rs.900</h1>
+
+</div>
+
+</div>
+
+<!-- BOOKING SUMMARY -->
+
+<div class="summary-card">
+
+<h3>Booking Summary</h3>
+
+<div class="summary-row">
+
+<span>Movie</span>
+
+<strong>Obsession</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>Cinema</span>
+
+<strong>Ranjana Cineplex</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>Date</span>
+
+<strong>Tomorrow</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>Time</span>
+
+<strong>5:30 PM</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>Seats</span>
+
+<strong>D4 • D5</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>Tickets</span>
+
+<strong>2</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>Price</span>
+
+<strong>Rs.450 × 2</strong>
+
+</div>
+
+<div class="summary-total">
+
+<span>Total</span>
+
+<strong>Rs.900</strong>
+
+</div>
+
+</div>
+
+<!-- PAYMENT METHODS -->
+
+<div class="payment-methods">
+
+<h3>Select Payment Method</h3>
+
+<div class="method-grid">
+
+<label class="method-card">
+
+<input type="radio" name="payment">
+
+<div class="method-icon">
+
+<i class="fa-solid fa-wallet"></i>
+
+</div>
+
+<div>
+
+<h4>eSewa</h4>
+
+<p>Fast Digital Wallet</p>
+
+</div>
+
+</label>
+
+<label class="method-card">
+
+<input type="radio" name="payment">
+
+<div class="method-icon">
+
+<i class="fa-solid fa-mobile-screen-button"></i>
+
+</div>
+
+<div>
+
+<h4>Khalti</h4>
+
+<p>Pay in Seconds</p>
+
+</div>
+
+</label>
+
+<label class="method-card">
+
+<input type="radio" name="payment">
+
+<div class="method-icon">
+
+<i class="fa-solid fa-money-bill-wave"></i>
+
+</div>
+
+<div>
+
+<h4>IME Pay</h4>
+
+<p>Secure Payment</p>
+
+</div>
+
+</label>
+
+<label class="method-card">
+
+<input type="radio" name="payment">
+
+<div class="method-icon">
+
+<i class="fa-regular fa-credit-card"></i>
+
+</div>
+
+<div>
+
+<h4>Debit / Credit Card</h4>
+
+<p>Visa • Mastercard</p>
+
+</div>
+
+</label>
+
+</div>
+
+</div>
+
+<!-- SECURITY -->
+
+<div class="secure-box">
+
+<i class="fa-solid fa-lock"></i>
+
+<span>
+
+Your payment is protected with SSL Encryption
+
+</span>
+
+</div>
+
+<!-- BUTTON -->
+
+<a href="confirmation.html" class="pay-button">
+
+Pay Rs.900
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</a>
+
+</div>
+
+</div>
 
 </section>
 
