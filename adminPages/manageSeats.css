@@ -1,0 +1,570 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",sans-serif;
+}
+
+body{
+    min-height:100vh;
+    color:white;
+
+    background:
+    radial-gradient(circle at top right,#7c3aed55 0%,transparent 35%),
+    radial-gradient(circle at bottom left,#ec489955 0%,transparent 35%),
+    linear-gradient(135deg,#111827,#1e1b4b,#4c1d95);
+}
+
+.container{
+    display:flex;
+}
+
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    width:260px;
+    height:100vh;
+
+    position:fixed;
+    left:0;
+    top:0;
+
+    background:rgba(17,24,39,.75);
+    backdrop-filter:blur(18px);
+
+    border-right:1px solid rgba(255,255,255,.08);
+
+    padding:35px 20px;
+}
+
+.sidebar h2{
+    text-align:center;
+    font-size:34px;
+    margin-bottom:45px;
+}
+
+.sidebar ul{
+    list-style:none;
+}
+
+.sidebar li{
+    margin:12px 0;
+}
+
+.sidebar a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    text-decoration:none;
+    color:white;
+
+    padding:15px 18px;
+
+    border-radius:15px;
+
+    transition:.3s;
+}
+
+.sidebar a:hover,
+.sidebar .active a{
+    background:linear-gradient(135deg,#ec4899,#9333ea);
+}
+
+.sidebar i{
+    width:22px;
+}
+
+
+/* ================= MAIN ================= */
+
+.main{
+    flex:1;
+
+    margin-left:260px;
+
+    padding:45px;
+}
+
+
+/* ================= TOP ================= */
+
+.top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+    gap:20px;
+}
+
+.top h1{
+    font-size:42px;
+}
+
+.subtitle{
+    color:#d8d8d8;
+
+    margin-top:8px;
+
+    font-size:17px;
+}
+
+
+/* ================= ADD BUTTON ================= */
+
+.add-btn{
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    text-decoration:none;
+
+    padding:15px 28px;
+
+    border-radius:50px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ec4899,
+            #9333ea
+        );
+
+    color:white;
+
+    font-weight:600;
+
+    transition:.35s;
+}
+
+.add-btn:hover{
+    box-shadow:
+        0 15px 30px
+        rgba(236,72,153,.35);
+
+    transform:translateY(-2px);
+}
+
+
+/* ================= HALL INFO ================= */
+
+.hall-info{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:25px 30px;
+
+    margin-bottom:25px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:22px;
+
+    box-shadow:
+        0 20px 45px
+        rgba(0,0,0,.25);
+}
+
+.hall-details{
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+}
+
+.hall-details > i{
+    font-size:35px;
+
+    color:#ec4899;
+}
+
+.hall-details h2{
+    margin-bottom:5px;
+}
+
+.hall-details p{
+    color:#d5d5d5;
+}
+
+.seat-count{
+    text-align:center;
+
+    padding:12px 25px;
+
+    border-radius:15px;
+
+    background:rgba(255,255,255,.08);
+}
+
+.seat-count span{
+    display:block;
+
+    color:#d5d5d5;
+
+    font-size:14px;
+}
+
+.seat-count strong{
+    display:block;
+
+    font-size:25px;
+
+    margin-top:5px;
+
+    color:#FFD166;
+}
+
+
+/* ================= LEGEND ================= */
+
+.legend{
+    display:flex;
+
+    justify-content:center;
+
+    gap:35px;
+
+    margin:25px 0;
+}
+
+.legend div{
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    color:#ddd;
+}
+
+.legend-box{
+    width:18px;
+
+    height:18px;
+
+    border-radius:50%;
+}
+
+.available{
+    background:#64748b;
+}
+
+.booked{
+    background:#ef4444;
+}
+
+.disabled{
+    background:#6b7280;
+}
+
+
+/* ================= SEAT CONTAINER ================= */
+
+.seat-container{
+    padding:35px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:22px;
+
+    box-shadow:
+        0 20px 45px
+        rgba(0,0,0,.25);
+}
+
+
+/* ================= SCREEN ================= */
+
+.screen{
+    width:75%;
+
+    margin:0 auto 45px;
+
+    padding:14px;
+
+    background:white;
+
+    color:#111827;
+
+    text-align:center;
+
+    border-radius:100px;
+
+    font-weight:bold;
+
+    letter-spacing:5px;
+
+    box-shadow:
+        0 10px 35px
+        rgba(255,255,255,.3);
+}
+
+
+/* ================= SECTION ================= */
+
+.section-title{
+    text-align:center;
+
+    margin:35px 0 25px;
+
+    color:#FFD166;
+
+    letter-spacing:2px;
+}
+
+
+/* ================= SEAT GRID ================= */
+
+.seat-grid{
+    display:grid;
+
+    grid-template-columns:
+        35px
+        repeat(5,40px)
+        70px
+        repeat(5,40px);
+
+    justify-content:center;
+
+    gap:12px;
+
+    margin-bottom:40px;
+}
+
+.row-label{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:bold;
+
+    color:#FFD166;
+}
+
+.space{
+    width:70px;
+}
+
+
+/* ================= SEATS ================= */
+
+.seat{
+    width:36px;
+
+    height:36px;
+
+    border-radius:
+        10px 10px 6px 6px;
+
+    background:#64748b;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:11px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.seat:hover{
+    transform:translateY(-4px);
+
+    background:#ec4899;
+
+    box-shadow:
+        0 10px 20px
+        rgba(236,72,153,.4);
+}
+
+.seat.booked{
+    background:#ef4444;
+
+    cursor:not-allowed;
+}
+
+.seat.booked:hover{
+    transform:none;
+
+    box-shadow:none;
+}
+
+
+/* ================= TABLE ================= */
+
+.table-box{
+    margin-top:30px;
+
+    padding:30px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:22px;
+
+    box-shadow:
+        0 20px 45px
+        rgba(0,0,0,.25);
+}
+
+.table-box h2{
+    margin-bottom:20px;
+}
+
+table{
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+th{
+    padding:18px;
+
+    background:rgba(255,255,255,.08);
+
+    font-size:17px;
+
+    text-align:center;
+}
+
+td{
+    padding:18px;
+
+    text-align:center;
+
+    border-top:
+        1px solid rgba(255,255,255,.08);
+}
+
+tr:hover{
+    background:rgba(255,255,255,.05);
+}
+
+
+/* ================= ACTION BUTTONS ================= */
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.actions a {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    transition: 0.3s;
+}
+
+
+/* EDIT */
+
+.actions .edit {
+    color: white;
+    background: rgba(59, 130, 246, 0.85);
+}
+
+.actions .edit:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+}
+
+
+/* DELETE */
+
+.actions .delete-btn {
+    color: white;
+    background: rgba(239, 68, 68, 0.85);
+}
+
+.actions .delete-btn:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+    .container{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        position:relative;
+
+        width:100%;
+
+        height:auto;
+    }
+
+    .main{
+        margin-left:0;
+
+        padding:25px;
+    }
+
+    .top{
+        flex-direction:column;
+
+        gap:20px;
+
+        align-items:flex-start;
+    }
+
+    .hall-info{
+        flex-direction:column;
+
+        gap:20px;
+
+        align-items:flex-start;
+    }
+
+    .seat-container{
+        overflow-x:auto;
+    }
+
+    .table-box{
+        overflow-x:auto;
+    }
+
+}

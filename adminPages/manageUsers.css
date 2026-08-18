@@ -1,0 +1,290 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",sans-serif;
+}
+
+body{
+    min-height:100vh;
+    color:white;
+
+    background:
+    radial-gradient(circle at top right,#7c3aed55 0%,transparent 35%),
+    radial-gradient(circle at bottom left,#ec489955 0%,transparent 35%),
+    linear-gradient(135deg,#111827,#1e1b4b,#4c1d95);
+}
+
+.container{
+    display:flex;
+}
+
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    width:260px;
+    height:100vh;
+    position:fixed;
+    left:0;
+    top:0;
+
+    background:rgba(17,24,39,.75);
+
+    backdrop-filter:blur(18px);
+
+    border-right:1px solid rgba(255,255,255,.08);
+
+    padding:35px 20px;
+}
+
+.sidebar h2{
+    text-align:center;
+
+    font-size:34px;
+
+    margin-bottom:45px;
+}
+
+.sidebar ul{
+    list-style:none;
+}
+
+.sidebar li{
+    margin:12px 0;
+}
+
+.sidebar a{
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    text-decoration:none;
+
+    color:white;
+
+    padding:15px 18px;
+
+    border-radius:15px;
+
+    transition:.3s;
+}
+
+.sidebar a:hover,
+.sidebar .active a{
+    background:linear-gradient(135deg,#ec4899,#9333ea);
+}
+
+.sidebar i{
+    width:22px;
+}
+
+
+/* ================= MAIN ================= */
+
+.main{
+    margin-left:260px;
+
+    width:calc(100% - 260px);
+
+    min-height:100vh;
+
+    padding:50px 45px;
+}
+
+
+/* ================= HEADING ================= */
+
+.main h1{
+    font-size:40px;
+
+    margin-bottom:32px;
+}
+
+
+/* ================= TABLE BOX ================= */
+
+.table-box{
+
+    width:100%;
+
+    background:rgba(255,255,255,.08);
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.20);
+}
+
+
+/* ================= TABLE ================= */
+
+table{
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+
+/* HEADER */
+
+thead{
+    background:rgba(255,255,255,.10);
+}
+
+th{
+    padding:20px 25px;
+
+    text-align:left;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    color:#ffffff;
+}
+
+
+/* BODY */
+
+td{
+    padding:20px 25px;
+
+    font-size:15px;
+
+    color:#f1f1f5;
+
+    border-top:1px solid rgba(255,255,255,.06);
+}
+
+
+/* ROW HOVER */
+
+tbody tr{
+    transition:.3s;
+}
+
+tbody tr:hover{
+    background:rgba(255,255,255,.05);
+}
+
+
+/* ================= ACTION BUTTON ================= */
+
+.delete-btn{
+    display:inline-flex;
+
+    align-items:center;
+    justify-content:center;
+
+    width:40px;
+    height:40px;
+
+    border-radius:50%;
+
+    background:#ef4444;
+
+    color:white;
+
+    text-decoration:none;
+
+    transition:.3s;
+}
+
+.delete-btn:hover{
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(239,68,68,.35);
+}
+
+.delete-btn i{
+    font-size:15px;
+}
+
+
+/* ================= NO USERS ================= */
+
+.no-users{
+
+    text-align:center;
+
+    padding:25px;
+
+    color:#d0d0df;
+
+    font-size:15px;
+
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:220px;
+    }
+
+    .main{
+        margin-left:220px;
+
+        width:calc(100% - 220px);
+
+        padding:45px 30px;
+    }
+
+}
+
+
+@media(max-width:700px){
+
+    .sidebar{
+        width:75px;
+
+        padding:30px 10px;
+    }
+
+    .sidebar h2{
+        font-size:0;
+    }
+
+    .sidebar h2::after{
+        content:"H";
+
+        font-size:28px;
+
+        color:#ec4899;
+    }
+
+    .sidebar li a{
+        justify-content:center;
+
+        padding:15px;
+    }
+
+    .main{
+        margin-left:75px;
+
+        width:calc(100% - 75px);
+
+        padding:35px 20px;
+    }
+
+    .main h1{
+        font-size:32px;
+    }
+
+    .table-box{
+        overflow-x:auto;
+    }
+
+    table{
+        min-width:900px;
+    }
+
+}

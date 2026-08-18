@@ -8,7 +8,10 @@
     box-sizing:border-box;
     font-family:"Segoe UI",sans-serif;
 }
-
+html,
+body{
+    overflow-x:hidden;
+}
 body{
 
     background:
@@ -29,13 +32,9 @@ body{
 
 .seat-page{
 
-    width:92%;
-
-    max-width:1500px;
-
-    margin:auto;
-
-    padding:20px 0 70px;
+     width:min(92%,1500px);
+    margin:0 auto;
+    padding:20px 20px 70px;
 }
 
 .seat-page h1{
@@ -84,7 +83,7 @@ body{
 
     box-shadow:0 20px 60px rgba(0,0,0,.35);
 
-
+   
     top:105px;
 }
 
@@ -196,6 +195,8 @@ body{
     border:1px solid rgba(255,255,255,.08);
 
     box-shadow:0 20px 60px rgba(0,0,0,.35);
+    width:100%;
+    min-width:0;
 }
 
 /*==================================================

@@ -18,56 +18,76 @@ body{
     display:flex;
 }
 
-/* ================= Sidebar ================= */
+/* ================= SIDEBAR ================= */
 
-.sidebar{
-    width:260px;
-    min-height:100vh;
-    background:rgba(17,24,39,.75);
-    backdrop-filter:blur(18px);
-    border-right:1px solid rgba(255,255,255,.08);
-    padding:35px 20px;
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    background: rgba(17,24,39,.75);
+
+    backdrop-filter: blur(18px);
+
+    border-right: 1px solid rgba(255,255,255,.08);
+
+    padding: 35px 20px;
+
+    flex-shrink: 0;
 }
 
-.sidebar h2{
-    text-align:center;
-    font-size:34px;
-    margin-bottom:45px;
+.sidebar h2 {
+    text-align: center;
+    font-size: 34px;
+    margin-bottom: 45px;
 }
 
-.sidebar ul{
-    list-style:none;
+.sidebar ul {
+    list-style: none;
 }
 
-.sidebar li{
-    margin:12px 0;
+.sidebar li {
+    margin: 12px 0;
 }
 
-.sidebar a{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    text-decoration:none;
-    color:white;
-    padding:15px 18px;
-    border-radius:15px;
-    transition:.3s;
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 15px 18px;
+
+    border-radius: 15px;
+
+    text-decoration: none;
+    color: white;
+
+    transition: .3s;
 }
 
 .sidebar a:hover,
-.sidebar .active a{
-    background:linear-gradient(135deg,#ec4899,#9333ea);
+.sidebar .active a {
+    background:
+        linear-gradient(
+            135deg,
+            #ec4899,
+            #9333ea
+        );
 }
 
-.sidebar i{
-    width:22px;
+.sidebar i {
+    width: 22px;
 }
 
 /* ================= Main ================= */
 
 .main{
-    flex:1;
-    padding:45px;
+    flex: 1;
+    margin-left: 260px;
+    padding: 45px;
+    min-width: 0;
 }
 
 header{
@@ -123,41 +143,202 @@ header{
     font-size:16px;
 }
 
-/* ================= Table ================= */
+/* ================= TABLE ================= */
 
-.table-box{
+.table-box {
+
+    background: rgba(255,255,255,.08);
+
+    backdrop-filter: blur(18px);
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    border-radius: 22px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.25);
+
+    overflow-x: auto;
+
+}
+
+
+/* ================= TABLE TITLE ================= */
+
+.table-box h2 {
+
+    padding: 0 0 25px 0;
+
+    font-size: 28px;
+
+}
+
+
+/* ================= TABLE ================= */
+
+table {
+
+    width: 100%;
+
+    min-width: 1000px;
+
+    border-collapse: collapse;
+
+}
+
+
+/* ================= TABLE HEADER ================= */
+
+th {
+
+    padding: 18px;
+
+    background: rgba(255,255,255,.08);
+
+    font-size: 15px;
+
+    text-align: center;
+
+    white-space: nowrap;
+
+}
+
+
+/* ================= TABLE DATA ================= */
+
+td {
+
+    padding: 18px;
+
+    text-align: center;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.08);
+
+    white-space: nowrap;
+
+}
+
+
+/* ================= ROW HOVER ================= */
+
+tr:hover {
+
+    background:
+        rgba(255,255,255,.05);
+
+}
+/* =========================
+        PAYMENT STATUS
+========================= */
+
+.paid,
+.unpaid{
+
+    display:inline-block;
+
+    padding:7px 16px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.paid{
+
+    background:#22c55e;
+
+}
+
+.unpaid{
+
+    background:#f59e0b;
+
+}
+
+
+/* =========================
+        TICKET STATUS
+========================= */
+
+.confirmed,
+.cancelled{
+
+    display:inline-block;
+
+    padding:7px 16px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.confirmed{
+
+    background:#3b82f6;
+
+}
+
+.cancelled{
+
+    background:#ef4444;
+
+}
+
+
+/* =========================
+        HALL INFORMATION
+========================= */
+
+.hall-box{
+
+    margin-top:30px;
+
+    padding:25px 30px;
+
     background:rgba(255,255,255,.08);
+
     backdrop-filter:blur(18px);
+
     border:1px solid rgba(255,255,255,.08);
+
     border-radius:22px;
-    overflow:hidden;
+
     box-shadow:0 20px 45px rgba(0,0,0,.25);
+
 }
 
-.table-box h2{
-    padding:25px;
-    font-size:28px;
+.hall-box h2{
+
+    margin-bottom:20px;
+
 }
 
-table{
-    width:100%;
-    border-collapse:collapse;
+.hall-box p{
+
+    display:inline-block;
+
+    margin-right:35px;
+
+    color:#ddd;
+
 }
 
-th{
-    background:rgba(255,255,255,.08);
-    padding:18px;
-    text-align:left;
-    font-size:17px;
-}
+.hall-box i{
 
-td{
-    padding:18px;
-    border-top:1px solid rgba(255,255,255,.08);
-}
+    margin-right:8px;
 
-tr:hover{
-    background:rgba(255,255,255,.05);
+    color:#ec4899;
+
 }
 
 /* ================= Responsive ================= */

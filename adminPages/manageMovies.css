@@ -185,35 +185,53 @@ td img{
     border-radius:10px;
 }
 
-/* ================= Buttons ================= */
+/* ================= ACTION BUTTONS ================= */
 
-.edit,
-.delete{
-    display:inline-flex;
-    justify-content:center;
-    align-items:center;
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    color:white;
-    text-decoration:none;
-    transition:.3s;
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.edit{
-    background:#3498db;
+.actions a {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    transition: 0.3s;
 }
 
-.edit:hover{
-    transform:scale(1.08);
+
+/* EDIT */
+
+.actions .edit {
+    color: white;
+    background: rgba(59, 130, 246, 0.85);
 }
 
-.delete{
-    background:#e74c3c;
+.actions .edit:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
 }
 
-.delete:hover{
-    transform:scale(1.08);
+
+/* DELETE */
+
+.actions .delete {
+    color: white;
+    background: rgba(239, 68, 68, 0.85);
+}
+
+.actions .delete:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
 }
 
 /* ================= Status ================= */
@@ -270,4 +288,34 @@ table{
     overflow-x:auto;
 }
 
+}
+.status-btn{
+    display:inline-block;
+    padding:8px 16px;
+    border-radius:20px;
+    text-decoration:none;
+    color:white;
+    font-size:14px;
+    font-weight:600;
+    transition:.3s;
+}
+
+/* Activate */
+.status-btn.activate{
+    background:#22c55e;
+}
+
+.status-btn.activate:hover{
+    background:#16a34a;
+    transform:translateY(-2px);
+}
+
+/* Deactivate */
+.status-btn.deactivate{
+    background:#ef4444;
+}
+
+.status-btn.deactivate:hover{
+    background:#dc2626;
+    transform:translateY(-2px);
 }

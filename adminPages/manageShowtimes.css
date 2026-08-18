@@ -1,7 +1,3 @@
-/* ==========================
-        RESET
-========================== */
-
 *{
     margin:0;
     padding:0;
@@ -22,86 +18,72 @@ body{
     display:flex;
 }
 
-/* ==========================
-        SIDEBAR
-========================== */
+/* ================= Sidebar ================= */
 
 .sidebar{
-
     width:260px;
-    min-height:100vh;
+    height:100vh;
+    position:fixed;
+    left:0;
+    top:0;
     background:rgba(17,24,39,.75);
     backdrop-filter:blur(18px);
     border-right:1px solid rgba(255,255,255,.08);
     padding:35px 20px;
-
 }
 
 .sidebar h2{
-
     text-align:center;
-    margin-bottom:45px;
     font-size:34px;
-    color:white;
-
+    margin-bottom:45px;
 }
 
 .sidebar ul{
-
     list-style:none;
-
 }
 
 .sidebar li{
-
     margin:12px 0;
-
 }
 
 .sidebar a{
-
     display:flex;
     align-items:center;
     gap:12px;
-    padding:15px 18px;
-    border-radius:15px;
     text-decoration:none;
     color:white;
+    padding:15px 18px;
+    border-radius:15px;
     transition:.3s;
-
 }
 
 .sidebar a:hover,
 .sidebar .active a{
-
     background:linear-gradient(135deg,#ec4899,#9333ea);
-
 }
 
 .sidebar i{
-
     width:22px;
-
 }
 
-/* ==========================
-        MAIN
-========================== */
+
+/* ================= Main ================= */
 
 .main{
-
     flex:1;
+    margin-left:260px;
     padding:45px;
-
 }
+
 .main h1{
     font-size:42px;
     margin-bottom:30px;
 }
 
-/* Toolbar */
 
-.toolbar{
+/* ================= Top ================= */
+
+.top{
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -109,44 +91,14 @@ body{
     gap:20px;
 }
 
-/* Search */
-
-.search-box{
-    display:flex;
-    width:380px;
-    align-items:center;
-}
-
-.search-box input{
-    flex:1;
-    padding:14px 18px;
-    border:none;
-    outline:none;
-    background:rgba(255,255,255,.08);
-    backdrop-filter:blur(15px);
-    color:white;
-    border-radius:30px 0 0 30px;
-}
-.search-box input::placeholder{
+.top p{
     color:#d5d5d5;
+    font-size:15px;
+    margin-top:-20px;
 }
 
-.search-box button{
-    width:50px;
-    height:45px;
-    border:none;
-    color:white;
-    background:linear-gradient(135deg,#ec4899,#9333ea);
-    border-radius:0 30px 30px 0;
-    cursor:pointer;
-    transition:.3s;
-}
 
-.search-box button:hover{
-    opacity:.9;
-}
-
-/* Add Button */
+/* ================= Add Button ================= */
 
 .add-btn{
     display:flex;
@@ -166,9 +118,13 @@ body{
     transform:translateY(-2px);
 }
 
-/* ==========================
-        TABLE
-========================== */
+
+/* ================= Table ================= */
+
+.table-box{
+    width:100%;
+}
+
 table{
     width:100%;
     border-collapse:collapse;
@@ -198,73 +154,107 @@ tr:hover{
 }
 
 
+/* ================= Showtime ID ================= */
 
-/* ==========================
-        STATUS
-========================== */
-
-.status{
-
-    display:inline-block;
-    padding:8px 18px;
-    border-radius:30px;
-    font-size:14px;
+td:first-child{
+    color:#ec4899;
     font-weight:600;
-
 }
 
-.active-status{
 
-    background:#22c55e;
+/* ================= Ticket Price ================= */
 
+td:nth-child(6){
+    color:#f0a6e8;
+    font-weight:600;
 }
 
-.ended-status{
 
-    background:#f59e0b;
+/* ================= ACTION BUTTONS ================= */
 
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-/* ==========================
-        ACTIONS
-========================== */
+.actions a {
+    width: 40px;
+    height: 40px;
 
-.actions{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    display:flex;
-    justify-content:center;
-    gap:12px;
+    border-radius: 12px;
 
+    text-decoration: none;
+
+    transition: 0.3s;
 }
 
-.actions a{
 
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-decoration:none;
-    color:white;
-    transition:.3s;
+/* EDIT */
 
+.actions .edit {
+    color: white;
+    background: rgba(59, 130, 246, 0.85);
 }
 
-.edit{
-
-    background:#3b82f6;
-
+.actions .edit:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
 }
 
-.delete{
 
-    background:#ef4444;
+/* DELETE */
 
+.actions .delete {
+    color: white;
+    background: rgba(239, 68, 68, 0.85);
 }
 
-.actions a:hover{
+.actions .delete:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
 
-    transform:scale(1.12);
 
+/* ================= Empty Table ================= */
+
+table td[colspan]{
+    padding:25px;
+    color:#d5d5d5;
+}
+
+
+/* ================= Responsive ================= */
+
+@media(max-width:900px){
+
+    .container{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .main{
+        margin-left:0;
+        padding:25px;
+    }
+
+    .top{
+        flex-direction:column;
+        gap:20px;
+        align-items:flex-start;
+    }
+
+    table{
+        display:block;
+        overflow-x:auto;
+    }
 }

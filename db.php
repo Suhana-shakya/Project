@@ -1,9 +1,14 @@
 <?php
 
-$conn = new mysqli("localhost","root","","movie_booking");
+$host = "localhost";
+$username = "root";
+$password = "";
+$database = "moviebookingsystem";
 
-if($conn->connect_error){
-    die("Connection Failed: ".$conn->connect_error);
+$conn = new mysqli($host, $username, $password, $database);
+
+if ($conn->connect_error) {
+    die("Database connection failed: " . $conn->connect_error);
 }
 
 ?>

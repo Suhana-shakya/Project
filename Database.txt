@@ -1,0 +1,65 @@
+CREATE TABLE Customer(
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30),
+    email VARCHAR(40) UNIQUE,
+    phone_number VARCHAR(15),
+    address VARCHAR(50)
+    );
+CREATE TABLE Admin(
+    admin_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30),
+    email VARCHAR(40) UNIQUE,
+    username VARCHAR(15) UNIQUE,
+    password VARCHAR(50)
+    );
+CREATE TABLE Movie(
+    movie_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(150),
+    genre VARCHAR(50),
+    duration INT,
+    release_date DATE,
+    admin_id INT,
+    FOREIGN KEY (admin_id) REFERENCES admin(admin_id)
+);
+CREATE TABLE Hall(
+    hall_id INT PRIMARY KEY AUTO_INCREMENT,
+    hall_name VARCHAR(50),
+    location VARCHAR(150),
+    capacity INT,
+    admin_id INT,
+    FOREIGN KEY (admin_id) REFERENCES admin(admin_id)
+);
+CREATE TABLE Seat(
+    seat_id INT PRIMARY KEY AUTO_INCREMENT,
+    seat_number VARCHAR(10),
+    seat_type VARCHAR(20),
+    hall_id INT,
+    FOREIGN KEY (hall_id) REFERENCES hall(hall_id)
+);
+CREATE TABLE Showtime(
+    showtime_id INT PRIMARY KEY AUTO_INCREMENT,
+    show_date DATE,
+    show_time VARCHAR(20),
+    ticket_price Decimal(8,2),
+    movie_id INT,
+    hall_id INT,
+    admin_id INT,
+    FOREIGN KEY (movie_id) REFERENCES movie(movie_id),
+    FOREIGN KEY (hall_id) REFERENCES hall(hall_id),
+    FOREIGN KEY (admin_id) REFERENCES admin(admin_id)
+);
+CREATE TABLE Ticket(
+    ticket_id INT PRIMARY KEY AUTO_INCREMENT,
+    bboking_date DATE,
+    status VARCHAR(20),
+    movie_id INT,
+    seat_id INT,
+    showtime_id INT,
+    customer_id INT,
+    FOREIGN KEY (movie_id) REFERENCES movie(movie_id),
+    FOREIGN KEY (seat_id) REFERENCES seat(seat_id),
+    FOREIGN KEY (showtime_id) REFERENCES showtime(showtime_id),
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+);
+ALTER TABLE admin
+MODIFY password VARCHAR(255) NOT NULL;
