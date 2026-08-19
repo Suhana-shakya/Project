@@ -154,14 +154,14 @@ $result = $conn->query($sql);
                                 </td>
 
                                 <td>
-
-                                    <a href="deleteUser.php?id=<?php echo $user["customer_id"]; ?>"
-                                        class="delete-btn"
-                                        onclick="return confirm('Are you sure you want to delete this user?');"
-                                    >
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-
+                                    <div class="actions">
+                                        <a href="deleteUser.php?id=<?php echo $user["customer_id"]; ?>"
+                                            class="delete-btn"
+                                            onclick="return confirm('Are you sure you want to delete this user?');"
+                                        >
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
                                 </td>
 
                             </tr>

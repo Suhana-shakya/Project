@@ -187,7 +187,28 @@ textarea{
     transform:translateY(-3px);
     box-shadow:0 15px 30px rgba(236,72,153,.35);
 }
+.form-group textarea {
+    width: 100%;
+    padding: 15px 18px;
+    border: none;
+    outline: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 15px;
+    font-family: "Segoe UI", sans-serif;
+    resize: vertical;
+}
 
+.form-group textarea:focus {
+    border-color: #ec4899;
+    box-shadow: 0 0 18px rgba(236, 72, 153, 0.25);
+}
+
+.form-group textarea::placeholder {
+    color: #aaaabd;
+}
 /* ==========================
         RESPONSIVE
 ========================== */

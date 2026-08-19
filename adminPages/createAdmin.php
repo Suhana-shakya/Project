@@ -2,10 +2,10 @@
 
 include "../db.php";
 
-$name = "Suhana Shakya";
-$email = "suhana@himovie.com";
-$username = "suhana";
-$password = password_hash("suhana123", PASSWORD_DEFAULT);
+$name = "Sarina Gole";
+$email = "sarina@himovie.com";
+$username = "sarina";
+$password = password_hash("sarina123", PASSWORD_DEFAULT);
 
 $sql = "INSERT INTO admin (name, email, username, password)
         VALUES (?, ?, ?, ?)";

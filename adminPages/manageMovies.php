@@ -3,7 +3,14 @@
 include "adminAuth.php";
 include "../db.php";
 
-$sql = "SELECT movie_id, title, genre, duration, release_date
+$sql = "SELECT 
+            movie_id,
+            title,
+            genre,
+            duration,
+            release_date,
+            language,
+            status
         FROM Movie
         ORDER BY movie_id DESC";
 
@@ -13,6 +20,7 @@ $result = $conn->query($sql);
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -24,6 +32,7 @@ $result = $conn->query($sql);
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
+
 <body>
 
 <div class="container">
@@ -79,7 +88,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
             </li>
 
             <li>
-                <a href="adminLogin.php">
+                <a href="adminLogout.php">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     Logout
                 </a>
@@ -90,39 +99,60 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     </aside>
 
 
-    <!-- Main -->
+    <!-- ================= MAIN ================= -->
 
     <main class="main">
+
         <h1>Manage Movies</h1>
+
         <div class="toolbar">
-            
 
             <div class="search-box">
-                <input type="text" placeholder="Search movie...">
+
+                <input
+                    type="text"
+                    placeholder="Search movie..."
+                >
+
                 <button>
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
+
             </div>
 
+
             <a href="addMovie.php" class="add-btn">
+
                 <i class="fa-solid fa-plus"></i>
+
                 Add Movie
+
             </a>
 
         </div>
+
+
+        <!-- ================= MOVIE TABLE ================= -->
 
         <table>
 
             <thead>
 
-                <th>Movie ID</th>
-                <th>Movie Name</th>
-                <th>Genre</th>
-                <th>Duration</th>
-                <th>Release Date</th>
-                <th>Action</th>
+                <tr>
+
+                    <th>Movie ID</th>
+                    <th>Movie Name</th>
+                    <th>Genre</th>
+                    <th>Duration</th>
+                    <th>Release Date</th>
+                    <th>Language</th>
+                    <th>Status</th>
+                    <th>Action</th>
+
+                </tr>
 
             </thead>
+
 
             <tbody>
 
@@ -136,38 +166,79 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                             <?php echo $movie["movie_id"]; ?>
                         </td>
 
+
                         <td>
                             <?php echo htmlspecialchars($movie["title"]); ?>
                         </td>
+
 
                         <td>
                             <?php echo htmlspecialchars($movie["genre"]); ?>
                         </td>
 
+
                         <td>
                             <?php echo $movie["duration"]; ?> min
                         </td>
 
+
                         <td>
-                            <?php echo date("d M Y", strtotime($movie["release_date"])); ?>
+                            <?php
+                            echo date(
+                                "d M Y",
+                                strtotime($movie["release_date"])
+                            );
+                            ?>
                         </td>
 
+
                         <td>
+                            <?php
+                            echo htmlspecialchars(
+                                $movie["language"] ?? "N/A"
+                            );
+                            ?>
+                        </td>
+
+
+                        <td>
+
+                            <?php if ($movie["status"] == "Active"): ?>
+
+                                <span class="active-user">
+                                    Active
+                                </span>
+
+                            <?php else: ?>
+
+                                <span class="inactive-user">
+                                    Inactive
+                                </span>
+
+                            <?php endif; ?>
+
+                        </td>
+
+
+                        <td>
+
                             <div class="actions">
 
-                                <a href="editMovie.php?id=<?php echo $movie["movie_id"]; ?>"
-                                class="edit">
-
+                                <a
+                                    href="editMovie.php?id=<?php echo $movie["movie_id"]; ?>"
+                                    class="edit"
+                                >
                                     <i class="fa-solid fa-pen"></i>
-
                                 </a>
 
-                                <a href="deleteMovie.php?id=<?php echo $movie["movie_id"]; ?>"
-                                class="delete">
 
+                                <a
+                                    href="deleteMovie.php?id=<?php echo $movie["movie_id"]; ?>"
+                                    class="delete"
+                                >
                                     <i class="fa-solid fa-trash"></i>
-
                                 </a>
+
                             </div>
 
                         </td>
@@ -176,11 +247,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
                 <?php endwhile; ?>
 
+
             <?php else: ?>
 
                 <tr>
 
-                    <td colspan="6">
+                    <td colspan="8">
                         No movies found.
                     </td>
 

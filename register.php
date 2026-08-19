@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $hashed_password
         );
         if ($stmt->execute()) {
-            header("Location: login.html");
+            header("Location: login.php");
             exit();
         } else {
             $error = "Registration failed. Please try again.";
@@ -194,7 +194,7 @@ Create Account
 
 <p class="login-link">
 Already have an account?
-<a href="login.html">Login</a>
+<a href="login.php">Login</a>
 </p>
 
 </form>
