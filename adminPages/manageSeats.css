@@ -88,54 +88,41 @@ body{
 }
 
 
-/* ================= TOP ================= */
+/* ================= HEADING ================= */
 
-.top{
-    display:flex;
+.main h1{
+    font-size:40px;
 
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:30px;
-
-    gap:20px;
+    margin-bottom:32px;
 }
-
-.top h1{
-    font-size:42px;
-}
-
-.subtitle{
-    color:#d8d8d8;
-
-    margin-top:8px;
-
-    font-size:17px;
-}
-
 
 /* ================= ADD BUTTON ================= */
 
-.add-btn{
+.add-seat-container{
     display:flex;
+    justify-content:flex-start;
+    margin-bottom:25px;
+}
+
+.add-btn{
+    display:inline-flex;
 
     align-items:center;
+    justify-content:center;
 
     gap:10px;
 
     text-decoration:none;
 
-    padding:15px 28px;
+    padding:14px 25px;
 
     border-radius:50px;
 
-    background:
-        linear-gradient(
-            135deg,
-            #ec4899,
-            #9333ea
-        );
+    background:linear-gradient(
+        135deg,
+        #ec4899,
+        #9333ea
+    );
 
     color:white;
 
@@ -151,276 +138,103 @@ body{
 
     transform:translateY(-2px);
 }
+/* ================= SUCCESS MESSAGE ================= */
 
-
-/* ================= HALL INFO ================= */
-
-.hall-info{
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    padding:25px 30px;
-
-    margin-bottom:25px;
-
-    background:rgba(255,255,255,.08);
-
-    backdrop-filter:blur(18px);
-
-    border:1px solid rgba(255,255,255,.08);
-
-    border-radius:22px;
-
-    box-shadow:
-        0 20px 45px
-        rgba(0,0,0,.25);
-}
-
-.hall-details{
+.success-message{
     display:flex;
 
     align-items:center;
 
-    gap:20px;
-}
+    gap:10px;
 
-.hall-details > i{
-    font-size:35px;
+    margin-bottom:20px;
 
-    color:#ec4899;
-}
+    padding:14px 18px;
 
-.hall-details h2{
-    margin-bottom:5px;
-}
+    border-radius:12px;
 
-.hall-details p{
-    color:#d5d5d5;
-}
+    background:rgba(34,197,94,.15);
 
-.seat-count{
-    text-align:center;
+    border:1px solid rgba(34,197,94,.4);
 
-    padding:12px 25px;
-
-    border-radius:15px;
-
-    background:rgba(255,255,255,.08);
-}
-
-.seat-count span{
-    display:block;
-
-    color:#d5d5d5;
+    color:#86efac;
 
     font-size:14px;
 }
 
-.seat-count strong{
-    display:block;
+.success-message i{
+    color:#22c55e;
 
-    font-size:25px;
-
-    margin-top:5px;
-
-    color:#FFD166;
+    font-size:17px;
 }
 
 
-/* ================= LEGEND ================= */
+/* ================= DELETE MESSAGE ================= */
 
-.legend{
-    display:flex;
-
-    justify-content:center;
-
-    gap:35px;
-
-    margin:25px 0;
-}
-
-.legend div{
+.delete-message{
     display:flex;
 
     align-items:center;
 
-    gap:8px;
+    gap:10px;
 
-    color:#ddd;
+    margin-bottom:20px;
+
+    padding:14px 18px;
+
+    border-radius:12px;
+
+    background:rgba(239,68,68,.15);
+
+    border:1px solid rgba(239,68,68,.4);
+
+    color:#fca5a5;
+
+    font-size:14px;
 }
 
-.legend-box{
-    width:18px;
+.delete-message i{
+    color:#ef4444;
 
-    height:18px;
-
-    border-radius:50%;
-}
-
-.available{
-    background:#64748b;
-}
-
-.booked{
-    background:#ef4444;
-}
-
-.disabled{
-    background:#6b7280;
-}
-
-
-/* ================= SEAT CONTAINER ================= */
-
-.seat-container{
-    padding:35px;
-
-    background:rgba(255,255,255,.08);
-
-    backdrop-filter:blur(18px);
-
-    border:1px solid rgba(255,255,255,.08);
-
-    border-radius:22px;
-
-    box-shadow:
-        0 20px 45px
-        rgba(0,0,0,.25);
+    font-size:17px;
 }
 
 
-/* ================= SCREEN ================= */
+/* ================= ERROR MESSAGE ================= */
 
-.screen{
-    width:75%;
-
-    margin:0 auto 45px;
-
-    padding:14px;
-
-    background:white;
-
-    color:#111827;
-
-    text-align:center;
-
-    border-radius:100px;
-
-    font-weight:bold;
-
-    letter-spacing:5px;
-
-    box-shadow:
-        0 10px 35px
-        rgba(255,255,255,.3);
-}
-
-
-/* ================= SECTION ================= */
-
-.section-title{
-    text-align:center;
-
-    margin:35px 0 25px;
-
-    color:#FFD166;
-
-    letter-spacing:2px;
-}
-
-
-/* ================= SEAT GRID ================= */
-
-.seat-grid{
-    display:grid;
-
-    grid-template-columns:
-        35px
-        repeat(5,40px)
-        70px
-        repeat(5,40px);
-
-    justify-content:center;
-
-    gap:12px;
-
-    margin-bottom:40px;
-}
-
-.row-label{
+.error-message{
     display:flex;
 
     align-items:center;
 
-    justify-content:center;
+    gap:10px;
 
-    font-weight:bold;
+    margin-bottom:20px;
 
-    color:#FFD166;
+    padding:14px 18px;
+
+    border-radius:12px;
+
+    background:rgba(239,68,68,.15);
+
+    border:1px solid rgba(239,68,68,.4);
+
+    color:#fca5a5;
+
+    font-size:14px;
 }
 
-.space{
-    width:70px;
-}
+.error-message i{
+    color:#ef4444;
 
-
-/* ================= SEATS ================= */
-
-.seat{
-    width:36px;
-
-    height:36px;
-
-    border-radius:
-        10px 10px 6px 6px;
-
-    background:#64748b;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:11px;
-
-    font-weight:600;
-
-    cursor:pointer;
-
-    transition:.3s;
-}
-
-.seat:hover{
-    transform:translateY(-4px);
-
-    background:#ec4899;
-
-    box-shadow:
-        0 10px 20px
-        rgba(236,72,153,.4);
-}
-
-.seat.booked{
-    background:#ef4444;
-
-    cursor:not-allowed;
-}
-
-.seat.booked:hover{
-    transform:none;
-
-    box-shadow:none;
+    font-size:17px;
 }
 
 
 /* ================= TABLE ================= */
 
 .table-box{
-    margin-top:30px;
+    margin-top:0;
 
     padding:30px;
 
@@ -435,6 +249,8 @@ body{
     box-shadow:
         0 20px 45px
         rgba(0,0,0,.25);
+
+    overflow-x:auto;
 }
 
 .table-box h2{
@@ -443,30 +259,28 @@ body{
 
 table{
     width:100%;
-
     border-collapse:collapse;
 }
 
 th{
     padding:18px;
 
-    background:rgba(255,255,255,.08);
+    background:rgba(255,255,255,.10);
 
-    font-size:17px;
+    font-size:16px;
 
-    text-align:center;
+    text-align:left;
 }
 
 td{
     padding:18px;
 
-    text-align:center;
+    text-align:left;
 
-    border-top:
-        1px solid rgba(255,255,255,.08);
+    border-top:1px solid rgba(255,255,255,.08);
 }
 
-tr:hover{
+tbody tr:hover{
     background:rgba(255,255,255,.05);
 }
 

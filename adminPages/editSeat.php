@@ -86,12 +86,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt->execute()) {
 
+            $_SESSION["success"] = "Seat updated successfully.";
+
             header("Location: manageSeats.php");
             exit();
 
-        } else {
+        }else {
 
-            $error = "Failed to update seat. Please try again.";
+            $_SESSION["error"] = "Failed to update seat. Please try again.";
+
+            header("Location: manageSeats.php");
+            exit();
 
         }
 

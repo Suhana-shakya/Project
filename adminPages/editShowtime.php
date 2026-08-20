@@ -48,13 +48,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     );
 
 
-    if ($stmt->execute()) {
+   if ($stmt->execute()) {
+
+        $_SESSION["success"] = "Showtime updated successfully.";
 
         header("Location: manageShowtimes.php");
         exit();
 
     } else {
-        $error = "Failed to update showtime. Please try again.";
+
+        $_SESSION["error"] = "Failed to update showtime. Please try again.";
+
+        header("Location: manageShowtimes.php");
+        exit();
 
     }
 
@@ -86,7 +92,6 @@ if ($result->num_rows != 1) {
 $showtime = $result->fetch_assoc();
 
 $stmt->close();
-
 
 /* ================= GET MOVIES ================= */
 
@@ -276,7 +281,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                 </select>
 
             </div>
-
 
             <!-- DATE -->
 

@@ -1,3 +1,4 @@
+
 <?php
 
 include "adminAuth.php";
@@ -105,21 +106,55 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         <h1>Manage Movies</h1>
 
-        <div class="toolbar">
+        <?php if (isset($_SESSION["success"])): ?>
 
-            <div class="search-box">
+            <div class="success-message">
 
-                <input
-                    type="text"
-                    placeholder="Search movie..."
-                >
+                <i class="fa-solid fa-circle-check"></i>
 
-                <button>
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
+                <?php
+                echo htmlspecialchars($_SESSION["success"]);
+                unset($_SESSION["success"]);
+                ?>
 
             </div>
 
+        <?php endif; ?>
+
+
+        <?php if (isset($_SESSION["error"])): ?>
+
+            <div class="error-message">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <?php
+                echo htmlspecialchars($_SESSION["error"]);
+                unset($_SESSION["error"]);
+                ?>
+
+            </div>
+
+        <?php endif; ?>
+
+
+        <?php if (isset($_SESSION["delete_success"])): ?>
+
+            <div class="delete-success-message">
+
+                <i class="fa-solid fa-trash"></i>
+
+                <?php
+                echo htmlspecialchars($_SESSION["delete_success"]);
+                unset($_SESSION["delete_success"]);
+                ?>
+
+            </div>
+
+        <?php endif; ?>
+
+
+        <div class="toolbar">
 
             <a href="addMovie.php" class="add-btn">
 
@@ -134,6 +169,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         <!-- ================= MOVIE TABLE ================= -->
 
+        <div class="table-box">
+
         <table>
 
             <thead>
@@ -146,6 +183,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                     <th>Duration</th>
                     <th>Release Date</th>
                     <th>Language</th>
+                    <th>Release Status</th>
                     <th>Status</th>
                     <th>Action</th>
 
@@ -159,6 +197,27 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
             <?php if ($result->num_rows > 0): ?>
 
                 <?php while ($movie = $result->fetch_assoc()): ?>
+
+                    <?php
+
+                    /*
+                     * Determine whether the movie is
+                     * Upcoming or Now Showing.
+                     */
+
+                    $today = date("Y-m-d");
+
+                    if ($movie["release_date"] > $today) {
+
+                        $release_status = "Upcoming";
+
+                    } else {
+
+                        $release_status = "Now Showing";
+
+                    }
+
+                    ?>
 
                     <tr>
 
@@ -184,41 +243,80 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
                         <td>
                             <?php
+
                             echo date(
                                 "d M Y",
                                 strtotime($movie["release_date"])
                             );
+
                             ?>
                         </td>
 
 
                         <td>
+
                             <?php
+
                             echo htmlspecialchars(
                                 $movie["language"] ?? "N/A"
                             );
+
                             ?>
+
                         </td>
 
 
+                        <!-- ================= RELEASE STATUS ================= -->
+
                         <td>
 
-                            <?php if ($movie["status"] == "Active"): ?>
+                            <?php if ($release_status == "Upcoming"): ?>
 
-                                <span class="active-user">
-                                    Active
+                                <span class="upcoming">
+
+                                    Upcoming
+
                                 </span>
 
                             <?php else: ?>
 
-                                <span class="inactive-user">
-                                    Inactive
+                                <span class="now-showing">
+
+                                    Now Showing
+
                                 </span>
 
                             <?php endif; ?>
 
                         </td>
 
+
+                        <!-- ================= ACTIVE / INACTIVE ================= -->
+
+                        <td>
+
+                            <?php if ($movie["status"] == "Active"): ?>
+
+                                <span class="active-user">
+
+                                    Active
+
+                                </span>
+
+                            <?php else: ?>
+
+                                <span class="inactive-user">
+
+                                    Inactive
+
+                                </span>
+
+                            <?php endif; ?>
+
+                        </td>
+
+
+                        <!-- ================= ACTION ================= -->
 
                         <td>
 
@@ -228,15 +326,20 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                                     href="editMovie.php?id=<?php echo $movie["movie_id"]; ?>"
                                     class="edit"
                                 >
+
                                     <i class="fa-solid fa-pen"></i>
+
                                 </a>
 
 
                                 <a
                                     href="deleteMovie.php?id=<?php echo $movie["movie_id"]; ?>"
                                     class="delete"
+                                    onclick="return confirm('Are you sure you want to delete this movie?');"
                                 >
+
                                     <i class="fa-solid fa-trash"></i>
+
                                 </a>
 
                             </div>
@@ -252,8 +355,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
                 <tr>
 
-                    <td colspan="8">
+                    <td colspan="9">
+
                         No movies found.
+
                     </td>
 
                 </tr>
@@ -263,6 +368,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
             </tbody>
 
         </table>
+
+        </div>
 
     </main>
 

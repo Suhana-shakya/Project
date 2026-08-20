@@ -170,16 +170,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $status,
             $movie_id
         );
-
-
         if ($stmt->execute()) {
+
+            $_SESSION["success"] = "Movie updated successfully.";
 
             header("Location: manageMovies.php");
             exit();
 
         } else {
 
-            $error = "Failed to update movie. Please try again.";
+            $_SESSION["error"] = "Failed to update movie. Please try again.";
+
+            header("Location: manageMovies.php");
+            exit();
 
         }
 

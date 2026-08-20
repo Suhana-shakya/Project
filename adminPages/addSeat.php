@@ -64,12 +64,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt->execute()) {
 
+            $_SESSION["success"] = "Seat added successfully.";
+
             header("Location: manageSeats.php");
             exit();
 
-        } else {
+        }else {
 
-            $error = "Failed to add seat. Please try again.";
+            $_SESSION["error"] = "Failed to add seat. Please try again.";
+
+            header("Location: manageSeats.php");
+            exit();
 
         }
 

@@ -98,8 +98,34 @@ $result = $conn->query($sql);
     <main class="main">
 
         <h1>Manage Users</h1>
+        <?php if (isset($_SESSION["delete_success"])): ?>
 
+            <div class="delete-message">
 
+                <i class="fa-solid fa-trash"></i>
+
+                <?php
+                echo htmlspecialchars($_SESSION["delete_success"]);
+                unset($_SESSION["delete_success"]);
+                ?>
+
+            </div>
+
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION["error"])): ?>
+
+            <div class="error-message">
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <?php
+                echo htmlspecialchars($_SESSION["error"]);
+                unset($_SESSION["error"]);
+                ?>
+            </div>
+
+        <?php endif; ?>
+        
         <!-- ================= TABLE ================= -->
 
         <div class="table-box">

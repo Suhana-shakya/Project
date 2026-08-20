@@ -3,8 +3,24 @@
 
 include "adminAuth.php";
 include "../db.php";
-
+$success = "";
 $error = "";
+
+if (isset($_SESSION["success"])) {
+
+    $success = $_SESSION["success"];
+
+    unset($_SESSION["success"]);
+
+}
+
+if (isset($_SESSION["error"])) {
+
+    $error = $_SESSION["error"];
+
+    unset($_SESSION["error"]);
+
+}
 
 
 /* ================= ADD MOVIE ================= */
@@ -138,18 +154,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $admin_id
         );
 
-
         if ($stmt->execute()) {
+
+            $_SESSION["success"] = "Movie added successfully.";
 
             header("Location: manageMovies.php");
             exit();
 
         } else {
 
-            $error = "Failed to add movie. Please try again.";
+            $_SESSION["error"] = "Failed to add movie. Please try again.";
+
+            header("Location: manageMovies.php");
+            exit();
 
         }
-
 
         $stmt->close();
 

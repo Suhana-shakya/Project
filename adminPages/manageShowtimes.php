@@ -105,27 +105,59 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
     <main class="main">
 
-        <div class="top">
+        <h1>Manage Showtimes</h1>
 
-            <div>
 
-                <h1>Manage Showtimes</h1>
+        <?php if (isset($_SESSION["success"])): ?>
 
-                <p>
-                    Add and manage movie showtimes.
-                </p>
+        <div class="success-message">
+            <i class="fa-solid fa-circle-check"></i>
+
+            <?php
+            echo htmlspecialchars($_SESSION["success"]);
+            unset($_SESSION["success"]);
+            ?>
+        </div>
+
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION["delete_success"])): ?>
+
+            <div class="delete-message">
+
+                <i class="fa-solid fa-trash"></i>
+
+                <?php
+                echo htmlspecialchars($_SESSION["delete_success"]);
+                unset($_SESSION["delete_success"]);
+                ?>
 
             </div>
 
-            <a href="addShowtime.php" class="add-btn">
+        <?php endif; ?>
 
-                <i class="fa-solid fa-plus"></i>
+        <?php if (isset($_SESSION["error"])): ?>
 
-                Add Showtime
+            <div class="error-message">
+                <i class="fa-solid fa-circle-exclamation"></i>
 
-            </a>
+                <?php
+                echo htmlspecialchars($_SESSION["error"]);
+                unset($_SESSION["error"]);
+                ?>
+            </div>
 
-        </div>
+        <?php endif; ?>
+
+          
+
+        <a href="addShowtime.php" class="add-btn">
+
+            <i class="fa-solid fa-plus"></i>
+
+            Add Showtime
+
+        </a>
         <!-- ================= TABLE ================= -->
 
         <div class="table-box">
@@ -213,7 +245,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
                                     <a
                                         href="deleteShowtime.php?id=<?php echo $showtime["showtime_id"]; ?>"
-                                        class="delete">
+                                        class="delete"
+                                        onclick="return confirm('Are you sure you want to delete this showtime?');">
 
                                         <i class="fa-solid fa-trash"></i>
 

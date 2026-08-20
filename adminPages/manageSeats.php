@@ -106,15 +106,57 @@ $result = $conn->query($sql);
 
     <main class="main">
 
-        <div class="top">
+        <h1>Manage Seats</h1>
+        
+        <?php if (isset($_SESSION["success"])): ?>
 
-            <div>
-                <h1>Manage Seats</h1>
+            <div class="success-message">
 
-                <p class="subtitle">
-                    Manage seats in HiMovie Cinema Hall
-                </p>
+                <i class="fa-solid fa-circle-check"></i>
+
+                <?php
+                echo htmlspecialchars($_SESSION["success"]);
+                unset($_SESSION["success"]);
+                ?>
+
             </div>
+
+        <?php endif; ?>
+
+
+        <?php if (isset($_SESSION["delete_success"])): ?>
+
+            <div class="delete-message">
+
+                <i class="fa-solid fa-trash"></i>
+
+                <?php
+                echo htmlspecialchars($_SESSION["delete_success"]);
+                unset($_SESSION["delete_success"]);
+                ?>
+
+            </div>
+
+        <?php endif; ?>
+
+
+        <?php if (isset($_SESSION["error"])): ?>
+
+            <div class="error-message">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <?php
+                echo htmlspecialchars($_SESSION["error"]);
+                unset($_SESSION["error"]);
+                ?>
+
+            </div>
+
+        <?php endif; ?>
+
+        <div class="add-seat-container">
+
             <a href="addSeat.php" class="add-btn">
 
                 <i class="fa-solid fa-plus"></i>

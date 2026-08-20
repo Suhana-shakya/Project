@@ -3,30 +3,60 @@
 include "adminAuth.php";
 include "../db.php";
 
-if (isset($_GET["id"])) {
 
-    $seat_id = (int) $_GET["id"];
+if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) {
 
-    $sql = "DELETE FROM seat WHERE seat_id = ?";
+    $_SESSION["error"] = "Invalid seat ID.";
 
-    $stmt = $conn->prepare($sql);
+    header("Location: manageSeats.php");
+    exit();
 
-    $stmt->bind_param("i", $seat_id);
+}
+
+
+$seat_id = (int) $_GET["id"];
+
+
+$sql = "DELETE FROM seat
+        WHERE seat_id = ?";
+
+$stmt = $conn->prepare($sql);
+
+$stmt->bind_param("i", $seat_id);
+
+
+try {
 
     if ($stmt->execute()) {
 
-        header("Location: manageSeats.php");
-        exit();
+        if ($stmt->affected_rows > 0) {
+
+            $_SESSION["delete_success"] = "Seat deleted successfully.";
+
+        } else {
+
+            $_SESSION["error"] = "Seat not found.";
+
+        }
 
     } else {
 
-        echo "Failed to delete seat.";
+        $_SESSION["error"] = "Failed to delete seat.";
 
     }
 
-    $stmt->close();
+} catch (mysqli_sql_exception $e) {
+
+    $_SESSION["error"] = "This seat cannot be deleted because it is already associated with a ticket.";
+
 }
 
+
+$stmt->close();
 $conn->close();
+
+
+header("Location: manageSeats.php");
+exit();
 
 ?>

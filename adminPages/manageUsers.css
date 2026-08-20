@@ -95,7 +95,6 @@ body{
     padding:50px 45px;
 }
 
-
 /* ================= HEADING ================= */
 
 .main h1{
@@ -103,7 +102,53 @@ body{
 
     margin-bottom:32px;
 }
+.error-message{
+    display:flex;
+    align-items:center;
+    gap:10px;
 
+    margin-bottom:20px;
+    padding:14px 18px;
+
+    border-radius:12px;
+
+    background:rgba(239,68,68,.15);
+    border:1px solid rgba(239,68,68,.4);
+
+    color:#fca5a5;
+
+    font-size:14px;
+}
+
+.error-message i{
+    color:#ef4444;
+    font-size:17px;
+}
+
+/* ================= DELETE SUCCESS MESSAGE ================= */
+
+.delete-message{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    margin-bottom:20px;
+    padding:14px 18px;
+
+    border-radius:12px;
+
+    background:rgba(239,68,68,.15);
+    border:1px solid rgba(239,68,68,.4);
+
+    color:#fca5a5;
+
+    font-size:14px;
+}
+
+.delete-message i{
+    color:#ef4444;
+    font-size:17px;
+}
 
 /* ================= TABLE BOX ================= */
 

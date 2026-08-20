@@ -15,9 +15,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ticket_price = $_POST["ticket_price"];
     $movie_id = (int) $_POST["movie_id"];
     $hall_id = (int) $_POST["hall_id"];
-
     $admin_id = $_SESSION["admin_id"];
 
+
+    /* ================= CHECK MOVIE RELEASE DATE ================= */
+
+    $check_sql = "SELECT release_date
+                  FROM Movie
+                  WHERE movie_id = ?";
+
+    $check_stmt = $conn->prepare($check_sql);
+
+    $check_stmt->bind_param("i", $movie_id);
+
+    $check_stmt->execute();
+
+    $check_result = $check_stmt->get_result();
+
+    if ($check_result->num_rows == 0) {
+
+        $_SESSION["error"] = "Movie not found.";
+
+        $check_stmt->close();
+
+        header("Location: addShowtime.php");
+        exit();
+
+    }
+
+    $movie = $check_result->fetch_assoc();
+
+    $today = date("Y-m-d");
+
+
+    /*
+     * Do not allow a showtime for an upcoming movie.
+     */
+
+    if ($movie["release_date"] > $today) {
+
+        $_SESSION["error"] =
+            "Showtime cannot be added for an upcoming movie.";
+
+        $check_stmt->close();
+
+        header("Location: addShowtime.php");
+        exit();
+
+    }
+
+    $check_stmt->close();
+
+
+    /* ================= INSERT SHOWTIME ================= */
 
     $sql = "INSERT INTO Showtime
             (show_date, show_time, ticket_price, movie_id, hall_id, admin_id)
@@ -35,26 +85,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $admin_id
     );
 
-
     if ($stmt->execute()) {
+
+        $_SESSION["success"] = "Showtime added successfully.";
+
+        $stmt->close();
 
         header("Location: manageShowtimes.php");
         exit();
 
     } else {
 
-        $error = "Failed to add showtime. Please try again.";
+        $_SESSION["error"] =
+            "Failed to add showtime. Please try again.";
+
+        $stmt->close();
+
+        header("Location: addShowtime.php");
+        exit();
 
     }
 
-    $stmt->close();
 }
 
 
 /* ================= GET MOVIES ================= */
 
+/*
+ * Only movies that have already been released
+ * are shown in the dropdown.
+ */
+
 $movie_sql = "SELECT movie_id, title
               FROM Movie
+              WHERE release_date <= CURDATE()
               ORDER BY title";
 
 $movie_result = $conn->query($movie_sql);
@@ -72,6 +136,7 @@ $hall_result = $conn->query($hall_sql);
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -83,9 +148,11 @@ $hall_result = $conn->query($hall_sql);
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
+
 <body>
 
 <div class="container">
+
     <!-- ================= SIDEBAR ================= -->
 
     <aside class="sidebar">
@@ -148,24 +215,46 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     </aside>
 
 
-    <!-- Main -->
+    <!-- ================= MAIN ================= -->
 
     <main class="main">
 
         <h1>Add New Showtime</h1>
 
-        <?php if (!empty($error)): ?>
+
+        <?php if (isset($_SESSION["error"])): ?>
 
             <div class="error-message">
+
                 <i class="fa-solid fa-circle-exclamation"></i>
-                <?php echo htmlspecialchars($error); ?>
+
+                <?php
+                echo htmlspecialchars($_SESSION["error"]);
+                unset($_SESSION["error"]);
+                ?>
+
             </div>
 
         <?php endif; ?>
 
+
+        <?php if (!empty($error)): ?>
+
+            <div class="error-message">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <?php echo htmlspecialchars($error); ?>
+
+            </div>
+
+        <?php endif; ?>
+
+
         <form method="POST" action="addShowtime.php">
 
-            <!-- MOVIE -->
+
+            <!-- ================= MOVIE ================= -->
 
             <div class="form-group">
 
@@ -175,22 +264,34 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
                     <option value="">Select Movie</option>
 
-                    <?php while ($movie = $movie_result->fetch_assoc()): ?>
+                    <?php if ($movie_result->num_rows > 0): ?>
 
-                        <option value="<?php echo $movie["movie_id"]; ?>">
+                        <?php while ($movie = $movie_result->fetch_assoc()): ?>
 
-                            <?php echo htmlspecialchars($movie["title"]); ?>
+                            <option value="<?php echo $movie["movie_id"]; ?>">
+
+                                <?php echo htmlspecialchars($movie["title"]); ?>
+
+                            </option>
+
+                        <?php endwhile; ?>
+
+                    <?php else: ?>
+
+                        <option value="" disabled>
+
+                            No movies available for showtime
 
                         </option>
 
-                    <?php endwhile; ?>
+                    <?php endif; ?>
 
                 </select>
 
             </div>
 
 
-            <!-- HALL -->
+            <!-- ================= HALL ================= -->
 
             <div class="form-group">
 
@@ -215,7 +316,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
             </div>
 
 
-            <!-- DATE -->
+            <!-- ================= DATE ================= -->
 
             <div class="form-group">
 
@@ -229,7 +330,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
             </div>
 
 
-            <!-- TIME -->
+            <!-- ================= TIME ================= -->
 
             <div class="form-group">
 
@@ -243,7 +344,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
             </div>
 
 
-            <!-- PRICE -->
+            <!-- ================= PRICE ================= -->
 
             <div class="form-group">
 

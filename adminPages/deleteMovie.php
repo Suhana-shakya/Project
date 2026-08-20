@@ -8,6 +8,8 @@ include "../db.php";
 
 if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) {
 
+    $_SESSION["error"] = "Invalid movie ID.";
+
     header("Location: manageMovies.php");
     exit();
 
@@ -25,20 +27,37 @@ $stmt = $conn->prepare($sql);
 
 $stmt->bind_param("i", $movie_id);
 
+try{
 
 if ($stmt->execute()) {
 
-    header("Location: manageMovies.php");
-    exit();
+    if ($stmt->affected_rows > 0) {
+
+        $_SESSION["delete_success"] = "Movie deleted successfully.";
+
+    } else {
+
+        $_SESSION["error"] = "Movie not found.";
+
+    }
 
 } else {
 
-    echo "Failed to delete movie.";
+    $_SESSION["error"] = "Failed to delete movie.";
+
+}
+}catch (mysqli_sql_exception $e) {
+
+    $_SESSION["error"] = "This movie cannot be deleted because it is already associated with existing showtimes or tickets.";
 
 }
 
 
 $stmt->close();
 $conn->close();
+
+
+header("Location: manageMovies.php");
+exit();
 
 ?>
