@@ -18,11 +18,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $admin_id = $_SESSION["admin_id"];
 
 
-    /* ================= CHECK MOVIE RELEASE DATE ================= */
+    /* ================= CHECK MOVIE ================= */
 
-    $check_sql = "SELECT release_date
-                  FROM Movie
-                  WHERE movie_id = ?";
+    $check_sql = "SELECT release_date, status
+                FROM Movie
+                WHERE movie_id = ?";
 
     $check_stmt = $conn->prepare($check_sql);
 
@@ -45,26 +45,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $movie = $check_result->fetch_assoc();
 
-    $today = date("Y-m-d");
 
+    /* ================= CHECK MOVIE STATUS ================= */
 
-    /*
-     * Do not allow a showtime for an upcoming movie.
-     */
+if ($movie["status"] != "Now Showing") {
 
-    if ($movie["release_date"] > $today) {
-
-        $_SESSION["error"] =
-            "Showtime cannot be added for an upcoming movie.";
-
-        $check_stmt->close();
-
-        header("Location: addShowtime.php");
-        exit();
-
-    }
+    $_SESSION["error"] =
+        "Showtime cannot be added for an upcoming movie.";
 
     $check_stmt->close();
+
+    header("Location: addShowtime.php");
+    exit();
+
+}
+
+
+/* ================= CHECK SHOW DATE ================= */
+
+/* Show date cannot be before movie release date */
+
+if ($show_date < $movie["release_date"]) {
+
+    $_SESSION["error"] =
+        "Show date cannot be before the movie release date.";
+
+    $check_stmt->close();
+
+    header("Location: addShowtime.php");
+    exit();
+
+}
+
+
+/* Show date cannot be in the past */
+
+if ($show_date < date("Y-m-d")) {
+
+    $_SESSION["error"] =
+        "Show date cannot be in the past.";
+
+    $check_stmt->close();
+
+    header("Location: addShowtime.php");
+    exit();
+
+}
+
+$check_stmt->close();
 
 
     /* ================= INSERT SHOWTIME ================= */
@@ -118,7 +146,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $movie_sql = "SELECT movie_id, title
               FROM Movie
-              WHERE release_date <= CURDATE()
+              WHERE status = 'Now Showing'
               ORDER BY title";
 
 $movie_result = $conn->query($movie_sql);
