@@ -1,10 +1,9 @@
-
 <?php
 
 include "db.php";
 
 
-/* ================= GET NOW SHOWING MOVIES ================= */
+/* ================= GET UPCOMING MOVIES ================= */
 
 $sql = "SELECT
             movie_id,
@@ -12,19 +11,39 @@ $sql = "SELECT
             genre,
             duration,
             release_date,
-            director,
-            `cast`,
             rating,
             description,
             poster,
-            trailer_url,
             language,
             status
         FROM movie
-        WHERE status = 'Now Showing'
-        ORDER BY movie_id DESC";
+        WHERE status = 'Upcoming'
+        ORDER BY release_date ASC";
 
 $result = $conn->query($sql);
+
+
+/* ================= FORMAT DURATION ================= */
+
+function formatDuration($minutes)
+{
+    $hours = floor($minutes / 60);
+    $mins = $minutes % 60;
+
+    if ($hours > 0 && $mins > 0) {
+
+        return $hours . "h " . $mins . "m";
+
+    } elseif ($hours > 0) {
+
+        return $hours . "h";
+
+    } else {
+
+        return $mins . "m";
+
+    }
+}
 
 ?>
 
@@ -34,12 +53,14 @@ $result = $conn->query($sql);
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Now Showing | HiMovie</title>
+<title>Upcoming Movies | HiMovie</title>
 
 <link rel="stylesheet" href="navbar.css">
-<link rel="stylesheet" href="movies.css">
+
+<link rel="stylesheet" href="upcoming.css">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -66,23 +87,29 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <ul>
 
     <li>
+
         <a href="index.html">
             Home
         </a>
+
     </li>
 
 
     <li>
-        <a href="movies.php" class="active">
+
+        <a href="movies.php">
             Now Showing
         </a>
+
     </li>
 
 
     <li>
-        <a href="upcomingMovies.php">
+
+        <a href="upcomingMovies.php" class="active">
             Upcoming
         </a>
+
     </li>
 
 
@@ -120,10 +147,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <section class="hero">
 
-    <h1>Now Showing</h1>
+    <h1>
+        Upcoming Movies
+    </h1>
 
     <p>
-        Book your tickets for the latest movies playing in theatres now.
+        Discover the biggest movies arriving in theatres soon.
     </p>
 
 </section>
@@ -147,47 +176,30 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         $poster = trim($movie["poster"] ?? "");
 
-
         if ($poster == "") {
 
             $poster = "images/default.jpg";
 
         } else {
+
             $poster = "uploads/posters/" . $poster;
-        }
-
-
-        /* ================= RATING ================= */
-
-        $rating = $movie["rating"];
-
-        if ($rating === null || $rating === "") {
-
-            $rating = "N/A";
 
         }
 
 
-        /* ================= DESCRIPTION ================= */
+        /* ================= RELEASE DATE ================= */
 
-        $description = $movie["description"];
-
-        if ($description === null || $description === "") {
-
-            $description = "No description available.";
-
-        }
+        $release_date = date(
+            "d F Y",
+            strtotime($movie["release_date"])
+        );
 
 
-        /* ================= LANGUAGE ================= */
+        /* ================= DURATION ================= */
 
-        $language = $movie["language"];
-
-        if ($language === null || $language === "") {
-
-            $language = "N/A";
-
-        }
+        $duration = formatDuration(
+            (int)$movie["duration"]
+        );
 
         ?>
 
@@ -209,7 +221,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
                 <span class="badge">
 
-                    Now Showing
+                    Coming Soon
 
                 </span>
 
@@ -234,20 +246,18 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 
 
-                <!-- INFO -->
-
                 <div class="info">
 
 
-                    <!-- RATING -->
+                    <!-- RELEASE DATE -->
 
                     <span>
 
-                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-calendar"></i>
 
                         <?php
-                        echo htmlspecialchars($rating);
-                        ?>/10
+                        echo $release_date;
+                        ?>
 
                     </span>
 
@@ -276,25 +286,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                         <i class="fa-regular fa-clock"></i>
 
                         <?php
-                        echo htmlspecialchars(
-                            $movie["duration"]
-                        );
-                        ?> min
-
-                    </span>
-
-
-
-                    <!-- LANGUAGE -->
-
-                    <span>
-
-                        <i class="fa-solid fa-language"></i>
-
-                        <?php
-                        echo htmlspecialchars(
-                            $language
-                        );
+                        echo $duration;
                         ?>
 
                     </span>
@@ -309,25 +301,27 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                 <p>
 
                     <?php
+
                     echo htmlspecialchars(
-                        $description
+                        $movie["description"] ?? "No description available."
                     );
+
                     ?>
 
                 </p>
 
 
 
-                <!-- BOOK NOW -->
+                <!-- MORE DETAILS -->
 
                 <a
                     href="movieDetail.php?id=<?php echo $movie["movie_id"]; ?>"
                     class="btn"
                 >
 
-                    Book Now
+                    More Details
 
-                    <i class="fa-solid fa-ticket"></i>
+                    <i class="fa-solid fa-arrow-right"></i>
 
                 </a>
 
@@ -343,11 +337,13 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <?php else: ?>
 
 
-    <p style="text-align:center; font-size:18px; color:#d6d6d6;">
+    <div class="no-movies">
 
-        No movies are currently showing.
+        <p>
+            No upcoming movies available.
+        </p>
 
-    </p>
+    </div>
 
 
 <?php endif; ?>

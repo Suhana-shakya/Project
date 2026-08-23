@@ -105,9 +105,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <li><a href="index.html">Home</a></li>
 
-        <li><a href="movies.html">Now Showing</a></li>
+        <li><a href="movies.php">Now Showing</a></li>
 
-        <li><a href="upcomingMovies.html">Upcoming</a></li>
+        <li><a href="upcomingMovies.php">Upcoming</a></li>
 
         <li class="search-box">
             <i class="fa-solid fa-magnifying-glass"></i>
