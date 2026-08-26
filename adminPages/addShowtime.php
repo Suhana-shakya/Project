@@ -78,12 +78,17 @@ if ($show_date < $movie["release_date"]) {
 }
 
 
-/* Show date cannot be in the past */
+/* ================= CHECK SHOW DATE AND TIME ================= */
 
-if ($show_date < date("Y-m-d")) {
+/* Showtime cannot be in the past */
+
+$show_datetime = strtotime($show_date . " " . $show_time);
+$current_datetime = time();
+
+if ($show_datetime < $current_datetime) {
 
     $_SESSION["error"] =
-        "Show date cannot be in the past.";
+        "Showtime cannot be in the past.";
 
     $check_stmt->close();
 
@@ -91,8 +96,6 @@ if ($show_date < date("Y-m-d")) {
     exit();
 
 }
-
-$check_stmt->close();
 
 
     /* ================= INSERT SHOWTIME ================= */

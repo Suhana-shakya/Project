@@ -103,25 +103,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <ul>
 
-        <li><a href="index.html">Home</a></li>
+    <li>
+        <a href="index.php">
+            Home
+        </a>
+    </li>
 
-        <li><a href="movies.php">Now Showing</a></li>
 
-        <li><a href="upcomingMovies.php">Upcoming</a></li>
+    <li>
+        <a href="movies.php">
+            Now Showing
+        </a>
+    </li>
 
-        <li class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search movies...">
-        </li>
 
-        <li>
-            <a href="login.php" class="login-btn">
-                <i class="fa-solid fa-user"></i>
-                Login
-            </a>
-        </li>
+    <li>
+        <a href="upcomingMovies.php">
+            Upcoming
+        </a>
+    </li>
 
-    </ul>
+
+    <li class="search-box">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+            type="text"
+            placeholder="Search movies..."
+        >
+
+    </li>
+
+
+    <li>
+
+        <a href="login.php" class="login-btn">
+
+            <i class="fa-solid fa-user"></i>
+
+            Login
+
+        </a>
+
+    </li>
+
+</ul>
 
 </nav>
 

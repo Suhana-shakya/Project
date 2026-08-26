@@ -162,7 +162,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <nav>
 
-<a href="index.html" class="logo">
+<a href="index.php" class="logo">
 
     <i class="fa-solid fa-clapperboard"></i>
 
@@ -175,7 +175,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
     <li>
 
-        <a href="index.html">
+        <a href="index.php">
             Home
         </a>
 
@@ -628,7 +628,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         <div class="select-seat">
 
-            <a class="seat-btn" href="seat.php?movie_id=<?php echo $movie_id; ?>&showtime_id=<?php echo $showtime['showtime_id']; ?>" class="select-seat">
+            <a class="seat-btn" href="seat.php?movie_id=8&showtime_id=9&hall_id=1" >
                 Select Seats
                 <i class="fa-solid fa-arrow-right"></i>
             </a>

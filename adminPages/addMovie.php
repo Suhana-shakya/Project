@@ -530,7 +530,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
 
-            <!-- ================= STATUS ================= -->
+            <!-- ================= STATUS =================
 
             <div class="form-group">
 
@@ -554,7 +554,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 </select>
 
-            </div>
+            </div> -->
 
 
             <!-- ================= BUTTONS ================= -->
@@ -571,10 +571,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </button>
 
 
-            <a
-                href="manageMovies.php"
-                class="cancel-btn"
-            >
+            <a href="manageMovies.php"
+                class="cancel-btn">
 
                 Cancel
 

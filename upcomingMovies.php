@@ -75,7 +75,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <nav>
 
-<a href="index.html" class="logo">
+<a href="index.php" class="logo">
 
     <i class="fa-solid fa-clapperboard"></i>
 
@@ -88,7 +88,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
     <li>
 
-        <a href="index.html">
+        <a href="index.php">
             Home
         </a>
 

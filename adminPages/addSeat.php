@@ -15,36 +15,106 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hall_id = (int) $_POST["hall_id"];
 
 
-    /* Check if seat already exists in this hall */
+    /* ================= CHECK HALL CAPACITY ================= */
 
-    $check_sql = "SELECT seat_id
-                  FROM seat
-                  WHERE seat_number = ?
-                  AND hall_id = ?";
+    $capacity_sql = "SELECT capacity
+                     FROM hall
+                     WHERE hall_id = ?";
 
-    $check_stmt = $conn->prepare($check_sql);
+    $capacity_stmt = $conn->prepare($capacity_sql);
 
-    $check_stmt->bind_param(
-        "si",
-        $seat_number,
+    $capacity_stmt->bind_param(
+        "i",
         $hall_id
     );
 
-    $check_stmt->execute();
+    $capacity_stmt->execute();
 
-    $check_result = $check_stmt->get_result();
+    $capacity_result = $capacity_stmt->get_result();
+
+    $hall = $capacity_result->fetch_assoc();
+
+    $capacity_stmt->close();
 
 
-    if ($check_result->num_rows > 0) {
+    if (!$hall) {
 
-        $error = "This seat already exists in the selected hall.";
+        $error = "Selected hall does not exist.";
 
+    } else {
+
+        $capacity = (int) $hall["capacity"];
+
+
+        /* Count existing seats in this hall */
+
+        $count_sql = "SELECT COUNT(*) AS total_seats
+                      FROM seat
+                      WHERE hall_id = ?";
+
+        $count_stmt = $conn->prepare($count_sql);
+
+        $count_stmt->bind_param(
+            "i",
+            $hall_id
+        );
+
+        $count_stmt->execute();
+
+        $count_result = $count_stmt->get_result();
+
+        $seat_count = $count_result->fetch_assoc();
+
+        $total_seats = (int) $seat_count["total_seats"];
+
+        $count_stmt->close();
+
+
+        /* Check if capacity has been reached */
+
+        if ($total_seats >= $capacity) {
+
+            $error = "This hall has reached its maximum capacity of "
+                   . $capacity
+                   . " seats.";
+
+        }
     }
 
-    $check_stmt->close();
+
+    /* ================= CHECK DUPLICATE SEAT ================= */
+
+    if ($error == "") {
+
+        $check_sql = "SELECT seat_id
+                      FROM seat
+                      WHERE seat_number = ?
+                      AND hall_id = ?";
+
+        $check_stmt = $conn->prepare($check_sql);
+
+        $check_stmt->bind_param(
+            "si",
+            $seat_number,
+            $hall_id
+        );
+
+        $check_stmt->execute();
+
+        $check_result = $check_stmt->get_result();
 
 
-    /* Insert seat */
+        if ($check_result->num_rows > 0) {
+
+            $error = "This seat already exists in the selected hall.";
+
+        }
+
+        $check_stmt->close();
+    }
+
+
+    /* ================= INSERT SEAT ================= */
 
     if ($error == "") {
 
@@ -69,9 +139,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: manageSeats.php");
             exit();
 
-        }else {
+        } else {
 
-            $_SESSION["error"] = "Failed to add seat. Please try again.";
+            $_SESSION["error"] =
+                "Failed to add seat. Please try again.";
 
             header("Location: manageSeats.php");
             exit();
@@ -79,9 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $stmt->close();
-
     }
-
 }
 
 

@@ -2,21 +2,22 @@
 
 include "db.php";
 
-/* =========================================================
-   GET MOVIE AND SHOWTIME
-========================================================= */
+/* =====================================================
+   GET BOOKING INFORMATION
+===================================================== */
 
-$movie_id = isset($_GET["movie_id"]) ? (int)$_GET["movie_id"] : 0;
-$showtime_id = isset($_GET["showtime_id"]) ? (int)$_GET["showtime_id"] : 0;
+$movie_id = isset($_GET['movie_id']) ? (int)$_GET['movie_id'] : 0;
+$showtime_id = isset($_GET['showtime_id']) ? (int)$_GET['showtime_id'] : 0;
+$hall_id = isset($_GET['hall_id']) ? (int)$_GET['hall_id'] : 0;
 
-if ($movie_id <= 0 || $showtime_id <= 0) {
-    die("Invalid movie or showtime.");
+if ($movie_id <= 0 || $showtime_id <= 0 || $hall_id <= 0) {
+    die("Invalid booking information.");
 }
 
 
-/* =========================================================
+/* =====================================================
    GET MOVIE
-========================================================= */
+===================================================== */
 
 $movie_sql = "
     SELECT *
@@ -29,20 +30,19 @@ $stmt->bind_param("i", $movie_id);
 $stmt->execute();
 
 $movie_result = $stmt->get_result();
-$movie = $movie_result->fetch_assoc();
 
-$stmt->close();
-
-if (!$movie) {
+if ($movie_result->num_rows == 0) {
     die("Movie not found.");
 }
 
+$movie = $movie_result->fetch_assoc();
 
-/* =========================================================
+
+/* =====================================================
    GET SHOWTIME + HALL
-========================================================= */
+===================================================== */
 
-$showtime_sql = "
+$show_sql = "
     SELECT
         s.showtime_id,
         s.show_date,
@@ -52,29 +52,29 @@ $showtime_sql = "
         h.hall_name,
         h.location
     FROM showtime s
-    JOIN hall h
+    INNER JOIN hall h
         ON s.hall_id = h.hall_id
     WHERE s.showtime_id = ?
       AND s.movie_id = ?
+      AND s.hall_id = ?
 ";
 
-$stmt = $conn->prepare($showtime_sql);
-$stmt->bind_param("ii", $showtime_id, $movie_id);
+$stmt = $conn->prepare($show_sql);
+$stmt->bind_param("iii", $showtime_id, $movie_id, $hall_id);
 $stmt->execute();
 
-$showtime_result = $stmt->get_result();
-$showtime = $showtime_result->fetch_assoc();
+$show_result = $stmt->get_result();
 
-$stmt->close();
-
-if (!$showtime) {
+if ($show_result->num_rows == 0) {
     die("Showtime not found.");
 }
 
+$show = $show_result->fetch_assoc();
 
-/* =========================================================
-   GET SEATS FOR THIS HALL
-========================================================= */
+
+/* =====================================================
+   GET SEATS
+===================================================== */
 
 $seat_sql = "
     SELECT
@@ -83,27 +83,21 @@ $seat_sql = "
         seat_type
     FROM seat
     WHERE hall_id = ?
-    ORDER BY seat_number
+    ORDER BY seat_id
 ";
 
 $stmt = $conn->prepare($seat_sql);
-$stmt->bind_param("i", $showtime["hall_id"]);
+$stmt->bind_param("i", $hall_id);
 $stmt->execute();
 
 $seat_result = $stmt->get_result();
 
-$seats = [];
 
-while ($row = $seat_result->fetch_assoc()) {
-    $seats[] = $row;
-}
-
-$stmt->close();
-
-
-/* =========================================================
+/* =====================================================
    GET BOOKED SEATS
-========================================================= */
+===================================================== */
+
+$booked_seats = [];
 
 $booked_sql = "
     SELECT seat_id
@@ -118,90 +112,104 @@ $stmt->execute();
 
 $booked_result = $stmt->get_result();
 
-$booked_seats = [];
-
 while ($row = $booked_result->fetch_assoc()) {
-    $booked_seats[] = (int)$row["seat_id"];
-}
-
-$stmt->close();
-
-
-/* =========================================================
-   SEPARATE SEATS BY TYPE
-========================================================= */
-
-$regular_seats = [];
-$premium_seats = [];
-$vip_seats = [];
-
-foreach ($seats as $seat) {
-
-    $type = strtolower(trim($seat["seat_type"]));
-
-    if ($type == "regular") {
-
-        $regular_seats[] = $seat;
-
-    } elseif ($type == "premium") {
-
-        $premium_seats[] = $seat;
-
-    } elseif ($type == "vip") {
-
-        $vip_seats[] = $seat;
-
-    }
+    $booked_seats[] = (int)$row['seat_id'];
 }
 
 
-/* =========================================================
-   POSTER PATH
-========================================================= */
+/* =====================================================
+   PRICE SETTINGS
+=====================================================
 
-$poster = trim($movie["poster"]);
+   Before 12 AM:
+   Regular  = 250
+   Premium  = 350
+   VIP      = 500
 
-if ($poster == "") {
+   12 AM and later:
+   Regular  = 300
+   Premium  = 400
+   VIP      = 550
+===================================================== */
 
-    $poster_path = "images/default.jpg";
+$show_time = strtotime($show['show_time']);
 
-} elseif (
-    strpos($poster, "http://") === 0 ||
-    strpos($poster, "https://") === 0
-) {
+$midnight = strtotime("00:00:00");
+$noon_cutoff = strtotime("12:00:00");
 
-    $poster_path = $poster;
+/*
+   Your previous rule was:
+   before/at 12 AM = cheaper
+   after 12 AM = 450
 
-} elseif (strpos($poster, "images/") === 0) {
+   Since a normal cinema showtime can be PM,
+   we use 12:00 AM as the late-night boundary.
 
-    $poster_path = $poster;
+   For example:
+   10:30 PM -> normal price
+   11:30 PM -> normal price
+   12:30 AM -> late-night price
+*/
+
+$hour = (int)date("H", $show_time);
+
+if ($hour >= 0 && $hour < 6) {
+
+    $regular_price = 300;
+    $premium_price = 400;
+    $vip_price = 550;
 
 } else {
 
-    $poster_path = "images/" . basename($poster);
-
+    $regular_price = 250;
+    $premium_price = 350;
+    $vip_price = 500;
 }
 
 
-/* =========================================================
-   DURATION
-========================================================= */
+/* =====================================================
+   POSTER PATH
+===================================================== */
 
-$duration = (int)$movie["duration"];
+$poster = trim($movie['poster']);
 
-$hours = floor($duration / 60);
-$minutes = $duration % 60;
+if ($poster == "") {
 
-$duration_text = $hours . "h " . $minutes . "m";
+    $poster_path = "images/default-poster.jpg";
+
+} else {
+
+    /*
+       Your database should contain something like:
+
+       uploads/poster/obsession.jpg
+
+       Therefore the browser path becomes:
+
+       uploads/poster/obsession.jpg
+    */
+
+    $poster_path = $poster;
+}
 
 
-/* =========================================================
-   SHOW DATE
-========================================================= */
+/* =====================================================
+   FORMAT DATE
+===================================================== */
 
-$formatted_date = date(
+$show_date = date(
     "d M Y",
-    strtotime($showtime["show_date"])
+    strtotime($show['show_date'])
+);
+
+
+/* =====================================================
+   FORMAT TIME
+===================================================== */
+
+$formatted_time = date(
+    "h:i A",
+    strtotime($show['show_time'])
 );
 
 ?>
@@ -215,225 +223,20 @@ $formatted_date = date(
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+content="width=device-width, initial-scale=1.0">
 
-<title>Select Seats | HiMovie</title>
-
-<link rel="stylesheet" href="navbar.css">
-
-<link rel="stylesheet" href="seat.css">
+<title>
+Select Seats | HiMovie
+</title>
 
 <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+href="navbar.css">
 
-<style>
+<link rel="stylesheet"
+href="seat.css">
 
-/* =========================================================
-   SEAT SECTIONS
-========================================================= */
-
-.seat-section {
-
-    margin-bottom: 45px;
-
-}
-
-.seat-section-title {
-
-    text-align: center;
-
-    color: #FFD166;
-
-    font-size: 22px;
-
-    letter-spacing: 3px;
-
-    margin-bottom: 25px;
-
-}
-
-
-/* =========================================================
-   SEAT CONTAINER
-========================================================= */
-
-.seats {
-
-    display: flex;
-
-    flex-wrap: wrap;
-
-    justify-content: center;
-
-    gap: 12px;
-
-    max-width: 850px;
-
-    margin: auto;
-
-}
-
-
-/* =========================================================
-   SEAT
-========================================================= */
-
-.seat {
-
-    width: 42px;
-
-    height: 38px;
-
-    border-radius: 10px 10px 6px 6px;
-
-    background: #64748b;
-
-    cursor: pointer;
-
-    position: relative;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 11px;
-
-    font-weight: bold;
-
-    color: white;
-
-    transition: .25s;
-
-}
-
-.seat::before {
-
-    content: "";
-
-    position: absolute;
-
-    width: 24px;
-
-    height: 5px;
-
-    top: 5px;
-
-    left: 9px;
-
-    border-radius: 10px;
-
-    background: rgba(255,255,255,.4);
-
-}
-
-.seat:hover {
-
-    transform: translateY(-4px);
-
-    background: #ec4899;
-
-    box-shadow: 0 8px 20px rgba(236,72,153,.4);
-
-}
-
-.seat.selected {
-
-    background: #FFD166;
-
-    color: #111827;
-
-    box-shadow: 0 0 20px rgba(255,209,102,.7);
-
-}
-
-.seat.booked {
-
-    background: #ef4444;
-
-    cursor: not-allowed;
-
-    opacity: .8;
-
-}
-
-.seat.booked:hover {
-
-    transform: none;
-
-    box-shadow: none;
-
-}
-
-
-/* =========================================================
-   DIFFERENT SEAT TYPE COLORS
-========================================================= */
-
-.vip-section .seat {
-
-    background: #9333ea;
-
-}
-
-.vip-section .seat:hover {
-
-    background: #ec4899;
-
-}
-
-.premium-section .seat {
-
-    background: #2563eb;
-
-}
-
-.premium-section .seat:hover {
-
-    background: #ec4899;
-
-}
-
-.regular-section .seat {
-
-    background: #64748b;
-
-}
-
-
-/* =========================================================
-   EMPTY MESSAGE
-========================================================= */
-
-.no-seats {
-
-    text-align: center;
-
-    color: #bbb;
-
-    padding: 20px;
-
-}
-
-
-/* =========================================================
-   POSTER
-========================================================= */
-
-.movie-card img {
-
-    width: 100%;
-
-    height: 470px;
-
-    object-fit: cover;
-
-    display: block;
-
-}
-
-</style>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
 
@@ -447,27 +250,44 @@ $formatted_date = date(
 
 <nav>
 
-<a href="index.html" class="logo">
+<a href="index.php"
+class="logo">
 
-    <i class="fa-solid fa-clapperboard"></i>
+<i class="fa-solid fa-clapperboard"></i>
 
-    <span>HiMovie</span>
+<span>HiMovie</span>
 
 </a>
+
 
 <ul>
 
 <li>
-<a href="index.html">Home</a>
+
+<a href="index.php">
+Home
+</a>
+
 </li>
 
-<li>
-<a href="movies.php">Now Showing</a>
-</li>
 
 <li>
-<a href="upcomingMovies.php">Upcoming</a>
+
+<a href="movies.php">
+Now Showing
+</a>
+
 </li>
+
+
+<li>
+
+<a href="upcomingMovies.php">
+Upcoming
+</a>
+
+</li>
+
 
 <li class="search-box">
 
@@ -475,13 +295,16 @@ $formatted_date = date(
 
 <input
 type="text"
-placeholder="Search movies...">
+placeholder="Search movies..."
+>
 
 </li>
 
+
 <li>
 
-<a href="login.php" class="login-btn">
+<a href="login.php"
+class="login-btn">
 
 <i class="fa-solid fa-user"></i>
 
@@ -496,8 +319,9 @@ Login
 </nav>
 
 
+
 <!-- =====================================================
-                       SEAT PAGE
+                     PAGE
 ===================================================== -->
 
 <section class="seat-page">
@@ -512,13 +336,27 @@ Login
 
 <div class="movie-card">
 
+
+<?php if ($poster != ""): ?>
+
 <img
 src="<?php echo htmlspecialchars($poster_path); ?>"
-alt="<?php echo htmlspecialchars($movie["title"]); ?>"
-onerror="this.src='images/default.jpg';">
+alt="<?php echo htmlspecialchars($movie['title']); ?>"
+onerror="this.src='images/default-poster.jpg';"
+>
+
+<?php else: ?>
+
+<img
+src="images/default-poster.jpg"
+alt="Movie Poster"
+>
+
+<?php endif; ?>
 
 
 <div class="movie-content">
+
 
 <span class="tag">
 
@@ -529,14 +367,18 @@ NOW SHOWING
 
 <h2>
 
-<?php echo htmlspecialchars($movie["title"]); ?>
+<?php
+echo htmlspecialchars($movie['title']);
+?>
 
 </h2>
 
 
 <p>
 
-<?php echo htmlspecialchars($movie["genre"]); ?>
+<?php
+echo htmlspecialchars($movie['genre']);
+?>
 
 </p>
 
@@ -548,7 +390,11 @@ NOW SHOWING
 
 <i class="fa-solid fa-star"></i>
 
-<?php echo htmlspecialchars($movie["rating"]); ?>/10
+<?php
+echo htmlspecialchars($movie['rating']);
+?>
+
+/10
 
 </div>
 
@@ -557,12 +403,27 @@ NOW SHOWING
 
 <i class="fa-regular fa-clock"></i>
 
-<?php echo $duration_text; ?>
+<?php
+
+$duration = (int)$movie['duration'];
+
+$hours = floor($duration / 60);
+
+$minutes = $duration % 60;
+
+echo $hours . "h ";
+
+if ($minutes > 0) {
+    echo $minutes . "m";
+}
+
+?>
 
 </div>
 
 
 </div>
+
 
 
 <div class="details">
@@ -570,11 +431,15 @@ NOW SHOWING
 
 <div class="detail">
 
-<span>Cinema</span>
+<span>
+Cinema
+</span>
 
 <strong>
 
-<?php echo htmlspecialchars($showtime["hall_name"]); ?>
+<?php
+echo htmlspecialchars($show['hall_name']);
+?>
 
 </strong>
 
@@ -583,11 +448,15 @@ NOW SHOWING
 
 <div class="detail">
 
-<span>Date</span>
+<span>
+Date
+</span>
 
 <strong>
 
-<?php echo $formatted_date; ?>
+<?php
+echo $show_date;
+?>
 
 </strong>
 
@@ -596,11 +465,15 @@ NOW SHOWING
 
 <div class="detail">
 
-<span>Time</span>
+<span>
+Time
+</span>
 
 <strong>
 
-<?php echo htmlspecialchars($showtime["show_time"]); ?>
+<?php
+echo $formatted_time;
+?>
 
 </strong>
 
@@ -612,10 +485,11 @@ NOW SHOWING
 </div>
 
 </div>
+
 
 
 <!-- =====================================================
-                     BOOKING PANEL
+                    BOOKING PANEL
 ===================================================== -->
 
 <div class="booking-panel">
@@ -627,15 +501,11 @@ NOW SHOWING
 <div>
 
 <h2>
-
 Select Seats
-
 </h2>
 
 <p>
-
 Choose your preferred seats
-
 </p>
 
 </div>
@@ -643,18 +513,19 @@ Choose your preferred seats
 
 <div class="price-box">
 
-<span>Ticket</span>
+<span>
+Starting From
+</span>
 
 <h3>
-
-Rs. <?php echo number_format($showtime["ticket_price"], 2); ?>
-
+Rs. <?php echo $regular_price; ?>
 </h3>
 
 </div>
 
 
 </div>
+
 
 
 <!-- =====================================================
@@ -666,193 +537,19 @@ Rs. <?php echo number_format($showtime["ticket_price"], 2); ?>
 <div class="screen-light"></div>
 
 <div class="screen">
-
 SCREEN
-
 </div>
 
 </div>
+
 
 
 <!-- =====================================================
-                     REGULAR SEATS
-===================================================== -->
-
-<div class="seat-section regular-section">
-
-<h3 class="seat-section-title">
-
-REGULAR
-
-</h3>
-
-
-<div class="seats">
-
-
-<?php
-
-if (count($regular_seats) > 0) {
-
-    foreach ($regular_seats as $seat) {
-
-        $seat_id = (int)$seat["seat_id"];
-
-        $seat_number = htmlspecialchars($seat["seat_number"]);
-
-        $is_booked = in_array($seat_id, $booked_seats);
-
-        ?>
-
-        <div
-            class="seat <?php echo $is_booked ? 'booked' : ''; ?>"
-            data-seat-id="<?php echo $seat_id; ?>"
-            data-seat-number="<?php echo $seat_number; ?>"
-            data-price="<?php echo $showtime["ticket_price"]; ?>"
-        >
-
-        <?php echo $seat_number; ?>
-
-        </div>
-
-        <?php
-
-    }
-
-} else {
-
-    echo '<p class="no-seats">No regular seats available.</p>';
-
-}
-
-?>
-
-</div>
-
-</div>
-
-
-<!-- =====================================================
-                     PREMIUM SEATS
-===================================================== -->
-
-<div class="seat-section premium-section">
-
-<h3 class="seat-section-title">
-
-PREMIUM
-
-</h3>
-
-
-<div class="seats">
-
-
-<?php
-
-if (count($premium_seats) > 0) {
-
-    foreach ($premium_seats as $seat) {
-
-        $seat_id = (int)$seat["seat_id"];
-
-        $seat_number = htmlspecialchars($seat["seat_number"]);
-
-        $is_booked = in_array($seat_id, $booked_seats);
-
-        ?>
-
-        <div
-            class="seat <?php echo $is_booked ? 'booked' : ''; ?>"
-            data-seat-id="<?php echo $seat_id; ?>"
-            data-seat-number="<?php echo $seat_number; ?>"
-            data-price="<?php echo $showtime["ticket_price"]; ?>"
-        >
-
-        <?php echo $seat_number; ?>
-
-        </div>
-
-        <?php
-
-    }
-
-} else {
-
-    echo '<p class="no-seats">No premium seats available.</p>';
-
-}
-
-?>
-
-</div>
-
-</div>
-
-
-<!-- =====================================================
-                         VIP SEATS
-===================================================== -->
-
-<div class="seat-section vip-section">
-
-<h3 class="seat-section-title">
-
-VIP
-
-</h3>
-
-
-<div class="seats">
-
-
-<?php
-
-if (count($vip_seats) > 0) {
-
-    foreach ($vip_seats as $seat) {
-
-        $seat_id = (int)$seat["seat_id"];
-
-        $seat_number = htmlspecialchars($seat["seat_number"]);
-
-        $is_booked = in_array($seat_id, $booked_seats);
-
-        ?>
-
-        <div
-            class="seat <?php echo $is_booked ? 'booked' : ''; ?>"
-            data-seat-id="<?php echo $seat_id; ?>"
-            data-seat-number="<?php echo $seat_number; ?>"
-            data-price="<?php echo $showtime["ticket_price"]; ?>"
-        >
-
-        <?php echo $seat_number; ?>
-
-        </div>
-
-        <?php
-
-    }
-
-} else {
-
-    echo '<p class="no-seats">No VIP seats available.</p>';
-
-}
-
-?>
-
-</div>
-
-</div>
-
-
-<!-- =====================================================
-                         LEGEND
+                     SEAT LEGEND
 ===================================================== -->
 
 <div class="legend">
+
 
 <div>
 
@@ -880,11 +577,287 @@ Booked
 
 </div>
 
+
 </div>
 
 
+
 <!-- =====================================================
-                     BOOKING SUMMARY
+                  REGULAR SEATS
+===================================================== -->
+
+<h3 class="section-title">
+
+REGULAR
+
+<span class="seat-price">
+
+Rs. <?php echo $regular_price; ?>
+
+</span>
+
+</h3>
+
+
+<div class="seat-grid">
+
+
+<?php
+
+$regular_found = false;
+
+
+/*
+   Because the seat table contains all seat types,
+   we first get the rows and display only Regular.
+*/
+
+$seat_result->data_seek(0);
+
+
+while ($seat = $seat_result->fetch_assoc()):
+
+    if (
+        strtolower(trim($seat['seat_type'])) !=
+        'regular'
+    ) {
+        continue;
+    }
+
+    $regular_found = true;
+
+    $seat_id = (int)$seat['seat_id'];
+
+    $seat_number =
+        htmlspecialchars($seat['seat_number']);
+
+    $is_booked =
+        in_array($seat_id, $booked_seats);
+
+?>
+
+
+<div
+class="seat <?php echo $is_booked ? 'taken' : ''; ?>"
+data-seat-id="<?php echo $seat_id; ?>"
+data-seat-number="<?php echo $seat_number; ?>"
+data-seat-type="Regular"
+data-price="<?php echo $regular_price; ?>"
+>
+
+<?php
+echo $seat_number;
+?>
+
+</div>
+
+
+<?php endwhile; ?>
+
+
+<?php if (!$regular_found): ?>
+
+<p class="no-seats">
+No Regular seats available.
+</p>
+
+<?php endif; ?>
+
+</div>
+
+
+
+<!-- =====================================================
+                  PREMIUM SEATS
+===================================================== -->
+
+<h3 class="section-title">
+
+PREMIUM
+
+<span class="seat-price">
+
+Rs. <?php echo $premium_price; ?>
+
+</span>
+
+</h3>
+
+
+<div class="seat-grid">
+
+
+<?php
+
+$premium_found = false;
+
+$seat_result->data_seek(0);
+
+
+while ($seat = $seat_result->fetch_assoc()):
+
+    if (
+        strtolower(trim($seat['seat_type'])) !=
+        'premium'
+    ) {
+        continue;
+    }
+
+    $premium_found = true;
+
+    $seat_id = (int)$seat['seat_id'];
+
+    $seat_number =
+        htmlspecialchars($seat['seat_number']);
+
+    $is_booked =
+        in_array($seat_id, $booked_seats);
+
+?>
+
+
+<div
+class="seat premium-seat <?php echo $is_booked ? 'taken' : ''; ?>"
+data-seat-id="<?php echo $seat_id; ?>"
+data-seat-number="<?php echo $seat_number; ?>"
+data-seat-type="Premium"
+data-price="<?php echo $premium_price; ?>"
+>
+
+<?php
+echo $seat_number;
+?>
+
+</div>
+
+
+<?php endwhile; ?>
+
+
+<?php if (!$premium_found): ?>
+
+<p class="no-seats">
+No Premium seats available.
+</p>
+
+<?php endif; ?>
+
+</div>
+
+
+
+<!-- =====================================================
+                      VIP SEATS
+===================================================== -->
+
+<h3 class="section-title">
+
+VIP
+
+<span class="seat-price">
+
+Rs. <?php echo $vip_price; ?>
+
+</span>
+
+</h3>
+
+
+<div class="seat-grid">
+
+
+<?php
+
+$vip_found = false;
+
+$seat_result->data_seek(0);
+
+
+while ($seat = $seat_result->fetch_assoc()):
+
+    if (
+        strtolower(trim($seat['seat_type'])) !=
+        'vip'
+    ) {
+        continue;
+    }
+
+    $vip_found = true;
+
+    $seat_id = (int)$seat['seat_id'];
+
+    $seat_number =
+        htmlspecialchars($seat['seat_number']);
+
+    $is_booked =
+        in_array($seat_id, $booked_seats);
+
+?>
+
+
+<div
+class="seat vip-seat <?php echo $is_booked ? 'taken' : ''; ?>"
+data-seat-id="<?php echo $seat_id; ?>"
+data-seat-number="<?php echo $seat_number; ?>"
+data-seat-type="VIP"
+data-price="<?php echo $vip_price; ?>"
+>
+
+<?php
+echo $seat_number;
+?>
+
+</div>
+
+
+<?php endwhile; ?>
+
+
+<?php if (!$vip_found): ?>
+
+<p class="no-seats">
+No VIP seats available.
+</p>
+
+<?php endif; ?>
+
+</div>
+
+
+
+<!-- =====================================================
+                      PRICE LEGEND
+===================================================== -->
+
+<div class="price-legend">
+
+<div>
+Regular:
+<strong>
+Rs. <?php echo $regular_price; ?>
+</strong>
+</div>
+
+<div>
+Premium:
+<strong>
+Rs. <?php echo $premium_price; ?>
+</strong>
+</div>
+
+<div>
+VIP:
+<strong>
+Rs. <?php echo $vip_price; ?>
+</strong>
+</div>
+
+</div>
+
+
+
+<!-- =====================================================
+                      SUMMARY
 ===================================================== -->
 
 <div class="summary">
@@ -893,15 +866,11 @@ Booked
 <div class="summary-left">
 
 <h3>
-
 Booking Summary
-
 </h3>
 
 <p id="selectedSeats">
-
 No seats selected
-
 </p>
 
 </div>
@@ -910,21 +879,73 @@ No seats selected
 <div class="summary-right">
 
 <h2 id="totalPrice">
-
-Rs.0.00
-
+Rs.0
 </h2>
 
 
-<a href="#"
-   id="continueButton"
-   style="opacity:.5;pointer-events:none;">
+<form
+action="payment.php"
+method="POST"
+id="bookingForm"
+>
+
+
+<input
+type="hidden"
+name="movie_id"
+value="<?php echo $movie_id; ?>"
+>
+
+
+<input
+type="hidden"
+name="showtime_id"
+value="<?php echo $showtime_id; ?>"
+>
+
+
+<input
+type="hidden"
+name="hall_id"
+value="<?php echo $hall_id; ?>"
+>
+
+
+<input
+type="hidden"
+name="seat_ids"
+id="seat_ids"
+>
+
+
+<input
+type="hidden"
+name="seat_numbers"
+id="seat_numbers"
+>
+
+
+<input
+type="hidden"
+name="total_price"
+id="total_price"
+>
+
+
+<button
+type="submit"
+id="continueButton"
+disabled
+>
 
 Continue
 
 <i class="fa-solid fa-arrow-right"></i>
 
-</a>
+</button>
+
+
+</form>
 
 </div>
 
@@ -939,129 +960,190 @@ Continue
 </section>
 
 
+
 <!-- =====================================================
-                         JAVASCRIPT
+                       JAVASCRIPT
 ===================================================== -->
 
 <script>
 
-const seats = document.querySelectorAll(".seat:not(.booked)");
+const seats =
+document.querySelectorAll(
+    ".seat:not(.taken)"
+);
 
-const selectedSeatsText =
-document.getElementById("selectedSeats");
+const selectedSeats =
+document.getElementById(
+    "selectedSeats"
+);
 
 const totalPrice =
-document.getElementById("totalPrice");
+document.getElementById(
+    "totalPrice"
+);
+
+const seatIds =
+document.getElementById(
+    "seat_ids"
+);
+
+const seatNumbers =
+document.getElementById(
+    "seat_numbers"
+);
+
+const totalPriceInput =
+document.getElementById(
+    "total_price"
+);
 
 const continueButton =
-document.getElementById("continueButton");
-
-let selectedSeats = [];
-
-
-seats.forEach(seat => {
-
-    seat.addEventListener("click", function() {
-
-        const seatId =
-        this.dataset.seatId;
-
-        const seatNumber =
-        this.dataset.seatNumber;
-
-        const price =
-        parseFloat(this.dataset.price);
+document.getElementById(
+    "continueButton"
+);
 
 
-        if (this.classList.contains("selected")) {
+let selected = [];
 
-            this.classList.remove("selected");
 
-            selectedSeats =
-            selectedSeats.filter(
-                id => id !== seatId
-            );
+seats.forEach(function(seat) {
 
-        } else {
+    seat.addEventListener(
+        "click",
+        function() {
 
-            this.classList.add("selected");
+            const seatId =
+                this.dataset.seatId;
 
-            selectedSeats.push(seatId);
+            const seatNumber =
+                this.dataset.seatNumber;
+
+            const seatType =
+                this.dataset.seatType;
+
+            const price =
+                Number(this.dataset.price);
+
+
+            const existing =
+                selected.find(
+                    function(item) {
+                        return item.id === seatId;
+                    }
+                );
+
+
+            if (existing) {
+
+                selected =
+                    selected.filter(
+                        function(item) {
+                            return item.id !== seatId;
+                        }
+                    );
+
+                this.classList.remove(
+                    "selected"
+                );
+
+            } else {
+
+                selected.push({
+                    id: seatId,
+                    number: seatNumber,
+                    type: seatType,
+                    price: price
+                });
+
+                this.classList.add(
+                    "selected"
+                );
+
+            }
+
+
+            updateSummary();
 
         }
-
-
-        updateSummary();
-
-    });
+    );
 
 });
 
 
 function updateSummary() {
 
-    const selectedElements =
-    document.querySelectorAll(".seat.selected");
+    if (selected.length === 0) {
 
-
-    let names = [];
-
-    let total = 0;
-
-
-    selectedElements.forEach(seat => {
-
-        names.push(
-            seat.dataset.seatNumber
-        );
-
-        total +=
-            parseFloat(seat.dataset.price);
-
-    });
-
-
-    if (names.length === 0) {
-
-        selectedSeatsText.innerText =
+        selectedSeats.innerText =
             "No seats selected";
 
         totalPrice.innerText =
-            "Rs.0.00";
+            "Rs.0";
 
+        seatIds.value =
+            "";
 
-        continueButton.style.opacity =
-            ".5";
+        seatNumbers.value =
+            "";
 
-        continueButton.style.pointerEvents =
-            "none";
+        totalPriceInput.value =
+            "0";
 
-        continueButton.href =
-            "#";
+        continueButton.disabled =
+            true;
 
         return;
 
     }
 
 
-    selectedSeatsText.innerText =
-        names.join(", ");
+    const numbers =
+        selected.map(
+            function(item) {
+                return item.number;
+            }
+        );
+
+
+    const ids =
+        selected.map(
+            function(item) {
+                return item.id;
+            }
+        );
+
+
+    const total =
+        selected.reduce(
+            function(sum, item) {
+                return sum + item.price;
+            },
+            0
+        );
+
+
+    selectedSeats.innerText =
+        numbers.join(", ");
 
 
     totalPrice.innerText =
-        "Rs." + total.toFixed(2);
+        "Rs." + total;
 
 
-    continueButton.style.opacity =
-        "1";
-
-    continueButton.style.pointerEvents =
-        "auto";
+    seatIds.value =
+        ids.join(",");
 
 
-    continueButton.href =
-        "payment.php?movie_id=<?php echo $movie_id; ?>&showtime_id=<?php echo $showtime_id; ?>&seats="
-        + selectedSeats.join(",");
+    seatNumbers.value =
+        numbers.join(",");
+
+
+    totalPriceInput.value =
+        total;
+
+
+    continueButton.disabled =
+        false;
 
 }
 

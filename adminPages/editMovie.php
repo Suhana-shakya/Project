@@ -66,7 +66,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $genre = trim($_POST["genre"]);
     $duration = (int) $_POST["duration"];
     $release_date = $_POST["release_date"];
+    /* ================= CHECK RELEASE DATE ================= */
 
+    /*
+    * If this movie already has showtimes,
+    * the new release date cannot be after those showtimes.
+    */
+
+    $showtime_sql = "SELECT MIN(show_date) AS first_show_date
+                    FROM Showtime
+                    WHERE movie_id = ?";
+
+    $showtime_stmt = $conn->prepare($showtime_sql);
+
+    $showtime_stmt->bind_param("i", $movie_id);
+
+    $showtime_stmt->execute();
+
+    $showtime_result = $showtime_stmt->get_result();
+
+    $showtime_data = $showtime_result->fetch_assoc();
+
+    $showtime_stmt->close();
+
+
+    if (
+        !empty($showtime_data["first_show_date"]) &&
+        $release_date > $showtime_data["first_show_date"]
+    ) {
+
+        $error = "Release date cannot be after an existing showtime date.";
+    }
     $director = trim($_POST["director"]);
     $cast = trim($_POST["cast"]);
     $rating = (float) $_POST["rating"];
@@ -567,7 +597,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
 
-            <!-- ================= STATUS ================= -->
+            <!-- ================= STATUS =================
 
             <div class="form-group">
 
@@ -607,7 +637,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 </select>
 
-            </div>
+            </div> -->
 
 
             <!-- ================= BUTTONS ================= -->
