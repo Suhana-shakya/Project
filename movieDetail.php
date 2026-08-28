@@ -480,167 +480,268 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <?php if ($movie["status"] == "Now Showing"): ?>
 
-
 <div class="booking-container" id="booking">
-
 
     <h2>
         Book Your Ticket
     </h2>
 
-
     <?php if ($showtime_result->num_rows > 0): ?>
 
+        <?php
+        /* ================= GROUP SHOWTIMES BY DATE ================= */
 
-    <form
-        action="seat.php"
-        method="GET"
-    >
+        $dates = [];
 
+        while ($showtime = $showtime_result->fetch_assoc()) {
 
-        <!-- ================= DATE ================= -->
+            $date = $showtime["show_date"];
 
-        <div class="booking-box">
+            if (!isset($dates[$date])) {
 
-            <h3>
-                Select Date
-            </h3>
+                $dates[$date] = [];
 
+            }
 
-            <div class="option-group">
-
-
-                <?php
-
-                $dates = [];
-
-                while ($showtime = $showtime_result->fetch_assoc()) {
-
-                    $date = $showtime["show_date"];
-
-                    if (!isset($dates[$date])) {
-
-                        $dates[$date] = [];
-
-                    }
-
-                    $dates[$date][] = $showtime;
-
-                }
-
-                ?>
+            $dates[$date][] = $showtime;
+        }
+        ?>
 
 
-                <?php foreach ($dates as $date => $date_showtimes): ?>
+        <form
+            action="seat.php"
+            method="GET"
+            id="bookingForm"
+        >
 
+            <!-- ================= DATE ================= -->
 
-                    <input
-                        type="radio"
-                        id="date_<?php echo $date; ?>"
-                        name="show_date"
-                        value="<?php echo $date; ?>"
-                        required
-                    >
+            <div class="booking-box">
 
+                <h3>
+                    Select Date
+                </h3>
 
-                    <label for="date_<?php echo $date; ?>">
+                <div class="option-group">
 
-                        <?php
-                        echo date(
-                            "d M",
-                            strtotime($date)
-                        );
-                        ?>
-
-                    </label>
-
-
-                <?php endforeach; ?>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ================= SHOWTIME ================= -->
-
-        <div class="booking-box">
-
-            <h3>
-                Select Showtime
-            </h3>
-
-
-            <div class="option-group">
-
-
-                <?php foreach ($dates as $date => $date_showtimes): ?>
-
-                    <?php foreach ($date_showtimes as $showtime): ?>
-
+                    <?php foreach ($dates as $date => $date_showtimes): ?>
 
                         <input
                             type="radio"
-                            id="showtime_<?php echo $showtime["showtime_id"]; ?>"
-                            name="showtime_id"
-                            value="<?php echo $showtime["showtime_id"]; ?>"
+                            id="date_<?php echo $date; ?>"
+                            name="show_date"
+                            value="<?php echo $date; ?>"
                             required
                         >
 
-
                         <label
-                            for="showtime_<?php echo $showtime["showtime_id"]; ?>"
+                            for="date_<?php echo $date; ?>"
                         >
 
                             <?php
-
                             echo date(
-                                "g:i A",
-                                strtotime($showtime["show_time"])
-                            );
-
-                            ?>
-
-                            -
-                            <?php
-                            echo htmlspecialchars(
-                                $showtime["hall_name"]
+                                "d M",
+                                strtotime($date)
                             );
                             ?>
 
                         </label>
 
-
                     <?php endforeach; ?>
 
-                <?php endforeach; ?>
-
+                </div>
 
             </div>
 
-        </div>
+
+            <!-- ================= SHOWTIME ================= -->
+
+            <div class="booking-box">
+
+                <h3>
+                    Select Showtime
+                </h3>
+
+                <div class="option-group">
+
+                    <?php foreach ($dates as $date => $date_showtimes): ?>
+
+                        <?php foreach ($date_showtimes as $showtime): ?>
+
+                            <input
+                                type="radio"
+                                id="showtime_<?php echo $showtime["showtime_id"]; ?>"
+                                name="showtime_id"
+                                value="<?php echo $showtime["showtime_id"]; ?>"
+                                data-date="<?php echo $date; ?>"
+                                data-hall-id="<?php echo $showtime["hall_id"]; ?>"
+                                required
+                            >
+
+                            <label
+                                for="showtime_<?php echo $showtime["showtime_id"]; ?>"
+                                data-showtime-date="<?php echo $date; ?>"
+                            >
+
+                                <?php
+                                echo date(
+                                    "g:i A",
+                                    strtotime($showtime["show_time"])
+                                );
+                                ?>
+
+                                -
+
+                                <?php
+                                echo htmlspecialchars(
+                                    $showtime["hall_name"]
+                                );
+                                ?>
+
+                            </label>
+
+                        <?php endforeach; ?>
+
+                    <?php endforeach; ?>
+
+                </div>
+
+            </div>
 
 
+            <!-- ================= HIDDEN VALUES ================= -->
 
-        <!-- ================= BUTTON ================= -->
+            <input
+                type="hidden"
+                name="movie_id"
+                value="<?php echo $movie_id; ?>"
+            >
 
-        <div class="select-seat">
-
-            <a class="seat-btn" href="seat.php?movie_id=8&showtime_id=9&hall_id=1" >
-                Select Seats
-                <i class="fa-solid fa-arrow-right"></i>
-            </a>
-
-        </div>
+            <input
+                type="hidden"
+                name="hall_id"
+                id="hall_id"
+            >
 
 
-    </form>
+            <!-- ================= BUTTON ================= -->
+
+            <div class="select-seat">
+
+                <button
+                    type="submit"
+                    class="seat-btn"
+                >
+
+                    Select Seats
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <!-- ================= DATE / SHOWTIME SCRIPT ================= -->
+
+        <script>
+
+        const dateOptions =
+            document.querySelectorAll(
+                'input[name="show_date"]'
+            );
+
+        const showtimeOptions =
+            document.querySelectorAll(
+                'input[name="showtime_id"]'
+            );
+
+        const showtimeLabels =
+            document.querySelectorAll(
+                '[data-showtime-date]'
+            );
+
+        const hallInput =
+            document.getElementById("hall_id");
+
+
+        /* ================= DATE SELECTION ================= */
+
+        dateOptions.forEach(function(dateOption) {
+
+            dateOption.addEventListener("change", function() {
+
+                const selectedDate = this.value;
+
+
+                /* Remove previously selected showtime */
+
+                showtimeOptions.forEach(function(showtime) {
+
+                    showtime.checked = false;
+
+                    if (
+                        showtime.dataset.date === selectedDate
+                    ) {
+
+                        showtime.style.display = "inline-block";
+
+                    } else {
+
+                        showtime.style.display = "none";
+
+                    }
+
+                });
+
+
+                /* Show/hide corresponding labels */
+
+                showtimeLabels.forEach(function(label) {
+
+                    if (
+                        label.dataset.showtimeDate === selectedDate
+                    ) {
+
+                        label.style.display = "inline-block";
+
+                    } else {
+
+                        label.style.display = "none";
+
+                    }
+
+                });
+
+
+                /* Reset hall */
+
+                hallInput.value = "";
+
+            });
+
+        });
+
+
+        /* ================= SHOWTIME SELECTION ================= */
+
+        showtimeOptions.forEach(function(showtime) {
+
+            showtime.addEventListener("change", function() {
+
+                hallInput.value =
+                    this.dataset.hallId;
+
+            });
+
+        });
+
+        </script>
 
 
     <?php else: ?>
-
 
         <p class="no-showtimes">
 
@@ -649,12 +750,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         </p>
 
-
     <?php endif; ?>
 
-
 </div>
-
 
 <?php endif; ?>
 

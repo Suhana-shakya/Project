@@ -405,32 +405,32 @@ body{
     box-shadow:0 12px 25px rgba(236,72,153,.45);
 }
 
-.selected{
+.selected-box{
 
     background:#FFD166;
 
     box-shadow:0 0 20px rgba(255,209,102,.6);
 }
 
-.selected::before{
+.selected-box::before{
 
     background:white;
 }
 
-.taken{
+.taken-box{
 
     background:#ef4444;
 
     cursor:not-allowed;
 }
 
-.taken:hover{
+.taken-box:hover{
 
     transform:none;
 
     box-shadow:none;
 }
-
+/* 
 /*==================================================
                 LEGEND
 ==================================================*/
@@ -479,7 +479,7 @@ body{
 .taken-box{
 
     background:#ef4444;
-}
+} */
 
 /*==================================================
                 SUMMARY

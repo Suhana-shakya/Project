@@ -116,56 +116,37 @@ while ($row = $booked_result->fetch_assoc()) {
     $booked_seats[] = (int)$row['seat_id'];
 }
 
-
 /* =====================================================
    PRICE SETTINGS
 =====================================================
 
-   Before 12 AM:
-   Regular  = 250
-   Premium  = 350
-   VIP      = 500
-
-   12 AM and later:
-   Regular  = 300
+   Before 12 PM:
+   Regular  = 350
    Premium  = 400
+   VIP      = 450
+
+   12 PM and later:
+   Regular  = 450
+   Premium  = 500
    VIP      = 550
 ===================================================== */
 
 $show_time = strtotime($show['show_time']);
 
-$midnight = strtotime("00:00:00");
-$noon_cutoff = strtotime("12:00:00");
-
-/*
-   Your previous rule was:
-   before/at 12 AM = cheaper
-   after 12 AM = 450
-
-   Since a normal cinema showtime can be PM,
-   we use 12:00 AM as the late-night boundary.
-
-   For example:
-   10:30 PM -> normal price
-   11:30 PM -> normal price
-   12:30 AM -> late-night price
-*/
-
 $hour = (int)date("H", $show_time);
 
-if ($hour >= 0 && $hour < 6) {
+if ($hour < 12) {
 
-    $regular_price = 300;
+    $regular_price = 350;
     $premium_price = 400;
-    $vip_price = 550;
+    $vip_price = 450;
 
 } else {
 
-    $regular_price = 250;
-    $premium_price = 350;
-    $vip_price = 500;
+    $regular_price = 450;
+    $premium_price = 500;
+    $vip_price = 550;
 }
-
 
 /* =====================================================
    POSTER PATH
@@ -339,18 +320,8 @@ Login
 
 <?php if ($poster != ""): ?>
 
-<img
-src="<?php echo htmlspecialchars($poster_path); ?>"
-alt="<?php echo htmlspecialchars($movie['title']); ?>"
-onerror="this.src='images/default-poster.jpg';"
->
-
-<?php else: ?>
-
-<img
-src="images/default-poster.jpg"
-alt="Movie Poster"
->
+<img src="uploads/posters/<?php echo htmlspecialchars($movie['poster']); ?>"
+     alt="<?php echo htmlspecialchars($movie['title']); ?>">
 
 <?php endif; ?>
 
@@ -553,7 +524,7 @@ SCREEN
 
 <div>
 
-<div class="box available"></div>
+<div class="available"></div>
 
 Available
 
@@ -562,7 +533,7 @@ Available
 
 <div>
 
-<div class="box selected-box"></div>
+<div class="selected-box"></div>
 
 Selected
 
@@ -571,7 +542,7 @@ Selected
 
 <div>
 
-<div class="box taken-box"></div>
+<div class="taken-box"></div>
 
 Booked
 
@@ -934,8 +905,8 @@ id="total_price"
 
 <button
 type="submit"
-id="continueButton"
-disabled
+class="continueBtn"
+
 >
 
 Continue
