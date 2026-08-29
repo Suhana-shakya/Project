@@ -7,7 +7,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Booking Confirmation | HiMovie</title>
-
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="confirmation.css">
 
@@ -19,57 +18,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <body>
 
 <!-- ================= NAVBAR ================= -->
-
-<nav>
-
-<a href="index.html" class="logo">
-
-    <i class="fa-solid fa-clapperboard"></i>
-
-    <span>HiMovie</span>
-
-</a>
-
-    <ul>
-
-        <li>
-            <a href="index.html">Home</a>
-        </li>
-
-        <li>
-            <a href="movies.html">Now Showing</a>
-        </li>
-
-        <li>
-            <a href="upcomingMovies.html">Upcoming</a>
-        </li>
-
-        <li class="search-box">
-
-            <i class="fa-solid fa-magnifying-glass"></i>
-
-            <input
-            type="text"
-            placeholder="Search movies...">
-
-        </li>
-
-        <li>
-
-            <a href="login.html" class="login-btn">
-
-                <i class="fa-solid fa-user"></i>
-
-                Login
-
-            </a>
-
-        </li>
-
-    </ul>
-
-</nav>
-
+<?php include "navbar.php"; ?>
 <!-- ================= PAGE ================= -->
 
 <section class="confirmation-page">

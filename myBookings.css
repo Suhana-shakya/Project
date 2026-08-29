@@ -1,0 +1,304 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0d0d12;
+    color: white;
+}
+
+/* ================= SECTION ================= */
+
+.bookings-section {
+
+    min-height: 100vh;
+
+    padding: 130px 70px 60px;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(147, 51, 234, 0.18),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at top left,
+            rgba(236, 72, 153, 0.12),
+            transparent 30%
+        ),
+        #0f172a;
+
+    color: white;
+}
+
+.bookings-container {
+
+    max-width: 1000px;
+
+    margin: 0 auto;
+}
+
+/* ================= HEADER ================= */
+
+.page-header {
+    margin-bottom: 35px;
+}
+
+.page-header h1 {
+    margin: 0 0 8px;
+
+    font-size: 30px;
+}
+
+.page-header p {
+    margin: 0;
+
+    color: #999;
+
+    font-size: 14px;
+}
+
+/* ================= BOOKING CARD ================= */
+
+.booking-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+.booking-card {
+    display: flex;
+
+    background: #18181f;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+    transition: 0.2s;
+}
+
+.booking-card:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(255, 61, 113, 0.35);
+}
+
+/* ================= POSTER ================= */
+
+.booking-poster {
+    width: 150px;
+
+    flex-shrink: 0;
+}
+
+.booking-poster img {
+    width: 100%;
+    height: 100%;
+
+    min-height: 210px;
+
+    object-fit: cover;
+}
+
+/* ================= DETAILS ================= */
+
+.booking-details {
+    flex: 1;
+
+    padding: 22px 25px;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+.booking-details h2 {
+    margin: 0 0 18px;
+
+    font-size: 21px;
+}
+
+/* ================= INFO ================= */
+
+.booking-info {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 14px;
+
+    color: #ccc;
+
+    font-size: 14px;
+}
+
+.booking-info div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+.booking-info i {
+    width: 18px;
+
+    color: #ff3d71;
+
+    text-align: center;
+}
+
+/* ================= BOTTOM ================= */
+
+.booking-bottom {
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    margin-top: auto;
+
+    padding-top: 20px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ticket-number {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.ticket-number span {
+    color: #777;
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+}
+
+.ticket-number strong {
+    color: #ddd;
+
+    font-size: 14px;
+}
+
+.status-container {
+    display: flex;
+
+    gap: 8px;
+}
+
+/* ================= STATUS ================= */
+
+.payment-status,
+.booking-status {
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.payment-status {
+    background: rgba(34, 197, 94, 0.12);
+
+    color: #4ade80;
+}
+
+.booking-status {
+    background: rgba(255, 61, 113, 0.12);
+
+    color: #ff6b91;
+}
+
+/* ================= NO BOOKINGS ================= */
+
+.no-bookings {
+    text-align: center;
+
+    padding: 70px 20px;
+
+    background: #18181f;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 16px;
+}
+
+.no-bookings > i {
+    font-size: 45px;
+
+    color: #ff3d71;
+
+    margin-bottom: 20px;
+}
+
+.no-bookings h2 {
+    margin: 0 0 8px;
+}
+
+.no-bookings p {
+    color: #888;
+
+    margin-bottom: 25px;
+}
+
+.no-bookings a {
+    display: inline-block;
+
+    padding: 11px 20px;
+
+    background: #ff3d71;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 650px) {
+
+    .booking-card {
+        flex-direction: column;
+    }
+
+    .booking-poster {
+        width: 100%;
+        height: 250px;
+    }
+
+    .booking-info {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-bottom {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+}

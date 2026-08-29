@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["customer_email"] = $customer["email"];
             $_SESSION["customer_username"] = $customer["username"];
 
-            header("Location: index.html");
+            header("Location: index.php");
             exit();
 
         } else {
@@ -95,62 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
 
-<nav>
-
-    <div class="logo">
-        <i class="fa-solid fa-clapperboard"></i>
-        <span>HiMovie</span>
-    </div>
-    <ul>
-
-    <li>
-        <a href="index.php">
-            Home
-        </a>
-    </li>
-
-
-    <li>
-        <a href="movies.php">
-            Now Showing
-        </a>
-    </li>
-
-
-    <li>
-        <a href="upcomingMovies.php">
-            Upcoming
-        </a>
-    </li>
-
-
-    <li class="search-box">
-
-        <i class="fa-solid fa-magnifying-glass"></i>
-
-        <input
-            type="text"
-            placeholder="Search movies..."
-        >
-
-    </li>
-
-
-    <li>
-
-        <a href="login.php" class="login-btn">
-
-            <i class="fa-solid fa-user"></i>
-
-            Login
-
-        </a>
-
-    </li>
-
-</ul>
-
-</nav>
+<?php include "navbar.php"; ?>
 
 <section class="login-section">
 

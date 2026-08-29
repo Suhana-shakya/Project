@@ -21,7 +21,6 @@ $hero_movie = mysqli_fetch_assoc($hero_result);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>HiMovie</title>
-
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="index.css">
 
@@ -32,59 +31,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <body>
 
-<!-- ================= NAVBAR ================= -->
-
-
-
-<nav>
-
- <a href="index.php" class="logo">
-
-    <i class="fa-solid fa-clapperboard"></i>
-
-    <span>HiMovie</span>
-
-</a>
-
-    <ul>
-
-        <li>
-            <a href="index.php" class="active">Home</a>
-        </li>
-
-        <li>
-            <a href="movies.php">Now Showing</a>
-        </li>
-
-        <li>
-            <a href="upcomingMovies.php">Upcoming</a>
-        </li>
-
-        <li class="search-box">
-
-            <i class="fa-solid fa-magnifying-glass"></i>
-
-            <input
-            type="text"
-            placeholder="Search movies...">
-
-        </li>
-
-        <li>
-
-            <a href="login.php" class="login-btn">
-
-                <i class="fa-solid fa-user"></i>
-
-                Login
-
-            </a>
-
-        </li>
-
-    </ul>
-
-</nav>
+<?php include "navbar.php"; ?>
 
 <!-- ================= HERO ================= -->
 
