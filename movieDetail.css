@@ -2,579 +2,481 @@
                 RESET
 ========================================== */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:"Segoe UI",sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
 }
 
-body{
-
-    min-height:100vh;
-
-    color:white;
+body {
+    min-height: 100vh;
+    color: white;
 
     background:
-    radial-gradient(circle at top right,#7c3aed55 0%,transparent 30%),
-    radial-gradient(circle at bottom left,#ec489955 0%,transparent 30%),
-    linear-gradient(135deg,#111827,#1e1b4b,#4c1d95);
+        radial-gradient(
+            circle at top right,
+            #7c3aed55 0%,
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at bottom left,
+            #ec489955 0%,
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #111827,
+            #1e1b4b,
+            #4c1d95
+        );
 
-    padding-top:90px;
-
+    padding-top: 90px;
 }
+
 
 /* ==========================================
                 PAGE
 ========================================== */
 
-.movie-page{
-
-    width:92%;
-
-    max-width:1450px;
-
-    margin:auto;
-
-    padding:40px 0 80px;
-
+.movie-page {
+    width: 92%;
+    max-width: 1450px;
+    margin: auto;
+    padding: 40px 0 80px;
 }
+
 
 /* ==========================================
             MOVIE CONTAINER
 ========================================== */
 
-.movie-container{
+.movie-container {
+    display: grid;
+    grid-template-columns: 330px 1fr;
+    gap: 40px;
 
-    display:grid;
+    background: rgba(255, 255, 255, .08);
+    backdrop-filter: blur(18px);
 
-    grid-template-columns:330px 1fr;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, .08);
 
-    gap:40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
 
-    background:rgba(255,255,255,.08);
-
-    backdrop-filter:blur(18px);
-
-    border-radius:30px;
-
-    border:1px solid rgba(255,255,255,.08);
-
-    box-shadow:0 20px 60px rgba(0,0,0,.35);
-
-    padding:35px;
-
-    margin-bottom:40px;
-
+    padding: 35px;
+    margin-bottom: 40px;
 }
+
 
 /* ==========================================
                 POSTER
 ========================================== */
 
-.poster{
-
-    position:relative;
-
+.poster {
+    position: relative;
 }
 
-.poster img{
+.poster img {
+    width: 100%;
+    height: 615px;
 
-    width:100%;
+    object-fit: cover;
 
-    height:615px;
-
-    object-fit:cover;
-
-    border-radius:20px;
-
-    display:block;
-
+    border-radius: 20px;
+    display: block;
 }
 
-.badge{
+.badge {
+    position: absolute;
+    left: 18px;
+    bottom: 18px;
 
-    position:absolute;
+    background: #ec4899;
+    color: white;
 
-    left:18px;
+    padding: 10px 20px;
+    border-radius: 40px;
 
-    bottom:18px;
-
-    background:#ec4899;
-
-    color:white;
-
-    padding:10px 20px;
-
-    border-radius:40px;
-
-    font-size:13px;
-
-    font-weight:700;
-
+    font-size: 13px;
+    font-weight: 700;
 }
+
 
 /* ==========================================
                 DETAILS
 ========================================== */
 
-.details{
-
-    display:flex;
-
-    flex-direction:column;
-
+.details {
+    display: flex;
+    flex-direction: column;
 }
 
-.details h1{
-
-    font-size:58px;
-
-    margin-bottom:20px;
-
+.details h1 {
+    font-size: 58px;
+    margin-bottom: 20px;
 }
 
-.description{
-
-    color:#d8d8d8;
-
-    line-height:1.9;
-
-    font-size:17px;
-
-    margin-bottom:35px;
-
+.description {
+    color: #d8d8d8;
+    line-height: 1.9;
+    font-size: 17px;
+    margin-bottom: 35px;
 }
+
 
 /* ==========================================
                 STATS
 ========================================== */
 
-.stats{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    gap:15px;
-
-    margin-bottom:35px;
-
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 35px;
 }
 
-.stats span{
+.stats span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 
-    display:flex;
+    padding: 12px 22px;
 
-    align-items:center;
+    border-radius: 40px;
 
-    gap:10px;
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .08);
 
-    padding:12px 22px;
-
-    border-radius:40px;
-
-    background:rgba(255,255,255,.05);
-
-    border:1px solid rgba(255,255,255,.08);
-
-    font-weight:600;
-
+    font-weight: 600;
 }
 
-.stats i{
-
-    color:#FFD166;
-
+.stats i {
+    color: #FFD166;
 }
+
 
 /* ==========================================
-            MOVIE INFO
+            MOVIE INFORMATION
 ========================================== */
 
-.details h2{
-
-    margin-bottom:25px;
-
-    font-size:30px;
-
+.details h2 {
+    margin-bottom: 25px;
+    font-size: 30px;
 }
 
-.movie-info{
-
-    background:rgba(255,255,255,.05);
-
-    border-radius:20px;
-
-    padding:25px;
-
+.movie-info {
+    background: rgba(255, 255, 255, .05);
+    border-radius: 20px;
+    padding: 25px;
 }
 
-.info-row{
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 35px;
 
-    display:flex;
+    padding: 18px 0;
 
-    justify-content:space-between;
-
-    gap:35px;
-
-    padding:18px 0;
-
-    border-bottom:1px solid rgba(255,255,255,.08);
-
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
 }
 
-.info-row:last-child{
-
-    border:none;
-
+.info-row:last-child {
+    border: none;
 }
 
-.title{
-
-    width:180px;
-
-    color:#FFD166;
-
-    font-weight:700;
-
+.title {
+    width: 180px;
+    color: #FFD166;
+    font-weight: 700;
 }
 
-.info-row span:last-child{
-
-    flex:1;
-
-    color:#d6d6d6;
-
-    line-height:1.7;
-
+.info-row span:last-child {
+    flex: 1;
+    color: #d6d6d6;
+    line-height: 1.7;
 }
+
 
 /* ==========================================
-                BUTTONS
+                TRAILER BUTTON
 ========================================== */
 
-.buttons{
-
-    display:flex;
-
-    gap:18px;
-
-    margin-top:35px;
-
+.buttons {
+    display: flex;
+    gap: 18px;
+    margin-top: 35px;
 }
 
-.watch-btn,
-.book-btn{
+.watch-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 
-    display:inline-flex;
+    padding: 18px 30px;
 
-    align-items:center;
+    border-radius: 50px;
 
-    justify-content:center;
+    text-decoration: none;
+    color: white;
 
-    gap:10px;
+    font-size: 17px;
+    font-weight: 700;
 
-    padding:18px 30px;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .12);
 
-    border-radius:50px;
-
-    text-decoration:none;
-
-    color:white;
-
-    font-size:17px;
-
-    font-weight:700;
-
-    transition:.35s;
-
+    transition: .35s;
 }
 
-.watch-btn{
-
-    background:rgba(255,255,255,.08);
-
-    border:1px solid rgba(255,255,255,.12);
-
+.watch-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .35);
 }
 
-.book-btn{
-
-    background:linear-gradient(135deg,#ec4899,#9333ea);
-
-}
-
-.watch-btn:hover,
-.book-btn:hover{
-
-    transform:translateY(-5px);
-
-    box-shadow:0 18px 40px rgba(0,0,0,.35);
-
-}
 
 /* ==========================================
             BOOKING CONTAINER
 ========================================== */
 
-.booking-container{
+.booking-container {
+    background: rgba(255, 255, 255, .08);
+    backdrop-filter: blur(18px);
 
-    background:rgba(255,255,255,.08);
+    border-radius: 30px;
 
-    backdrop-filter:blur(18px);
+    border: 1px solid rgba(255, 255, 255, .08);
 
-    border-radius:30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
 
-    border:1px solid rgba(255,255,255,.08);
-
-    box-shadow:0 20px 60px rgba(0,0,0,.35);
-
-    padding:40px;
-
+    padding: 40px;
 }
 
-.booking-container h2{
-
-    font-size:36px;
-
-    margin-bottom:35px;
-
+.booking-container h2 {
+    font-size: 36px;
+    margin-bottom: 35px;
 }
 
-.booking-box{
-
-    margin-bottom:35px;
-
+.booking-box {
+    margin-bottom: 35px;
 }
 
-.booking-box h3{
-
-    margin-bottom:18px;
-
-    font-size:22px;
-
+.booking-box h3 {
+    margin-bottom: 18px;
+    font-size: 22px;
 }
+
 
 /* ==========================================
-            OPTIONS
+                OPTIONS
 ========================================== */
 
-.option-group{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    gap:15px;
-
+.option-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
-.option-group input{
 
-    display:none;
+/* Hide actual radio buttons */
 
+.option-group input[type="radio"] {
+    display: none;
 }
 
-.option-group label{
 
-    padding:15px 28px;
+/* Date and showtime buttons */
 
-    background:rgba(255,255,255,.05);
+.option-group label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-    border:2px solid transparent;
+    padding: 15px 28px;
 
-    border-radius:40px;
+    background: rgba(255, 255, 255, .05);
 
-    cursor:pointer;
+    border: 2px solid transparent;
+    border-radius: 40px;
 
-    transition:.35s;
+    cursor: pointer;
 
-    font-weight:600;
+    transition: .35s;
 
+    font-weight: 600;
 }
 
-.option-group label:hover{
 
-    border-color:#ec4899;
+/* Hover */
 
-    transform:translateY(-3px);
-
+.option-group label:hover {
+    border-color: #ec4899;
+    transform: translateY(-3px);
 }
 
-.option-group input:checked+label{
 
-    background:#ec4899;
+/* Selected option */
 
-    border-color:#ec4899;
-
+.option-group input[type="radio"]:checked + label {
+    background: #ec4899;
+    border-color: #ec4899;
+    color: white;
 }
+
 
 /* ==========================================
-            SELECT SEAT
+            SHOWTIME OPTIONS
 ========================================== */
 
-.select-seat{
+/*
+   Showtime labels are hidden initially by JavaScript.
+   They become visible after a date is selected.
+*/
 
-    margin-top:20px;
-
-    text-align:right;
-
+#showtimeBox .option-group label {
+    min-width: 190px;
 }
 
-.seat-btn{
-
-    display:inline-flex;
-
-    align-items:center;
-
-    gap:12px;
-
-    text-decoration:none;
-
-    color:white;
-
-    padding:18px 35px;
-
-    border-radius:50px;
-
-    background:linear-gradient(135deg,#ec4899,#c026d3);
-
-    font-size:18px;
-
-    font-weight:700;
-
-    transition:.35s;
-
-}
-
-.seat-btn:hover{
-
-    transform:translateY(-5px);
-
-    box-shadow:0 20px 45px rgba(236,72,153,.45);
-
-}
 
 /* ==========================================
-            RESPONSIVE
+            SELECT SEAT BUTTON
 ========================================== */
 
-@media(max-width:1100px){
-
-.movie-container{
-
-    grid-template-columns:1fr;
-
+.select-seat {
+    margin-top: 20px;
+    text-align: right;
 }
 
-.poster{
+.seat-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-    max-width:340px;
+    gap: 12px;
 
-    margin:auto;
+    text-decoration: none;
+    color: white;
 
+    padding: 18px 35px;
+
+    border: none;
+    border-radius: 50px;
+
+    background: linear-gradient(
+        135deg,
+        #ec4899,
+        #c026d3
+    );
+
+    font-size: 18px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .35s;
 }
 
-.details{
+.seat-btn:hover {
+    transform: translateY(-5px);
 
-    text-align:center;
-
+    box-shadow:
+        0 20px 45px rgba(236, 72, 153, .45);
 }
 
-.stats{
 
-    justify-content:center;
+/* ==========================================
+            NO SHOWTIMES
+========================================== */
 
+.no-showtimes {
+    color: #d6d6d6;
+    font-size: 16px;
 }
 
-.buttons{
 
-    justify-content:center;
+/* ==========================================
+                RESPONSIVE
+========================================== */
 
+@media (max-width: 1100px) {
+
+    .movie-container {
+        grid-template-columns: 1fr;
+    }
+
+    .poster {
+        max-width: 340px;
+        margin: auto;
+    }
+
+    .details {
+        text-align: center;
+    }
+
+    .stats {
+        justify-content: center;
+    }
+
+    .buttons {
+        justify-content: center;
+    }
+
+    .info-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .title {
+        width: auto;
+    }
+
+    .select-seat {
+        text-align: center;
+    }
 }
 
-.info-row{
 
-    flex-direction:column;
+@media (max-width: 768px) {
 
-    gap:8px;
+    .details h1 {
+        font-size: 42px;
+    }
 
-}
+    .description {
+        font-size: 16px;
+    }
 
-.title{
+    .option-group {
+        flex-direction: column;
+    }
 
-    width:auto;
+    .option-group label {
+        width: 100%;
+        text-align: center;
+    }
 
-}
+    #showtimeBox .option-group label {
+        min-width: 0;
+    }
 
-.select-seat{
+    .buttons {
+        flex-direction: column;
+    }
 
-    text-align:center;
+    .watch-btn {
+        width: 100%;
+    }
 
-}
+    .seat-btn {
+        width: 100%;
+    }
 
-}
+    .booking-container {
+        padding: 25px;
+    }
 
-@media(max-width:768px){
-
-.details h1{
-
-    font-size:42px;
-
-}
-
-.description{
-
-    font-size:16px;
-
-}
-
-.option-group{
-
-    flex-direction:column;
-
-}
-
-.option-group label{
-
-    width:100%;
-
-    text-align:center;
-
-}
-
-.buttons{
-
-    flex-direction:column;
-
-}
-
-.watch-btn,
-.book-btn{
-
-    width:100%;
-
-}
-
-.seat-btn{
-
-    width:100%;
-
-    justify-content:center;
-
-}
-
-.booking-container{
-
-    padding:25px;
-
-}
-
-.movie-container{
-
-    padding:25px;
-
-}
-
+    .movie-container {
+        padding: 25px;
+    }
 }

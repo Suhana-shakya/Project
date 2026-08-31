@@ -90,7 +90,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
             <?php } ?>
 
-            <a href="movieDetails.php?id=<?php echo $hero_movie['movie_id']; ?>"
+            <a href="movieDetail.php?id=<?php echo $hero_movie['movie_id']; ?>"
                class="book-btn">
 
                 <i class="fa-solid fa-ticket"></i>

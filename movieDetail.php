@@ -483,7 +483,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
             <!-- ================= SHOWTIME ================= -->
 
-            <div class="booking-box">
+            <div class="booking-box" id="showtimeBox" style="display: none;">
 
                 <h3>
                     Select Showtime
@@ -575,95 +575,108 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         <script>
 
-        const dateOptions =
-            document.querySelectorAll(
-                'input[name="show_date"]'
-            );
+            const dateOptions =
+                document.querySelectorAll(
+                    'input[name="show_date"]'
+                );
 
-        const showtimeOptions =
-            document.querySelectorAll(
-                'input[name="showtime_id"]'
-            );
+            const showtimeOptions =
+                document.querySelectorAll(
+                    'input[name="showtime_id"]'
+                );
 
-        const showtimeLabels =
-            document.querySelectorAll(
-                '[data-showtime-date]'
-            );
+            const showtimeLabels =
+                document.querySelectorAll(
+                    '[data-showtime-date]'
+                );
 
-        const hallInput =
-            document.getElementById("hall_id");
+            const hallInput =
+                document.getElementById("hall_id");
 
-
-        /* ================= DATE SELECTION ================= */
-
-        dateOptions.forEach(function(dateOption) {
-
-            dateOption.addEventListener("change", function() {
-
-                const selectedDate = this.value;
+            const showtimeBox =
+                document.getElementById("showtimeBox");
 
 
-                /* Remove previously selected showtime */
+            /* ================= INITIAL STATE ================= */
 
-                showtimeOptions.forEach(function(showtime) {
+            /* Hide all showtimes initially */
 
-                    showtime.checked = false;
+            showtimeOptions.forEach(function(showtime) {
 
-                    if (
-                        showtime.dataset.date === selectedDate
-                    ) {
-
-                        showtime.style.display = "inline-block";
-
-                    } else {
-
-                        showtime.style.display = "none";
-
-                    }
-
-                });
-
-
-                /* Show/hide corresponding labels */
-
-                showtimeLabels.forEach(function(label) {
-
-                    if (
-                        label.dataset.showtimeDate === selectedDate
-                    ) {
-
-                        label.style.display = "inline-block";
-
-                    } else {
-
-                        label.style.display = "none";
-
-                    }
-
-                });
-
-
-                /* Reset hall */
-
-                hallInput.value = "";
+                showtime.style.display = "none";
 
             });
 
-        });
+            showtimeLabels.forEach(function(label) {
 
-
-        /* ================= SHOWTIME SELECTION ================= */
-
-        showtimeOptions.forEach(function(showtime) {
-
-            showtime.addEventListener("change", function() {
-
-                hallInput.value =
-                    this.dataset.hallId;
+                label.style.display = "none";
 
             });
 
-        });
+
+            /* ================= DATE SELECTION ================= */
+
+            dateOptions.forEach(function(dateOption) {
+
+                dateOption.addEventListener("change", function() {
+
+                    const selectedDate = this.value;
+
+
+                    /* ================= SHOW SHOWTIME BOX ================= */
+
+                    showtimeBox.style.display = "block";
+
+
+                    /* ================= RESET SHOWTIME ================= */
+
+                    showtimeOptions.forEach(function(showtime) {
+
+                        showtime.checked = false;
+
+                    });
+
+
+                    /* ================= SHOW/HIDE LABELS ================= */
+
+                    showtimeLabels.forEach(function(label) {
+
+                        if (
+                            label.dataset.showtimeDate === selectedDate
+                        ) {
+
+                            label.style.display = "inline-block";
+
+                        } else {
+
+                            label.style.display = "none";
+
+                        }
+
+                    });
+
+
+                    /* ================= RESET HALL ================= */
+
+                    hallInput.value = "";
+
+                });
+
+            });
+
+
+            /* ================= SHOWTIME SELECTION ================= */
+
+            showtimeOptions.forEach(function(showtime) {
+
+                showtime.addEventListener("change", function() {
+
+                    hallInput.value =
+                        this.dataset.hallId;
+
+                });
+
+            });
 
         </script>
 

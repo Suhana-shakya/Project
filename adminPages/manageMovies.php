@@ -14,11 +14,17 @@ include "../db.php";
  * Today/past date      = Now Showing
  */
 
-$update_sql = "UPDATE Movie
-               SET status = CASE
-                   WHEN release_date > CURDATE() THEN 'Upcoming'
-                   ELSE 'Now Showing'
-               END";
+$update_sql = "UPDATE movie
+            SET status = CASE
+                WHEN release_date > CURDATE()
+                    THEN 'Upcoming'
+
+                WHEN release_date <= CURDATE()
+                    AND release_date > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+                    THEN 'Now Showing'
+
+                ELSE 'Archived'
+            END";
 
 $conn->query($update_sql);
 
@@ -33,7 +39,7 @@ $sql = "SELECT
             release_date,
             language,
             status
-        FROM Movie
+        FROM movie
         ORDER BY movie_id DESC";
 
 $result = $conn->query($sql);
@@ -350,23 +356,21 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
                                 <?php if ($movie["status"] == "Now Showing"): ?>
 
-
                                     <span class="active-user">
-
                                         Now Showing
-
                                     </span>
 
+                                <?php elseif ($movie["status"] == "Upcoming"): ?>
+
+                                    <span class="inactive-user">
+                                        Upcoming
+                                    </span>
 
                                 <?php else: ?>
 
-
-                                    <span class="inactive-user">
-
-                                        Upcoming
-
+                                    <span class="archived-user">
+                                        Archived
                                     </span>
-
 
                                 <?php endif; ?>
 

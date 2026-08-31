@@ -373,7 +373,15 @@ tbody tr:hover{
 
     font-weight:600;
 }
-
+.archived-user {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(156, 163, 175, 0.15);
+    color: #9ca3af;
+    font-size: 13px;
+    font-weight: 600;
+}
 
 /* ================= STATUS BUTTON ================= */
 

@@ -1,7 +1,245 @@
 <?php
-
+session_start();
 include "db.php";
+/* ================= CHECK LOGIN ================= */
 
+if (!isset($_SESSION["customer_id"])) {
+    header("Location: login.php");
+    exit();
+}
+
+$customer_id = (int)$_SESSION["customer_id"];
+/* =====================================================
+   TEMPORARY SEAT RESERVATION AJAX
+===================================================== */
+
+if (
+    $_SERVER["REQUEST_METHOD"] === "POST" &&
+    isset($_POST["action"]) &&
+    $_POST["action"] === "reserve_seat"
+) {
+
+    header("Content-Type: application/json");
+
+    $seat_id = isset($_POST["seat_id"])
+        ? (int)$_POST["seat_id"]
+        : 0;
+
+    $showtime_id_post = isset($_POST["showtime_id"])
+        ? (int)$_POST["showtime_id"]
+        : 0;
+
+    if ($seat_id <= 0 || $showtime_id_post <= 0) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Invalid seat information."
+        ]);
+        exit();
+    }
+
+    /* Remove expired reservations */
+
+    $cleanup_sql = "
+        DELETE FROM temporary_booking
+        WHERE expires_at <= NOW()
+    ";
+
+    $conn->query($cleanup_sql);
+
+
+    /* Check if seat is permanently booked */
+
+    $check_ticket = "
+        SELECT ticket_id
+        FROM ticket
+        WHERE seat_id = ?
+          AND showtime_id = ?
+          AND status = 'Confirmed'
+        LIMIT 1
+    ";
+
+    $stmt = $conn->prepare($check_ticket);
+    $stmt->bind_param(
+        "ii",
+        $seat_id,
+        $showtime_id_post
+    );
+    $stmt->execute();
+
+    $ticket_result = $stmt->get_result();
+
+    if ($ticket_result->num_rows > 0) {
+
+        echo json_encode([
+            "success" => false,
+            "message" => "This seat has already been booked."
+        ]);
+
+        exit();
+    }
+
+
+    /* Check temporary reservation */
+
+    $check_temp = "
+        SELECT temp_booking_id, customer_id
+        FROM temporary_booking
+        WHERE seat_id = ?
+          AND showtime_id = ?
+        LIMIT 1
+    ";
+
+    $stmt = $conn->prepare($check_temp);
+    $stmt->bind_param(
+        "ii",
+        $seat_id,
+        $showtime_id_post
+    );
+    $stmt->execute();
+
+    $temp_result = $stmt->get_result();
+
+
+    if ($temp_result->num_rows > 0) {
+
+        $temp = $temp_result->fetch_assoc();
+
+        /* Already reserved by this customer */
+
+        if ((int)$temp["customer_id"] === $customer_id) {
+
+            echo json_encode([
+                "success" => true,
+                "message" => "Seat is already reserved by you."
+            ]);
+
+            exit();
+
+        } else {
+
+            echo json_encode([
+                "success" => false,
+                "message" => "This seat is temporarily reserved by another customer."
+            ]);
+
+            exit();
+        }
+    }
+
+
+    /* Reserve for 10 minutes */
+
+    $insert_temp = "
+        INSERT INTO temporary_booking
+        (
+            customer_id,
+            seat_id,
+            showtime_id,
+            reserved_at,
+            expires_at
+        )
+        VALUES
+        (
+            ?,
+            ?,
+            ?,
+            NOW(),
+            DATE_ADD(NOW(), INTERVAL 10 MINUTE)
+        )
+    ";
+
+    $stmt = $conn->prepare($insert_temp);
+
+    $stmt->bind_param(
+        "iii",
+        $customer_id,
+        $seat_id,
+        $showtime_id_post
+    );
+
+    if ($stmt->execute()) {
+
+        echo json_encode([
+            "success" => true,
+            "message" => "Seat reserved for 10 minutes."
+        ]);
+
+    } else {
+
+        echo json_encode([
+            "success" => false,
+            "message" => "Unable to reserve seat."
+        ]);
+    }
+
+    exit();
+}
+/* =====================================================
+   RELEASE TEMPORARY SEAT
+===================================================== */
+
+if (
+    $_SERVER["REQUEST_METHOD"] === "POST" &&
+    isset($_POST["action"]) &&
+    $_POST["action"] === "release_seat"
+) {
+
+    header("Content-Type: application/json");
+
+    $seat_id = isset($_POST["seat_id"])
+        ? (int)$_POST["seat_id"]
+        : 0;
+
+    $showtime_id_post = isset($_POST["showtime_id"])
+        ? (int)$_POST["showtime_id"]
+        : 0;
+
+    if ($seat_id <= 0 || $showtime_id_post <= 0) {
+
+        echo json_encode([
+            "success" => false,
+            "message" => "Invalid seat information."
+        ]);
+
+        exit();
+    }
+
+
+    /* Delete only this customer's reservation */
+
+    $release_sql = "
+        DELETE FROM temporary_booking
+        WHERE seat_id = ?
+          AND showtime_id = ?
+          AND customer_id = ?
+    ";
+
+    $stmt = $conn->prepare($release_sql);
+
+    $stmt->bind_param(
+        "iii",
+        $seat_id,
+        $showtime_id_post,
+        $customer_id
+    );
+
+    if ($stmt->execute()) {
+
+        echo json_encode([
+            "success" => true,
+            "message" => "Seat released."
+        ]);
+
+    } else {
+
+        echo json_encode([
+            "success" => false,
+            "message" => "Unable to release seat."
+        ]);
+    }
+
+    exit();
+}
 /* =====================================================
    GET BOOKING INFORMATION
 ===================================================== */
@@ -13,7 +251,16 @@ $hall_id = isset($_GET['hall_id']) ? (int)$_GET['hall_id'] : 0;
 if ($movie_id <= 0 || $showtime_id <= 0 || $hall_id <= 0) {
     die("Invalid booking information.");
 }
+/* =====================================================
+   REMOVE EXPIRED TEMPORARY BOOKINGS
+===================================================== */
 
+$cleanup_sql = "
+    DELETE FROM temporary_booking
+    WHERE expires_at <= NOW()
+";
+
+$conn->query($cleanup_sql);
 
 /* =====================================================
    GET MOVIE
@@ -115,7 +362,41 @@ $booked_result = $stmt->get_result();
 while ($row = $booked_result->fetch_assoc()) {
     $booked_seats[] = (int)$row['seat_id'];
 }
+/********************************************************
+   GET TEMPORARILY RESERVED SEATS
+********************************************************/
 
+$temp_booked_seats = [];
+$my_temp_seats = [];
+
+$temp_sql = "
+    SELECT seat_id, customer_id
+    FROM temporary_booking
+    WHERE showtime_id = ?
+      AND expires_at > NOW()
+";
+
+$stmt = $conn->prepare($temp_sql);
+$stmt->bind_param("i", $showtime_id);
+$stmt->execute();
+
+$temp_result = $stmt->get_result();
+
+while ($row = $temp_result->fetch_assoc()) {
+
+    $temp_seat_id = (int)$row['seat_id'];
+    $temp_customer_id = (int)$row['customer_id'];
+
+    $temp_booked_seats[] = $temp_seat_id;
+
+    /*
+       Keep track of seats temporarily reserved
+       by the currently logged-in customer.
+    */
+    if ($temp_customer_id === $customer_id) {
+        $my_temp_seats[] = $temp_seat_id;
+    }
+}
 /* =====================================================
    PRICE SETTINGS
 =====================================================
@@ -527,15 +808,26 @@ while ($seat = $seat_result->fetch_assoc()):
     $is_booked =
         in_array($seat_id, $booked_seats);
 
+    $is_temp_booked =
+        in_array($seat_id, $temp_booked_seats);
+
+    $is_my_temp =
+        in_array($seat_id, $my_temp_seats);
+
 ?>
 
 
 <div
-class="seat <?php echo $is_booked ? 'taken' : ''; ?>"
+class="seat <?php
+    echo $is_booked ? 'taken' : '';
+    echo ($is_temp_booked && !$is_my_temp) ? ' temp-taken' : '';
+    echo $is_my_temp ? ' selected' : '';
+?>"
 data-seat-id="<?php echo $seat_id; ?>"
 data-seat-number="<?php echo $seat_number; ?>"
 data-seat-type="Regular"
 data-price="<?php echo $regular_price; ?>"
+data-temp-booked="<?php echo $is_temp_booked ? '1' : '0'; ?>"
 >
 
 <?php
@@ -606,15 +898,26 @@ while ($seat = $seat_result->fetch_assoc()):
     $is_booked =
         in_array($seat_id, $booked_seats);
 
+    $is_temp_booked =
+        in_array($seat_id, $temp_booked_seats);
+
+    $is_my_temp =
+        in_array($seat_id, $my_temp_seats);
+
 ?>
 
 
 <div
-class="seat premium-seat <?php echo $is_booked ? 'taken' : ''; ?>"
+class="seat premium-seat <?php
+    echo $is_booked ? 'taken' : '';
+    echo ($is_temp_booked && !$is_my_temp) ? ' temp-taken' : '';
+    echo $is_my_temp ? ' selected' : '';
+?>"
 data-seat-id="<?php echo $seat_id; ?>"
 data-seat-number="<?php echo $seat_number; ?>"
 data-seat-type="Premium"
 data-price="<?php echo $premium_price; ?>"
+data-temp-booked="<?php echo $is_temp_booked ? '1' : '0'; ?>"
 >
 
 <?php
@@ -685,15 +988,26 @@ while ($seat = $seat_result->fetch_assoc()):
     $is_booked =
         in_array($seat_id, $booked_seats);
 
+    $is_temp_booked =
+        in_array($seat_id, $temp_booked_seats);
+
+    $is_my_temp =
+        in_array($seat_id, $my_temp_seats);
+
 ?>
 
 
 <div
-class="seat vip-seat <?php echo $is_booked ? 'taken' : ''; ?>"
+class="seat vip-seat <?php
+    echo $is_booked ? 'taken' : '';
+    echo ($is_temp_booked && !$is_my_temp) ? ' temp-taken' : '';
+    echo $is_my_temp ? ' selected' : '';
+?>"
 data-seat-id="<?php echo $seat_id; ?>"
 data-seat-number="<?php echo $seat_number; ?>"
 data-seat-type="VIP"
 data-price="<?php echo $vip_price; ?>"
+data-temp-booked="<?php echo $is_temp_booked ? '1' : '0'; ?>"
 >
 
 <?php
@@ -754,7 +1068,10 @@ Rs. <?php echo $vip_price; ?>
 ===================================================== -->
 
 <div class="summary">
-
+<div id="reservationTimer" class="reservation-timer" style="display:none;">
+    <i class="fa-regular fa-clock"></i>
+    Seats reserved for <strong id="timerText">10:00</strong>
+</div>
 
 <div class="summary-left">
 
@@ -825,16 +1142,9 @@ id="total_price"
 >
 
 
-<button
-type="submit"
-class="continueBtn"
-
->
-
-Continue
-
-<i class="fa-solid fa-arrow-right"></i>
-
+<button type="submit" id="continueBtn" disabled>
+    Continue
+    <i class="fa-solid fa-arrow-right"></i>
 </button>
 
 
@@ -862,7 +1172,7 @@ Continue
 
 const seats =
 document.querySelectorAll(
-    ".seat:not(.taken)"
+    ".seat:not(.taken):not(.temp-taken)"
 );
 
 const selectedSeats =
@@ -892,7 +1202,7 @@ document.getElementById(
 
 const continueButton =
 document.getElementById(
-    "continueButton"
+    "continueBtn"
 );
 
 
@@ -902,44 +1212,161 @@ let selected = [];
 seats.forEach(function(seat) {
 
     seat.addEventListener(
-        "click",
-        function() {
+    "click",
+    function() {
 
-            const seatId =
-                this.dataset.seatId;
+        const seatElement = this;
 
-            const seatNumber =
-                this.dataset.seatNumber;
+        const seatId =
+            seatElement.dataset.seatId;
 
-            const seatType =
-                this.dataset.seatType;
+        const seatNumber =
+            seatElement.dataset.seatNumber;
 
-            const price =
-                Number(this.dataset.price);
+        const seatType =
+            seatElement.dataset.seatType;
+
+        const price =
+            Number(seatElement.dataset.price);
 
 
-            const existing =
-                selected.find(
-                    function(item) {
-                        return item.id === seatId;
+        /* ==========================================
+           CHECK IF ALREADY SELECTED
+        ========================================== */
+
+        const existing =
+            selected.find(
+                function(item) {
+                    return item.id === seatId;
+                }
+            );
+
+
+        /* ==========================================
+           DESELECT
+        ========================================== */
+
+        if (existing) {
+
+            const formData = new FormData();
+
+            formData.append(
+                "action",
+                "release_seat"
+            );
+
+            formData.append(
+                "seat_id",
+                seatId
+            );
+
+            formData.append(
+                "showtime_id",
+                "<?php echo $showtime_id; ?>"
+            );
+
+
+            fetch(
+                "seat.php",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            )
+            .then(
+                response => response.json()
+            )
+            .then(
+                data => {
+
+                    if (!data.success) {
+
+                        alert(data.message);
+
+                        return;
                     }
-                );
 
 
-            if (existing) {
+                    selected =
+                        selected.filter(
+                            function(item) {
+                                return item.id !== seatId;
+                            }
+                        );
 
-                selected =
-                    selected.filter(
-                        function(item) {
-                            return item.id !== seatId;
-                        }
+
+                    seatElement.classList.remove(
+                        "selected"
                     );
 
-                this.classList.remove(
-                    "selected"
-                );
 
-            } else {
+                    updateSummary();
+
+                }
+            )
+            .catch(
+                error => {
+
+                    console.error(
+                        "Release error:",
+                        error
+                    );
+
+                    alert(
+                        "Unable to release the seat."
+                    );
+                }
+            );
+
+            return;
+        }
+
+        /* ==========================================
+           RESERVE SEAT IN DATABASE
+        ========================================== */
+
+        const formData = new FormData();
+
+        formData.append(
+            "action",
+            "reserve_seat"
+        );
+
+        formData.append(
+            "seat_id",
+            seatId
+        );
+
+        formData.append(
+            "showtime_id",
+            "<?php echo $showtime_id; ?>"
+        );
+
+
+        fetch(
+            "seat.php",
+            {
+                method: "POST",
+                body: formData
+            }
+        )
+        .then(
+            response => response.json()
+        )
+        .then(
+            data => {
+
+                if (!data.success) {
+
+                    alert(data.message);
+
+                    return;
+                }
+
+
+                /* ==================================
+                   ADD TO SELECTED ARRAY
+                ================================== */
 
                 selected.push({
                     id: seatId,
@@ -948,18 +1375,34 @@ seats.forEach(function(seat) {
                     price: price
                 });
 
-                this.classList.add(
+                seatElement.classList.add(
                     "selected"
                 );
 
+                /* Start 10-minute timer */
+
+                startReservationTimer();
+
+                updateSummary();
+
             }
+        )
+        .catch(
+            error => {
 
+                console.error(
+                    "Reservation error:",
+                    error
+                );
 
-            updateSummary();
+                alert(
+                    "Unable to reserve this seat. Please try again."
+                );
+            }
+        );
 
-        }
-    );
-
+    }
+);
 });
 
 
@@ -1038,6 +1481,106 @@ function updateSummary() {
     continueButton.disabled =
         false;
 
+}
+/* =====================================================
+   10 MINUTE RESERVATION COUNTDOWN
+===================================================== */
+
+const reservationTimer =
+    document.getElementById("reservationTimer");
+
+const timerText =
+    document.getElementById("timerText");
+
+let reservationEndTime = null;
+
+let countdownInterval = null;
+
+
+function startReservationTimer() {
+
+    /*
+       If the timer has already started,
+       don't create another timer.
+    */
+
+    if (reservationEndTime !== null) {
+        return;
+    }
+
+
+    /*
+       10 minutes from now
+    */
+
+    reservationEndTime =
+        Date.now() + (10 * 60 * 1000);
+
+
+    reservationTimer.style.display =
+        "block";
+
+
+    countdownInterval =
+        setInterval(
+            updateReservationTimer,
+            1000
+        );
+
+
+    updateReservationTimer();
+}
+
+
+function updateReservationTimer() {
+
+    const remaining =
+        reservationEndTime - Date.now();
+
+
+    if (remaining <= 0) {
+
+        clearInterval(countdownInterval);
+
+        timerText.innerText =
+            "00:00";
+
+        reservationTimer.innerHTML =
+            '<i class="fa-solid fa-circle-exclamation"></i> ' +
+            'Your seat reservation has expired.';
+
+        /*
+           Reload the page so expired
+           temporary bookings are removed.
+        */
+
+        setTimeout(
+            function() {
+                window.location.reload();
+            },
+            1500
+        );
+
+        return;
+    }
+
+
+    const totalSeconds =
+        Math.floor(remaining / 1000);
+
+
+    const minutes =
+        Math.floor(totalSeconds / 60);
+
+
+    const seconds =
+        totalSeconds % 60;
+
+
+    timerText.innerText =
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0");
 }
 
 </script>
