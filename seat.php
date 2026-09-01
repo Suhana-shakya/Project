@@ -129,6 +129,84 @@ if (
 
     /* Reserve for 10 minutes */
 
+    /* =====================================================
+   GET EXISTING RESERVATION EXPIRY
+===================================================== */
+
+$existing_expiry = null;
+
+$expiry_sql = "
+    SELECT MIN(expires_at) AS expires_at
+    FROM temporary_booking
+    WHERE customer_id = ?
+      AND showtime_id = ?
+      AND expires_at > NOW()
+";
+
+$stmt = $conn->prepare($expiry_sql);
+
+$stmt->bind_param(
+    "ii",
+    $customer_id,
+    $showtime_id_post
+);
+
+$stmt->execute();
+
+$expiry_result = $stmt->get_result();
+
+if ($expiry_row = $expiry_result->fetch_assoc()) {
+    $existing_expiry = $expiry_row["expires_at"];
+}
+
+
+/* =====================================================
+   INSERT TEMPORARY BOOKING
+===================================================== */
+
+if ($existing_expiry !== null) {
+
+    /*
+     * Customer already has a reservation.
+     * Give the new seat the SAME expiry time.
+     */
+
+    $insert_temp = "
+        INSERT INTO temporary_booking
+        (
+            customer_id,
+            seat_id,
+            showtime_id,
+            reserved_at,
+            expires_at
+        )
+        VALUES
+        (
+            ?,
+            ?,
+            ?,
+            NOW(),
+            ?
+        )
+    ";
+
+    $stmt = $conn->prepare($insert_temp);
+
+    $stmt->bind_param(
+        "iiis",
+        $customer_id,
+        $seat_id,
+        $showtime_id_post,
+        $existing_expiry
+    );
+
+} else {
+
+    /*
+     * This is the customer's first seat.
+     * Start a new 10-minute reservation.
+     */
+
     $insert_temp = "
         INSERT INTO temporary_booking
         (
@@ -156,24 +234,50 @@ if (
         $seat_id,
         $showtime_id_post
     );
+}
 
-    if ($stmt->execute()) {
 
-        echo json_encode([
-            "success" => true,
-            "message" => "Seat reserved for 10 minutes."
-        ]);
+/* =====================================================
+   EXECUTE
+===================================================== */
+
+if ($stmt->execute()) {
+
+    /*
+     * Return the actual expiry time to JavaScript.
+     */
+
+    if ($existing_expiry !== null) {
+
+        $expiry_for_client = $existing_expiry;
 
     } else {
 
-        echo json_encode([
-            "success" => false,
-            "message" => "Unable to reserve seat."
-        ]);
+        $expiry_for_client =
+            date(
+                "Y-m-d H:i:s",
+                time() + (10 * 60)
+            );
     }
 
-    exit();
+    echo json_encode([
+        "success" => true,
+        "message" => "Seat reserved for 10 minutes.",
+        "expires_at" => $expiry_for_client
+    ]);
+
+} else {
+
+    echo json_encode([
+        "success" => false,
+        "message" => "Unable to reserve seat."
+    ]);
 }
+exit();
+}
+
+
+
 /* =====================================================
    RELEASE TEMPORARY SEAT
 ===================================================== */
@@ -368,9 +472,13 @@ while ($row = $booked_result->fetch_assoc()) {
 
 $temp_booked_seats = [];
 $my_temp_seats = [];
+$my_expiry_time = null;
+echo "<!-- MY EXPIRY START: ";
+var_dump($my_expiry_time);
+echo " -->";
 
 $temp_sql = "
-    SELECT seat_id, customer_id
+    SELECT seat_id, customer_id, expires_at
     FROM temporary_booking
     WHERE showtime_id = ?
       AND expires_at > NOW()
@@ -389,14 +497,26 @@ while ($row = $temp_result->fetch_assoc()) {
 
     $temp_booked_seats[] = $temp_seat_id;
 
-    /*
-       Keep track of seats temporarily reserved
-       by the currently logged-in customer.
-    */
     if ($temp_customer_id === $customer_id) {
+
         $my_temp_seats[] = $temp_seat_id;
+
+        /*
+         * Get the earliest expiry time belonging
+         * to this customer's current reservation.
+         */
+        if (
+            $my_expiry_time === null ||
+            strtotime($row['expires_at']) < strtotime($my_expiry_time)
+        ) {
+            $my_expiry_time = $row['expires_at'];
+        }
     }
 }
+echo "<!-- DEBUG EXPIRY: ";
+var_dump($my_expiry_time);
+echo " -->";
+
 /* =====================================================
    PRICE SETTINGS
 =====================================================
@@ -1070,7 +1190,7 @@ Rs. <?php echo $vip_price; ?>
 <div class="summary">
 <div id="reservationTimer" class="reservation-timer" style="display:none;">
     <i class="fa-regular fa-clock"></i>
-    Seats reserved for <strong id="timerText">10:00</strong>
+    Seats reserved for <strong id="timerText"></strong>
 </div>
 
 <div class="summary-left">
@@ -1162,58 +1282,113 @@ id="total_price"
 
 </section>
 
-
-
-<!-- =====================================================
-                       JAVASCRIPT
-===================================================== -->
-
 <script>
 
-const seats =
-document.querySelectorAll(
+const seats = document.querySelectorAll(
     ".seat:not(.taken):not(.temp-taken)"
 );
 
 const selectedSeats =
-document.getElementById(
-    "selectedSeats"
-);
+    document.getElementById("selectedSeats");
 
 const totalPrice =
-document.getElementById(
-    "totalPrice"
-);
+    document.getElementById("totalPrice");
 
 const seatIds =
-document.getElementById(
-    "seat_ids"
-);
+    document.getElementById("seat_ids");
 
 const seatNumbers =
-document.getElementById(
-    "seat_numbers"
-);
+    document.getElementById("seat_numbers");
 
 const totalPriceInput =
-document.getElementById(
-    "total_price"
-);
+    document.getElementById("total_price");
 
 const continueButton =
-document.getElementById(
-    "continueBtn"
-);
+    document.getElementById("continueBtn");
 
+const reservationTimer =
+    document.getElementById("reservationTimer");
+
+const timerText =
+    document.getElementById("timerText");
+
+
+/* =====================================================
+   DATABASE EXPIRY TIME
+===================================================== */
+
+const databaseExpiryTime =
+    <?php
+    echo $my_expiry_time
+        ? json_encode($my_expiry_time)
+        : "null";
+    ?>;
+
+
+/* =====================================================
+   TIMER VARIABLES
+===================================================== */
+
+let reservationEndTime = null;
+let countdownInterval = null;
+
+
+/* =====================================================
+   SELECTED SEATS
+===================================================== */
 
 let selected = [];
 
 
+/* =====================================================
+   RESTORE EXISTING USER RESERVATIONS
+===================================================== */
+
+document.querySelectorAll(".seat.selected").forEach(function(seat) {
+
+    selected.push({
+        id: seat.dataset.seatId,
+        number: seat.dataset.seatNumber,
+        type: seat.dataset.seatType,
+        price: Number(seat.dataset.price)
+    });
+
+});
+
+
+/* =====================================================
+   INITIAL PAGE STATE
+===================================================== */
+
+updateSummary();
+
+
+/*
+ * Only show timer if the customer REALLY has
+ * an existing temporary reservation.
+ */
+
+if (
+    databaseExpiryTime !== null &&
+    selected.length > 0
+) {
+
+    reservationEndTime =
+        new Date(
+            databaseExpiryTime.replace(" ", "T")
+        ).getTime();
+
+    startReservationTimer();
+}
+
+
+/* =====================================================
+   SEAT CLICK
+===================================================== */
+
 seats.forEach(function(seat) {
 
-    seat.addEventListener(
-    "click",
-    function() {
+    seat.addEventListener("click", function() {
 
         const seatElement = this;
 
@@ -1230,21 +1405,21 @@ seats.forEach(function(seat) {
             Number(seatElement.dataset.price);
 
 
-        /* ==========================================
-           CHECK IF ALREADY SELECTED
-        ========================================== */
+        /* =================================================
+           CHECK IF THIS SEAT IS ALREADY SELECTED
+        ================================================= */
 
         const existing =
-            selected.find(
-                function(item) {
-                    return item.id === seatId;
-                }
-            );
+            selected.find(function(item) {
+
+                return item.id === seatId;
+
+            });
 
 
-        /* ==========================================
+        /* =================================================
            DESELECT
-        ========================================== */
+        ================================================= */
 
         if (existing) {
 
@@ -1266,64 +1441,83 @@ seats.forEach(function(seat) {
             );
 
 
-            fetch(
-                "seat.php",
-                {
-                    method: "POST",
-                    body: formData
+            fetch("seat.php", {
+                method: "POST",
+                body: formData
+            })
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                if (!data.success) {
+
+                    alert(data.message);
+                    return;
+
                 }
-            )
-            .then(
-                response => response.json()
-            )
-            .then(
-                data => {
-
-                    if (!data.success) {
-
-                        alert(data.message);
-
-                        return;
-                    }
 
 
-                    selected =
-                        selected.filter(
-                            function(item) {
-                                return item.id !== seatId;
-                            }
+                selected =
+                    selected.filter(function(item) {
+
+                        return item.id !== seatId;
+
+                    });
+
+
+                seatElement.classList.remove(
+                    "selected"
+                );
+
+
+                /*
+                 * If there are no seats left,
+                 * stop the timer.
+                 */
+
+                if (selected.length === 0) {
+
+                    reservationEndTime = null;
+
+                    if (countdownInterval !== null) {
+
+                        clearInterval(
+                            countdownInterval
                         );
 
+                        countdownInterval = null;
+                    }
 
-                    seatElement.classList.remove(
-                        "selected"
-                    );
-
-
-                    updateSummary();
-
+                    reservationTimer.style.display =
+                        "none";
                 }
-            )
-            .catch(
-                error => {
 
-                    console.error(
-                        "Release error:",
-                        error
-                    );
 
-                    alert(
-                        "Unable to release the seat."
-                    );
-                }
-            );
+                updateSummary();
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Release error:",
+                    error
+                );
+
+                alert(
+                    "Unable to release the seat."
+                );
+
+            });
 
             return;
         }
 
-        /* ==========================================
-           RESERVE SEAT IN DATABASE
-        ========================================== */
+
+        /* =================================================
+           RESERVE NEW SEAT
+        ================================================= */
 
         const formData = new FormData();
 
@@ -1343,68 +1537,103 @@ seats.forEach(function(seat) {
         );
 
 
-        fetch(
-            "seat.php",
-            {
-                method: "POST",
-                body: formData
+        fetch("seat.php", {
+            method: "POST",
+            body: formData
+        })
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            console.log("Reservation response:", data);
+
+
+            if (!data.success) {
+
+                alert(data.message);
+                return;
+
             }
-        )
-        .then(
-            response => response.json()
-        )
-        .then(
-            data => {
 
-                if (!data.success) {
+            console.log("AJAX RESPONSE:", data);
+            /* =================================================
+               SAVE DATABASE EXPIRY TIME
+            ================================================= */
 
-                    alert(data.message);
+            if (data.expires_at) {
+                
+                reservationEndTime =
+                    new Date(
+                        data.expires_at.replace(" ", "T")
+                    ).getTime();
+                    
 
-                    return;
-                }
+            }
 
 
-                /* ==================================
-                   ADD TO SELECTED ARRAY
-                ================================== */
+            /* =================================================
+               ADD SELECTED SEAT
+            ================================================= */
 
-                selected.push({
-                    id: seatId,
-                    number: seatNumber,
-                    type: seatType,
-                    price: price
-                });
+            selected.push({
 
-                seatElement.classList.add(
-                    "selected"
-                );
+                id: seatId,
+                number: seatNumber,
+                type: seatType,
+                price: price
 
-                /* Start 10-minute timer */
+            });
+
+
+            seatElement.classList.add(
+                "selected"
+            );
+
+
+            /* =================================================
+               UPDATE SUMMARY
+            ================================================= */
+
+            updateSummary();
+
+
+            /* =================================================
+               START TIMER
+            ================================================= */
+
+            if (
+                reservationEndTime !== null &&
+                !isNaN(reservationEndTime)
+            ) {
 
                 startReservationTimer();
 
-                updateSummary();
-
             }
-        )
-        .catch(
-            error => {
 
-                console.error(
-                    "Reservation error:",
-                    error
-                );
+        })
 
-                alert(
-                    "Unable to reserve this seat. Please try again."
-                );
-            }
-        );
+        .catch(error => {
 
-    }
-);
+            console.error(
+                "Reservation error:",
+                error
+            );
+
+            alert(
+                "Unable to reserve this seat. Please try again."
+            );
+
+        });
+
+    });
+
 });
 
+
+/* =====================================================
+   UPDATE BOOKING SUMMARY
+===================================================== */
 
 function updateSummary() {
 
@@ -1429,33 +1658,31 @@ function updateSummary() {
             true;
 
         return;
-
     }
 
 
     const numbers =
-        selected.map(
-            function(item) {
-                return item.number;
-            }
-        );
+        selected.map(function(item) {
+
+            return item.number;
+
+        });
 
 
     const ids =
-        selected.map(
-            function(item) {
-                return item.id;
-            }
-        );
+        selected.map(function(item) {
+
+            return item.id;
+
+        });
 
 
     const total =
-        selected.reduce(
-            function(sum, item) {
-                return sum + item.price;
-            },
-            0
-        );
+        selected.reduce(function(sum, item) {
+
+            return sum + item.price;
+
+        }, 0);
 
 
     selectedSeats.innerText =
@@ -1482,43 +1709,38 @@ function updateSummary() {
         false;
 
 }
+
+
 /* =====================================================
-   10 MINUTE RESERVATION COUNTDOWN
+   START TIMER
 ===================================================== */
-
-const reservationTimer =
-    document.getElementById("reservationTimer");
-
-const timerText =
-    document.getElementById("timerText");
-
-let reservationEndTime = null;
-
-let countdownInterval = null;
-
 
 function startReservationTimer() {
 
-    /*
-       If the timer has already started,
-       don't create another timer.
-    */
+    if (
+        reservationEndTime === null ||
+        isNaN(reservationEndTime)
+    ) {
 
-    if (reservationEndTime !== null) {
         return;
+
     }
-
-
-    /*
-       10 minutes from now
-    */
-
-    reservationEndTime =
-        Date.now() + (10 * 60 * 1000);
 
 
     reservationTimer.style.display =
         "block";
+
+
+    if (countdownInterval !== null) {
+
+        clearInterval(
+            countdownInterval
+        );
+
+    }
+
+
+    updateReservationTimer();
 
 
     countdownInterval =
@@ -1527,43 +1749,60 @@ function startReservationTimer() {
             1000
         );
 
-
-    updateReservationTimer();
 }
 
 
+/* =====================================================
+   UPDATE TIMER
+===================================================== */
+
 function updateReservationTimer() {
+
+    if (
+        reservationEndTime === null ||
+        isNaN(reservationEndTime)
+    ) {
+
+        return;
+
+    }
+
 
     const remaining =
         reservationEndTime - Date.now();
 
 
+    /* =================================================
+       ACTUALLY EXPIRED
+    ================================================= */
+
     if (remaining <= 0) {
 
-        clearInterval(countdownInterval);
+        clearInterval(
+            countdownInterval
+        );
 
-        timerText.innerText =
-            "00:00";
+        countdownInterval = null;
 
         reservationTimer.innerHTML =
             '<i class="fa-solid fa-circle-exclamation"></i> ' +
             'Your seat reservation has expired.';
 
-        /*
-           Reload the page so expired
-           temporary bookings are removed.
-        */
+        reservationEndTime = null;
 
-        setTimeout(
-            function() {
-                window.location.reload();
-            },
-            1500
-        );
+        setTimeout(function() {
+
+            window.location.reload();
+
+        }, 1500);
 
         return;
     }
 
+
+    /* =================================================
+       CALCULATE TIME
+    ================================================= */
 
     const totalSeconds =
         Math.floor(remaining / 1000);
@@ -1581,10 +1820,10 @@ function updateReservationTimer() {
         String(minutes).padStart(2, "0") +
         ":" +
         String(seconds).padStart(2, "0");
+
 }
 
 </script>
-
 
 </body>
 

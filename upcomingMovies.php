@@ -18,7 +18,7 @@ $sql = "SELECT
             status
         FROM movie
         WHERE status = 'Upcoming'
-        ORDER BY release_date;
+        ORDER BY release_date";
 
 $result = $conn->query($sql);
 

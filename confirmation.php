@@ -1,29 +1,349 @@
+<?php
+
+session_start();
+
+include "db.php";
+
+
+/* =====================================================
+   CHECK LOGIN
+===================================================== */
+
+if (!isset($_SESSION["customer_id"])) {
+    header("Location: login.php");
+    exit();
+}
+
+$customer_id =
+    (int)$_SESSION["customer_id"];
+
+
+/* =====================================================
+   CHECK CONFIRMATION DATA
+===================================================== */
+
+if (!isset($_SESSION["booking_confirmation"])) {
+    die("Booking confirmation not found.");
+}
+
+$confirmation =
+    $_SESSION["booking_confirmation"];
+
+
+$ticket_ids =
+    $confirmation["ticket_ids"] ?? [];
+
+$transaction_uuid =
+    $confirmation["transaction_uuid"] ?? "";
+
+$total_paid =
+    (float)($confirmation["total_amount"] ?? 0);
+
+
+if (empty($ticket_ids)) {
+    die("Invalid booking confirmation.");
+}
+
+
+/* =====================================================
+   GET TICKET IDS
+===================================================== */
+
+$placeholders = implode(
+    ",",
+    array_fill(
+        0,
+        count($ticket_ids),
+        "?"
+    )
+);
+
+$types =
+    str_repeat(
+        "i",
+        count($ticket_ids)
+    );
+
+
+$sql = "
+    SELECT
+        t.ticket_id,
+        t.booking_date,
+        t.status,
+        t.movie_id,
+        t.seat_id,
+        t.showtime_id,
+        t.customer_id,
+        t.payment_status,
+
+        m.title,
+        m.genre,
+        m.duration,
+        m.poster,
+        m.rating,
+
+        s.seat_number,
+
+        st.show_date,
+        st.show_time,
+        st.ticket_price,
+
+        h.hall_name
+
+    FROM ticket t
+
+    INNER JOIN movie m
+        ON t.movie_id = m.movie_id
+
+    INNER JOIN seat s
+        ON t.seat_id = s.seat_id
+
+    INNER JOIN showtime st
+        ON t.showtime_id = st.showtime_id
+
+    INNER JOIN hall h
+        ON st.hall_id = h.hall_id
+
+    WHERE t.ticket_id IN ($placeholders)
+      AND t.customer_id = ?
+
+    ORDER BY t.ticket_id
+";
+
+
+$params =
+    array_merge(
+        $ticket_ids,
+        [$customer_id]
+    );
+
+
+$types .= "i";
+
+
+$stmt =
+    $conn->prepare($sql);
+
+$stmt->bind_param(
+    $types,
+    ...$params
+);
+
+$stmt->execute();
+
+$result =
+    $stmt->get_result();
+
+
+$tickets = [];
+
+while (
+    $row =
+    $result->fetch_assoc()
+) {
+
+    $tickets[] = $row;
+}
+
+
+if (empty($tickets)) {
+    die("Booking information could not be found.");
+}
+
+
+/* =====================================================
+   GET FIRST TICKET
+===================================================== */
+
+$first_ticket =
+    $tickets[0];
+
+
+/* =====================================================
+   MOVIE INFORMATION
+===================================================== */
+
+$movie_title =
+    htmlspecialchars(
+        $first_ticket["title"]
+    );
+
+$genre =
+    htmlspecialchars(
+        $first_ticket["genre"]
+    );
+
+$poster =
+    htmlspecialchars(
+        $first_ticket["poster"]
+    );
+
+$rating =
+    htmlspecialchars(
+        $first_ticket["rating"]
+    );
+
+
+/* =====================================================
+   DURATION
+===================================================== */
+
+$duration_minutes =
+    (int)$first_ticket["duration"];
+
+$hours =
+    floor(
+        $duration_minutes / 60
+    );
+
+$minutes =
+    $duration_minutes % 60;
+
+
+if (
+    $hours > 0 &&
+    $minutes > 0
+) {
+
+    $duration =
+        $hours . "h " .
+        $minutes . "m";
+
+} elseif ($hours > 0) {
+
+    $duration =
+        $hours . "h";
+
+} else {
+
+    $duration =
+        $minutes . "m";
+}
+
+
+/* =====================================================
+   SHOWTIME INFORMATION
+===================================================== */
+
+$hall_name =
+    htmlspecialchars(
+        $first_ticket["hall_name"]
+    );
+
+$show_date =
+    date(
+        "d M Y",
+        strtotime(
+            $first_ticket["show_date"]
+        )
+    );
+
+$show_time =
+    date(
+        "h:i A",
+        strtotime(
+            $first_ticket["show_time"]
+        )
+    );
+
+
+/* =====================================================
+   SEAT NUMBERS
+===================================================== */
+
+$seat_numbers = [];
+
+foreach ($tickets as $ticket) {
+
+    $seat_numbers[] =
+        htmlspecialchars(
+            $ticket["seat_number"]
+        );
+}
+
+$seat_display =
+    implode(
+        " • ",
+        $seat_numbers
+    );
+
+
+/* =====================================================
+   NUMBER OF TICKETS
+===================================================== */
+
+$ticket_count =
+    count($tickets);
+
+
+/* =====================================================
+   BOOKING ID
+===================================================== */
+
+$booking_id =
+    "HM" .
+    str_pad(
+        $first_ticket["ticket_id"],
+        6,
+        "0",
+        STR_PAD_LEFT
+    );
+
+
+/* =====================================================
+   TOTAL
+===================================================== */
+
+$total_paid =
+    $first_ticket["ticket_price"] *
+    $ticket_count;
+
+?>
+
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Booking Confirmation | HiMovie</title>
-<link rel="stylesheet" href="navbar.css">
-<link rel="stylesheet" href="confirmation.css">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+>
+
+<title>
+Booking Confirmation | HiMovie
+</title>
+
+<link
+    rel="stylesheet"
+    href="navbar.css"
+>
+
+<link
+    rel="stylesheet"
+    href="confirmation.css"
+>
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+>
 
 </head>
 
 <body>
 
 <!-- ================= NAVBAR ================= -->
+
 <?php include "navbar.php"; ?>
+
 <!-- ================= PAGE ================= -->
 
 <section class="confirmation-page">
-
-
 
 <div class="confirmation-container">
 
@@ -33,7 +353,14 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <div class="poster">
 
-<img src="images/obsession.jpg" alt="Movie Poster">
+<?php if (!empty($details["poster"])): ?>
+
+<img 
+    src="uploads/posters/<?php echo htmlspecialchars($details["poster"]); ?>" 
+    alt="<?php echo $movie_title; ?>"
+>
+
+<?php endif; ?>
 
 <span class="badge">
 
@@ -45,10 +372,16 @@ READY TO WATCH
 
 <div class="movie-content">
 
-<h2>Obsession</h2>
+<h2>
+
+<?php echo $movie_title; ?>
+
+</h2>
 
 <p class="genre">
-Thriller • Mystery
+
+<?php echo $genre; ?>
+
 </p>
 
 <div class="rating">
@@ -57,7 +390,7 @@ Thriller • Mystery
 
 <i class="fa-solid fa-star"></i>
 
-8.6
+<?php echo $rating; ?>
 
 </span>
 
@@ -65,7 +398,7 @@ Thriller • Mystery
 
 <i class="fa-regular fa-clock"></i>
 
-2h 18m
+<?php echo $duration; ?>
 
 </span>
 
@@ -85,7 +418,11 @@ Thriller • Mystery
 
 <h4>Cinema</h4>
 
-<p>Ranjana Cineplex</p>
+<p>
+
+<?php echo $hall_name; ?>
+
+</p>
 
 </div>
 
@@ -103,7 +440,11 @@ Thriller • Mystery
 
 <h4>Date</h4>
 
-<p>Tomorrow</p>
+<p>
+
+<?php echo $show_date; ?>
+
+</p>
 
 </div>
 
@@ -121,7 +462,11 @@ Thriller • Mystery
 
 <h4>Time</h4>
 
-<p>5:30 PM</p>
+<p>
+
+<?php echo $show_time; ?>
+
+</p>
 
 </div>
 
@@ -139,7 +484,11 @@ Thriller • Mystery
 
 <h4>Seats</h4>
 
-<p>D4 • D5</p>
+<p>
+
+<?php echo $seat_display; ?>
+
+</p>
 
 </div>
 
@@ -163,7 +512,11 @@ Thriller • Mystery
 
 </div>
 
-<h2>Booking Confirmed!</h2>
+<h2>
+
+Booking Confirmed!
+
+</h2>
 
 <p>
 
@@ -182,9 +535,19 @@ Enjoy your movie and have a wonderful time!
 
 <div>
 
-<h3>Digital Movie Ticket</h3>
+<h3>
 
-<p>Booking ID : HM102548</p>
+Digital Movie Ticket
+
+</h3>
+
+<p>
+
+Booking ID :
+
+<?php echo $booking_id; ?>
+
+</p>
 
 </div>
 
@@ -202,7 +565,11 @@ PAID
 
 <span>Movie</span>
 
-<strong>Obsession</strong>
+<strong>
+
+<?php echo $movie_title; ?>
+
+</strong>
 
 </div>
 
@@ -210,7 +577,11 @@ PAID
 
 <span>Cinema</span>
 
-<strong>Ranjana Cineplex</strong>
+<strong>
+
+<?php echo $hall_name; ?>
+
+</strong>
 
 </div>
 
@@ -218,7 +589,11 @@ PAID
 
 <span>Date</span>
 
-<strong>Tomorrow</strong>
+<strong>
+
+<?php echo $show_date; ?>
+
+</strong>
 
 </div>
 
@@ -226,7 +601,11 @@ PAID
 
 <span>Time</span>
 
-<strong>5:30 PM</strong>
+<strong>
+
+<?php echo $show_time; ?>
+
+</strong>
 
 </div>
 
@@ -234,7 +613,11 @@ PAID
 
 <span>Seats</span>
 
-<strong>D4 • D5</strong>
+<strong>
+
+<?php echo $seat_display; ?>
+
+</strong>
 
 </div>
 
@@ -242,7 +625,11 @@ PAID
 
 <span>Tickets</span>
 
-<strong>2</strong>
+<strong>
+
+<?php echo $ticket_count; ?>
+
+</strong>
 
 </div>
 
@@ -250,7 +637,30 @@ PAID
 
 <span>Total Paid</span>
 
-<strong>Rs.900</strong>
+<strong>
+
+Rs.<?php
+echo number_format(
+ $total_paid,
+ 2
+);
+?>
+
+</strong>
+
+</div>
+
+<div>
+
+<span>eSewa Transaction</span>
+
+<strong>
+
+<?php echo htmlspecialchars(
+    $transaction_uuid
+); ?>
+
+</strong>
 
 </div>
 
@@ -258,18 +668,24 @@ PAID
 
 <div class="ticket-note">
 
-    <i class="fa-solid fa-circle-info"></i>
+<i class="fa-solid fa-circle-info"></i>
 
-    <div>
+<div>
 
-        <h4>Important Information</h4>
+<h4>
 
-        <p>
-            Please arrive at least 15 minutes before the show begins.
-            Carry a valid ID and present your Booking ID at the ticket counter if requested.
-        </p>
+Important Information
 
-    </div>
+</h4>
+
+<p>
+
+Please arrive at least 15 minutes before the show begins.
+Carry a valid ID and present your Booking ID at the ticket counter if requested.
+
+</p>
+
+</div>
 
 </div>
 
@@ -279,7 +695,11 @@ PAID
 
 <div class="buttons">
 
-<a href="index.html" class="home-btn">
+<a
+href="index.php"
+class="home-btn"
+
+>
 
 <i class="fa-solid fa-house"></i>
 
@@ -287,15 +707,35 @@ Home
 
 </a>
 
-<a href="#" class="download-btn">
+<button 
+    type="button" 
+    class="download-btn" 
+    onclick="window.print()"
+    style="
+        background: #111827;
+        color: #ffffff;
+        border: none;
+        padding: 12px 22px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: 0.3s ease;
+    "
+>
+    <i class="fa-solid fa-download"></i>
+    Download Ticket
+</button>
 
-<i class="fa-solid fa-download"></i>
+<a
+href="movies.php"
+class="book-btn"
 
-Download Ticket
-
-</a>
-
-<a href="movies.html" class="book-btn">
+>
 
 <i class="fa-solid fa-film"></i>
 
@@ -314,3 +754,15 @@ Book Again
 </body>
 
 </html>
+
+<?php
+
+/* =====================================================
+   CLEAR CONFIRMATION SESSION
+===================================================== */
+
+unset(
+    $_SESSION["booking_confirmation"]
+);
+
+?>
