@@ -290,13 +290,7 @@ $booking_id =
     );
 
 
-/* =====================================================
-   TOTAL
-===================================================== */
 
-$total_paid =
-    $first_ticket["ticket_price"] *
-    $ticket_count;
 
 ?>
 
@@ -353,10 +347,10 @@ Booking Confirmation | HiMovie
 
 <div class="poster">
 
-<?php if (!empty($details["poster"])): ?>
+<?php if (!empty($poster)): ?>
 
 <img 
-    src="uploads/posters/<?php echo htmlspecialchars($details["poster"]); ?>" 
+    src="uploads/posters/<?php echo $poster; ?>" 
     alt="<?php echo $movie_title; ?>"
 >
 
@@ -710,7 +704,7 @@ Home
 <button 
     type="button" 
     class="download-btn" 
-    onclick="window.print()"
+    onclick="window.location.href='download_ticket.php'"
     style="
         background: #111827;
         color: #ffffff;
@@ -754,15 +748,3 @@ Book Again
 </body>
 
 </html>
-
-<?php
-
-/* =====================================================
-   CLEAR CONFIRMATION SESSION
-===================================================== */
-
-unset(
-    $_SESSION["booking_confirmation"]
-);
-
-?>

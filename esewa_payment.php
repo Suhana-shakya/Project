@@ -49,7 +49,7 @@ if (
 
 
 /* =====================================================
-   SEAT IDS
+   GET SEAT IDS
 ===================================================== */
 
 $seat_ids = array_filter(
@@ -96,7 +96,9 @@ $params = array_merge(
 
 
 $sql = "
-    SELECT seat_id, expires_at
+    SELECT
+        seat_id,
+        expires_at
     FROM temporary_booking
     WHERE showtime_id = ?
       AND customer_id = ?
@@ -158,6 +160,7 @@ if (
 
 $sql = "
     SELECT
+        s.show_time,
         s.ticket_price,
         s.movie_id,
         s.hall_id
@@ -192,17 +195,164 @@ $showtime =
 
 
 /* =====================================================
-   CALCULATE TOTAL
+   CALCULATE PRICES BASED ON SHOWTIME
 ===================================================== */
 
-$ticket_price =
-    (float)$showtime["ticket_price"];
+/*
+ * Before 12:00 PM
+ * Regular = 350
+ * Premium = 400
+ * VIP = 450
+ *
+ * 12:00 PM and later
+ * Regular = 450
+ * Premium = 500
+ * VIP = 550
+ */
+
+$show_time =
+    strtotime($showtime["show_time"]);
+
+$hour =
+    (int)date("H", $show_time);
+
+
+if ($hour < 12) {
+
+    $regular_price = 350;
+    $premium_price = 400;
+    $vip_price = 450;
+
+} else {
+
+    $regular_price = 450;
+    $premium_price = 500;
+    $vip_price = 550;
+
+}
+
+
+/* =====================================================
+   GET SELECTED SEAT TYPES
+===================================================== */
+
+$seat_placeholders = implode(
+    ",",
+    array_fill(0, count($seat_ids), "?")
+);
+
+
+$seat_sql = "
+    SELECT
+        seat_id,
+        seat_type
+    FROM seat
+    WHERE hall_id = ?
+      AND seat_id IN ($seat_placeholders)
+";
+
+
+$seat_stmt =
+    $conn->prepare($seat_sql);
+
+
+$seat_params = array_merge(
+    [$hall_id],
+    $seat_ids
+);
+
+
+$seat_types_string =
+    str_repeat("i", count($seat_ids));
+
+
+$seat_stmt->bind_param(
+    "i" . $seat_types_string,
+    ...$seat_params
+);
+
+
+$seat_stmt->execute();
+
+
+$seat_result =
+    $seat_stmt->get_result();
+
+
+$selected_seats = [];
+
+
+while (
+    $row =
+    $seat_result->fetch_assoc()
+) {
+
+    $selected_seats[] =
+        $row;
+
+}
+
+
+/* =====================================================
+   MAKE SURE ALL SEATS WERE FOUND
+===================================================== */
+
+if (
+    count($selected_seats)
+    !== count($seat_ids)
+) {
+
+    die(
+        "One or more selected seats could not be found."
+    );
+
+}
+
+
+/* =====================================================
+   CALCULATE TOTAL FROM SEAT TYPES
+===================================================== */
 
 $number_of_seats =
-    count($seat_ids);
+    count($selected_seats);
 
-$total_amount =
-    $ticket_price * $number_of_seats;
+
+$total_amount = 0;
+
+
+foreach ($selected_seats as $seat) {
+
+    if ($seat["seat_type"]=== "Regular") {
+
+        $seat_price =
+            $regular_price;
+
+    }
+    elseif ($seat["seat_type"]=== "Premium") {
+
+        $seat_price =
+            $premium_price;
+
+    }
+    elseif ($seat["seat_type"]=== "VIP") {
+
+        $seat_price =
+            $vip_price;
+
+    }
+    else {
+
+        die(
+            "Invalid seat type."
+        );
+
+    }
+
+
+    $total_amount +=
+        $seat_price;
+
+}
 
 
 /* =====================================================
@@ -217,25 +367,41 @@ $secret_key =
 
 
 /*
- * eSewa requires a unique transaction UUID.
- *
- * Only alphanumeric characters and hyphens
- * should be used.
+ * Generate a unique transaction UUID.
  */
 
 $transaction_uuid =
     "HIMOVIE-" .
     date("YmdHis") .
     "-" .
-    $customer_id;
+    $customer_id .
+    "-" .
+    bin2hex(random_bytes(4));
 
-    $_SESSION["esewa_booking"] = [
-    "movie_id" => $movie_id,
-    "showtime_id" => $showtime_id,
-    "hall_id" => $hall_id,
-    "seat_ids" => $seat_ids,
-    "transaction_uuid" => $transaction_uuid,
+
+/* =====================================================
+   SAVE BOOKING INFORMATION IN SESSION
+===================================================== */
+
+$_SESSION["esewa_booking"] = [
+
+    "movie_id" =>
+        $movie_id,
+
+    "showtime_id" =>
+        $showtime_id,
+
+    "hall_id" =>
+        $hall_id,
+
+    "seat_ids" =>
+        $seat_ids,
+
+    "transaction_uuid" =>
+        $transaction_uuid
+
 ];
+
 
 /* =====================================================
    ESEWA AMOUNTS
@@ -249,11 +415,18 @@ $amount =
         ""
     );
 
-$tax_amount = "0";
 
-$product_service_charge = "0";
+$tax_amount =
+    "0";
 
-$product_delivery_charge = "0";
+
+$product_service_charge =
+    "0";
+
+
+$product_delivery_charge =
+    "0";
+
 
 $total_amount_esewa =
     $amount;
@@ -269,20 +442,21 @@ $base_url =
     dirname($_SERVER["PHP_SELF"]);
 
 
-/*
- * Remove trailing slash if necessary.
- */
-
 $base_url =
-    rtrim($base_url, "/");
+    rtrim(
+        $base_url,
+        "/"
+    );
 
 
 $success_url =
-    $base_url . "/esewa_success.php";
+    $base_url .
+    "/esewa_success.php";
 
 
 $failure_url =
-    $base_url . "/esewa_failure.php";
+    $base_url .
+    "/esewa_failure.php";
 
 
 /* =====================================================
@@ -312,11 +486,13 @@ $hash =
 
 
 $signature =
-    base64_encode($hash);
+    base64_encode(
+        $hash
+    );
 
 
 /* =====================================================
-   SEND PAYMENT REQUEST TO ESEWA
+   ESEWA PAYMENT URL
 ===================================================== */
 
 $esewa_url =
@@ -332,7 +508,9 @@ $esewa_url =
 
 <meta charset="UTF-8">
 
-<title>Redirecting to eSewa</title>
+<title>
+    Redirecting to eSewa
+</title>
 
 </head>
 

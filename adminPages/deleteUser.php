@@ -1,3 +1,4 @@
+
 <?php
 
 include "adminAuth.php";
@@ -11,7 +12,13 @@ if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) {
 
 $customer_id = (int) $_GET["id"];
 
-$sql = "DELETE FROM customer
+
+/* =====================================================
+   SOFT DELETE USER
+===================================================== */
+
+$sql = "UPDATE customer
+        SET status = 'Deleted'
         WHERE customer_id = ?";
 
 $stmt = $conn->prepare($sql);
@@ -24,24 +31,27 @@ try {
 
         if ($stmt->affected_rows > 0) {
 
-            $_SESSION["delete_success"] = "User deleted successfully.";
+            $_SESSION["delete_success"] =
+                "User deactivated successfully.";
 
         } else {
 
-            $_SESSION["error"] = "User not found.";
+            $_SESSION["error"] =
+                "User not found or already deleted.";
 
         }
 
     } else {
 
-        $_SESSION["error"] = "Failed to delete user.";
+        $_SESSION["error"] =
+            "Failed to delete user.";
 
     }
 
 } catch (mysqli_sql_exception $e) {
 
     $_SESSION["error"] =
-        "This user cannot be deleted because they have existing tickets.";
+        "Failed to delete user.";
 
 }
 

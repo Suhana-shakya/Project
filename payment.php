@@ -137,12 +137,16 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 
-
 if (count($valid_seats) !== count($seat_ids)) {
 
-    die(
-        "One or more selected seats are no longer reserved. Please return to seat selection."
+    header(
+        "Location: seat.php?movie_id=" . $movie_id .
+        "&showtime_id=" . $showtime_id .
+        "&hall_id=" . $hall_id .
+        "&error=expired"
     );
+
+    exit();
 }
 
 
@@ -236,18 +240,82 @@ while ($row = $seat_result->fetch_assoc()) {
     $seats[] = $row;
 }
 
-
 /* =====================================================
-   CALCULATE TOTAL FROM DATABASE
+   CALCULATE PRICES BASED ON SHOWTIME
 ===================================================== */
 
-$ticket_price = (float)$details["ticket_price"];
+/*
+ * Before 12:00 PM
+ * Regular = 350
+ * Premium = 400
+ * VIP = 450
+ *
+ * 12:00 PM and later
+ * Regular = 450
+ * Premium = 500
+ * VIP = 550
+ */
+
+$show_time = strtotime($details["show_time"]);
+
+$hour = (int)date("H", $show_time);
+
+
+if ($hour < 12) {
+
+    $regular_price = 350;
+    $premium_price = 400;
+    $vip_price = 450;
+
+}
+else {
+
+    $regular_price = 450;
+    $premium_price = 500;
+    $vip_price = 550;
+
+}
+
+
+/* =====================================================
+   CALCULATE TOTAL FROM SEAT TYPES
+===================================================== */
 
 $ticket_count = count($seats);
 
-$total_price =
-    $ticket_price * $ticket_count;
+$total_price = 0;
 
+
+foreach ($seats as $seat) {
+
+    $seat_type = $seat["seat_type"];
+
+
+    if ($seat_type === "Regular") {
+
+        $seat_price = $regular_price;
+
+    }
+    elseif ($seat_type === "Premium") {
+
+        $seat_price = $premium_price;
+
+    }
+    elseif ($seat_type === "VIP") {
+
+        $seat_price = $vip_price;
+
+    }
+    else {
+
+        die("Invalid seat type.");
+
+    }
+
+
+    $total_price += $seat_price;
+
+}
 
 /* =====================================================
    FORMAT VALUES
@@ -599,12 +667,44 @@ Rs.<?php echo number_format($total_price, 2); ?>
 
 <div class="summary-row">
 
-<span>Price</span>
+    <span>Price</span>
 
-<strong>
-Rs.<?php echo number_format($ticket_price, 2); ?>
- × <?php echo $ticket_count; ?>
-</strong>
+    <strong>
+        <?php
+        $price_display = [];
+
+        foreach ($seats as $seat) {
+
+            if ($seat["seat_type"] === "Regular") {
+
+                $seat_price = $regular_price;
+
+            }
+            elseif ($seat["seat_type"] === "Premium") {
+
+                $seat_price = $premium_price;
+
+            }
+            elseif ($seat["seat_type"] === "VIP") {
+
+                $seat_price = $vip_price;
+
+            }
+            else {
+
+                $seat_price = 0;
+
+            }
+
+            $price_display[] =
+                htmlspecialchars($seat["seat_type"]) .
+                " Rs." .
+                number_format($seat_price, 2);
+        }
+
+        echo implode(" • ", $price_display);
+        ?>
+    </strong>
 
 </div>
 
@@ -621,138 +721,53 @@ Rs.<?php echo number_format($total_price, 2); ?>
 
 </div>
 
-
-
 <!-- =====================================================
-     PAYMENT METHODS
+     ESEWA PAYMENT
 ===================================================== -->
 
-<div class="payment-methods">
+<div class="esewa-payment">
 
-<h3>Select Payment Method</h3>
+    <div class="esewa-header">
 
+        <div class="esewa-logo">
+            <i class="fa-solid fa-wallet"></i>
+        </div>
 
-<div class="method-grid">
+        <div class="esewa-title">
 
+            <h3>Pay securely with eSewa</h3>
 
-<!-- eSEWA -->
+            <p>
+                Fast, simple and secure digital payment
+            </p>
 
-<label class="method-card">
+        </div>
 
-<input
-    type="radio"
-    name="payment"
-    value="esewa"
-    checked
->
+        <div class="esewa-check">
+            <i class="fa-solid fa-check"></i>
+        </div>
 
-<div class="method-icon">
-
-<i class="fa-solid fa-wallet"></i>
-
-</div>
-
-<div>
-
-<h4>eSewa</h4>
-
-<p>
-Fast Digital Wallet
-</p>
-
-</div>
-
-</label>
+    </div>
 
 
-<!-- KHALTI -->
-
-<label class="method-card">
-
-<input
-    type="radio"
-    name="payment"
-    value="khalti"
->
-
-<div class="method-icon">
-
-<i class="fa-solid fa-mobile-screen-button"></i>
-
-</div>
-
-<div>
-
-<h4>Khalti</h4>
-
-<p>
-Coming Soon
-</p>
-
-</div>
-
-</label>
+    <div class="esewa-divider"></div>
 
 
-<!-- IME PAY -->
+    <div class="payment-amount">
 
-<label class="method-card">
+        <div>
+            <span>Amount to pay</span>
+            <small>
+                <?php echo $ticket_count; ?>
+                <?php echo ($ticket_count == 1) ? "ticket" : "tickets"; ?>
+            </small>
+        </div>
 
-<input
-    type="radio"
-    name="payment"
-    value="imepay"
->
+        <strong>
+            Rs.<?php echo number_format($total_price, 2); ?>
+        </strong>
 
-<div class="method-icon">
-
-<i class="fa-solid fa-money-bill-wave"></i>
-
-</div>
-
-<div>
-
-<h4>IME Pay</h4>
-
-<p>
-Coming Soon
-</p>
-
-</div>
-
-</label>
-
-
-<!-- CARD -->
-
-<label class="method-card">
-
-<input
-    type="radio"
-    name="payment"
-    value="card"
->
-
-<div class="method-icon">
-
-<i class="fa-regular fa-credit-card"></i>
-
-</div>
-
-<div>
-
-<h4>Debit / Credit Card</h4>
-
-<p>
-Coming Soon
-</p>
-
-</div>
-
-</label>
-
-
-</div>
+    </div>
 
 </div>
 

@@ -224,7 +224,7 @@ $conn->query("
 ===================================================== */
 
 $price_sql = "
-    SELECT ticket_price
+    SELECT ticket_price, show_time
     FROM showtime
     WHERE showtime_id = ?
       AND movie_id = ?
@@ -254,25 +254,93 @@ if ($price_result->num_rows === 0) {
 $price_row =
     $price_result->fetch_assoc();
 
-$ticket_price =
-    (float)$price_row["ticket_price"];
-
-$expected_amount =
-    $ticket_price * count($seat_ids);
-
-
 /* =====================================================
-   VERIFY PAYMENT AMOUNT
+   CALCULATE EXPECTED BOOKING AMOUNT
+   USING SEAT TYPE PRICING
 ===================================================== */
 
-if (
-    abs(
-        $response_total_amount -
-        $expected_amount
-    ) > 0.01
-) {
+$show_time = strtotime($price_row["show_time"]);
+$hour = (int)date("H", $show_time);
+
+/*
+    Before 12 PM:
+    Regular = 350
+    Premium = 400
+    VIP     = 450
+
+    12 PM and later:
+    Regular = 450
+    Premium = 500
+    VIP     = 550
+*/
+
+if ($hour < 12) {
+
+    $regular_price = 350;
+    $premium_price = 400;
+    $vip_price = 450;
+
+} else {
+
+    $regular_price = 450;
+    $premium_price = 500;
+    $vip_price = 550;
+}
+
+
+/* Calculate total from the actual seat types */
+
+$expected_amount = 0;
+
+foreach ($seat_ids as $seat_id) {
+
+    $seat_stmt = $conn->prepare("
+        SELECT seat_type
+        FROM seat
+        WHERE seat_id = ?
+    ");
+
+    $seat_stmt->bind_param("i", $seat_id);
+    $seat_stmt->execute();
+
+    $seat_result = $seat_stmt->get_result();
+
+    if ($seat_result->num_rows !== 1) {
+        die("Invalid seat selected.");
+    }
+
+    $seat_row = $seat_result->fetch_assoc();
+
+    switch ($seat_row["seat_type"]) {
+
+        case "Regular":
+            $expected_amount += $regular_price;
+            break;
+
+        case "Premium":
+            $expected_amount += $premium_price;
+            break;
+
+        case "VIP":
+            $expected_amount += $vip_price;
+            break;
+
+        default:
+            die("Invalid seat type.");
+    }
+
+    $seat_stmt->close();
+}
+
+
+/* Compare with the amount returned by eSewa */
+
+if (abs($response_total_amount - $expected_amount) > 0.01) {
+
     die("Payment amount does not match booking amount.");
 }
+
+
 
 
 /* =====================================================

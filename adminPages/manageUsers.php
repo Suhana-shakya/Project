@@ -8,7 +8,8 @@ $sql = "SELECT customer_id,
                email,
                phone_number,
                address,
-               username
+               username,
+               status
         FROM customer
         ORDER BY customer_id DESC";
 
@@ -142,6 +143,7 @@ $result = $conn->query($sql);
                         <th>Phone</th>
                         <th>Address</th>
                         <th>Username</th>
+                        <th>Status</th>
                         <th>Action</th>
 
                     </tr>
@@ -180,10 +182,14 @@ $result = $conn->query($sql);
                                 </td>
 
                                 <td>
+                                    <?php echo htmlspecialchars($user["status"]); ?>
+                                </td>
+
+                                <td>
                                     <div class="actions">
                                         <a href="deleteUser.php?id=<?php echo $user["customer_id"]; ?>"
                                             class="delete-btn"
-                                            onclick="return confirm('Are you sure you want to delete this user?');"
+                                            onclick="return confirm('Are you sure you want to deactivate this user?');"
                                         >
                                             <i class="fa-solid fa-trash"></i>
                                         </a>
@@ -198,7 +204,7 @@ $result = $conn->query($sql);
 
                         <tr>
 
-                            <td colspan="7" class="no-users">
+                            <td colspan="8" class="no-users">
 
                                 No registered users found.
 

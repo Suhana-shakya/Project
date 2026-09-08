@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST["email"]);
     $password = $_POST["password"];
 
-    $sql = "SELECT customer_id, name, email, username, password
+    $sql = "SELECT customer_id, name, email, username, password, status
             FROM customer
             WHERE email = ?";
 
@@ -25,9 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows == 1) {
 
-        $customer = $result->fetch_assoc();
+    $customer = $result->fetch_assoc();
 
-        if (password_verify($password, $customer["password"])) {
+    if ($customer["status"] === "Deleted") {
+
+        $error = "Your account has been deleted by the administrator.";
+
+    } elseif (password_verify($password, $customer["password"])) {
 
             $_SESSION["customer_id"] = $customer["customer_id"];
             $_SESSION["customer_name"] = $customer["name"];
@@ -140,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </button>
 
             <p class="forgot">
-                <a href="#">Forgot Password?</a>
+                <a href="forgot_password.php">Forgot Password?</a>
             </p>
 
             <p class="register">

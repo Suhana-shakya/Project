@@ -256,17 +256,98 @@ $show_time =
     );
 
 
-$ticket_price =
-    (float)$details["ticket_price"];
+/* =====================================================
+   CALCULATE TOTAL PRICE
+===================================================== */
+
+$show_time_value =
+    strtotime($details["show_time"]);
+
+$hour =
+    (int)date("H", $show_time_value);
+
+if ($hour < 12) {
+
+    $regular_price = 350;
+    $premium_price = 400;
+    $vip_price = 450;
+
+} else {
+
+    $regular_price = 450;
+    $premium_price = 500;
+    $vip_price = 550;
+}
+
+
+/* =====================================================
+   GET SEAT TYPES
+===================================================== */
+
+$seat_placeholders = implode(
+    ",",
+    array_fill(0, count($seat_ids), "?")
+);
+
+$seat_types_sql = "
+    SELECT seat_type
+    FROM seat
+    WHERE hall_id = ?
+      AND seat_id IN ($seat_placeholders)
+";
+
+$seat_types_stmt =
+    $conn->prepare($seat_types_sql);
+
+$seat_types_params =
+    array_merge(
+        [$hall_id],
+        $seat_ids
+    );
+
+$seat_types_string =
+    str_repeat("i", count($seat_ids));
+
+$seat_types_stmt->bind_param(
+    "i" . $seat_types_string,
+    ...$seat_types_params
+);
+
+$seat_types_stmt->execute();
+
+$seat_types_result =
+    $seat_types_stmt->get_result();
+
+
+$total_price = 0;
+
+while ($seat = $seat_types_result->fetch_assoc()) {
+
+    if ($seat["seat_type"] === "Regular") {
+
+        $total_price += $regular_price;
+
+    }
+    elseif ($seat["seat_type"] === "Premium") {
+
+        $total_price += $premium_price;
+
+    }
+    elseif ($seat["seat_type"] === "VIP") {
+
+        $total_price += $vip_price;
+
+    }
+    else {
+
+        die("Invalid seat type.");
+
+    }
+}
 
 
 $ticket_count =
     count($seat_ids);
-
-
-$total_price =
-    $ticket_price *
-    $ticket_count;
 
 
 /* =====================================================
@@ -413,11 +494,14 @@ Payment Failed | HiMovie
 
 <div class="poster">
 
-<img
-src="<?php echo $poster; ?>"
-alt="<?php echo $movie_title; ?>"
+<?php if (!empty($details["poster"])): ?>
 
+<img 
+    src="uploads/posters/<?php echo htmlspecialchars($details["poster"]); ?>" 
+    alt="<?php echo $movie_title; ?>"
 >
+
+<?php endif; ?>
 
 <span class="badge">
 

@@ -30,16 +30,6 @@ if (session_status() === PHP_SESSION_NONE) {
             </a>
         </li>
 
-        <li class="search-box">
-
-            <i class="fa-solid fa-magnifying-glass"></i>
-
-            <input
-                type="text"
-                placeholder="Search movies..."
-            >
-
-        </li>
 
         <?php if (isset($_SESSION["customer_id"])): ?>
 

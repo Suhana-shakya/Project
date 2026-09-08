@@ -42,11 +42,12 @@ $showtime_id =
 
 $hall_id =
     (int)$booking["hall_id"];
-
 $seat_ids =
     $booking["seat_ids"];
-
-
+if (empty($seat_ids)) {
+    unset($_SESSION["esewa_booking"]);
+    die("No seats were selected.");
+}
 /* =====================================================
    REMOVE ONLY EXPIRED RESERVATIONS
 ===================================================== */
@@ -135,7 +136,7 @@ $_SESSION["payment_failure"] = [
     "movie_id" => $movie_id,
     "showtime_id" => $showtime_id,
     "hall_id" => $hall_id,
-    "seat_ids" => $valid_seats,
+    "seat_ids" => $seat_ids,
     "expiry_time" => $expiry_time
 ];
 

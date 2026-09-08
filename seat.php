@@ -594,6 +594,8 @@ $formatted_time = date(
     strtotime($show['show_time'])
 );
 
+
+
 ?>
 
 <!DOCTYPE html>
@@ -623,6 +625,21 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <body>
 
 <?php include "navbar.php"; ?>
+
+<?php if (isset($_GET["error"]) && $_GET["error"] === "expired"): ?>
+
+    <div class="booking-error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <div>
+            <strong>Seat reservation expired</strong>
+            <p>
+                One or more selected seats are no longer reserved.
+                Please select your seats again.
+            </p>
+        </div>
+    </div>
+
+<?php endif; ?>
 
 <!-- =====================================================
                      PAGE
@@ -1147,37 +1164,6 @@ No VIP seats available.
 </p>
 
 <?php endif; ?>
-
-</div>
-
-
-
-<!-- =====================================================
-                      PRICE LEGEND
-===================================================== -->
-
-<div class="price-legend">
-
-<div>
-Regular:
-<strong>
-Rs. <?php echo $regular_price; ?>
-</strong>
-</div>
-
-<div>
-Premium:
-<strong>
-Rs. <?php echo $premium_price; ?>
-</strong>
-</div>
-
-<div>
-VIP:
-<strong>
-Rs. <?php echo $vip_price; ?>
-</strong>
-</div>
 
 </div>
 
