@@ -226,6 +226,7 @@ body {
     color: #ff6b91;
 }
 
+
 /* ================= NO BOOKINGS ================= */
 
 .no-bookings {
@@ -275,7 +276,97 @@ body {
 
     font-weight: 600;
 }
+/* =========================================
+   CANCEL TICKET BUTTON
+========================================= */
 
+.cancel-ticket-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 10px 18px;
+
+    margin-top: 12px;
+
+    background: rgba(239, 68, 68, 0.12) !important;
+
+    border: 1px solid rgba(239, 68, 68, 0.5) !important;
+
+    border-radius: 8px;
+
+    color: #f87171 !important;
+
+    text-decoration: none !important;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.cancel-ticket-btn i {
+    color: #f87171 !important;
+
+    font-size: 13px;
+}
+
+.cancel-ticket-btn:hover {
+    background: rgba(239, 68, 68, 0.25) !important;
+
+    border-color: #ef4444 !important;
+
+    color: #fca5a5 !important;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 15px rgba(239, 68, 68, 0.15);
+}
+
+.cancel-ticket-btn:hover i {
+    color: #fca5a5 !important;
+}
+.refund-info {
+    margin-top: 12px;
+    padding: 12px 15px;
+    background: rgba(139, 92, 246, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    border-radius: 8px;
+}
+
+.refund-info div {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.refund-info span {
+    color: #9ca3af;
+}
+
+.refund-info strong {
+    color: #e5e7eb;
+}
+
+.refund-refunded {
+    color: #22c55e !important;
+}
+
+.refund-refund-pending {
+    color: #eab308 !important;
+}
+
+.refund-not-applicable {
+    color: #9ca3af !important;
+}
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 650px) {

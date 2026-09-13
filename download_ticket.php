@@ -55,6 +55,8 @@ $sql = "
         t.ticket_id,
         t.customer_id,
 
+		c.name AS customer_name,
+		 
         m.title,
 
         s.seat_number,
@@ -66,7 +68,10 @@ $sql = "
         h.hall_name
 
     FROM ticket t
-
+	
+	INNER JOIN customer c
+    ON t.customer_id = c.customer_id
+	
     INNER JOIN movie m
         ON t.movie_id = m.movie_id
 
@@ -123,6 +128,9 @@ if (empty($tickets)) {
 ===================================================== */
 
 $first_ticket = $tickets[0];
+
+$customer_id = $first_ticket["customer_id"];
+$customer_name = $first_ticket["customer_name"];
 
 $movie_title = $first_ticket["title"];
 
@@ -317,7 +325,28 @@ body {
 
 
     <table class="details">
+		
+		<tr>
+			<td class="label">
+				Customer ID
+			</td>
 
+			<td class="value">
+				' . htmlspecialchars($customer_id) . '
+			</td>
+		</tr>
+
+
+		<tr>
+			<td class="label">
+				Customer Name
+			</td>
+
+			<td class="value">
+				' . htmlspecialchars($customer_name) . '
+			</td>
+		</tr>
+		
         <tr>
             <td class="label">
                 Movie

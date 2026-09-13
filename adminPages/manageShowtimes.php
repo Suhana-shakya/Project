@@ -31,6 +31,7 @@ $result = $conn->query($sql);
 <title>Manage Showtimes</title>
 
 <link rel="stylesheet" href="manageShowtimes.css">
+<link rel="stylesheet" href="sidebar.css">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -39,66 +40,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <div class="container">
 
-    <!-- ================= SIDEBAR ================= -->
-
-    <aside class="sidebar">
-
-        <h2>HiMovie</h2>
-
-        <ul>
-
-            <li>
-                <a href="dashboard.php">
-                    <i class="fa-solid fa-house"></i>
-                    Dashboard
-                </a>
-            </li>
-
-            <li>
-                <a href="manageMovies.php">
-                    <i class="fa-solid fa-film"></i>
-                    Manage Movies
-                </a>
-            </li>
-
-            <li class="active">
-                <a href="manageShowtimes.php">
-                    <i class="fa-solid fa-clock"></i>
-                    Showtimes
-                </a>
-            </li>
-
-            <li>
-                <a href="manageSeats.php">
-                    <i class="fa-solid fa-chair"></i>
-                    Manage Seats
-                </a>
-            </li>
-
-            <li>
-                <a href="manageUsers.php">
-                    <i class="fa-solid fa-users"></i>
-                    Manage Users
-                </a>
-            </li>
-
-            <li>
-                <a href="manageTicketStatus.php">
-                    <i class="fa-solid fa-ticket"></i>
-                    Manage Ticket Status
-                </a>
-            </li>
-
-            <li>
-                <a href="adminLogout.php">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    Logout
-                </a>
-            </li>
-
-        </ul>
-
-    </aside>
+    <?php include "sidebar.php"; ?>
 
 
     <!-- ================= MAIN ================= -->

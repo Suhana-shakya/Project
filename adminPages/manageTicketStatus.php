@@ -14,30 +14,159 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ticket_id = (int) $_POST["ticket_id"];
     $status = trim($_POST["status"]);
 
-    $sql = "UPDATE ticket
-            SET status = ?
-            WHERE ticket_id = ?";
 
-    $stmt = $conn->prepare($sql);
+    /* ============================================
+       GET CURRENT STATUS AND CUSTOMER
+    ============================================ */
 
-    $stmt->bind_param(
-        "si",
-        $status,
-        $ticket_id
-    );
+    $check_sql = "SELECT
+                  t.customer_id,
+                  t.status,
+                  m.title AS movie_title,
+                  s.seat_number,
+                  st.show_date,
+                  st.show_time
+              FROM ticket t
+              LEFT JOIN movie m
+                  ON t.movie_id = m.movie_id
+              LEFT JOIN seat s
+                  ON t.seat_id = s.seat_id
+              LEFT JOIN showtime st
+                  ON t.showtime_id = st.showtime_id
+              WHERE t.ticket_id = ?";
 
-    if ($stmt->execute()) {
+    $check_stmt = $conn->prepare($check_sql);
 
-        $success = "Ticket status updated successfully.";
+    $check_stmt->bind_param("i", $ticket_id);
+
+    $check_stmt->execute();
+
+    $check_result = $check_stmt->get_result();
+
+
+    if ($check_result->num_rows == 1) {
+
+        $ticket_data = $check_result->fetch_assoc();
+
+        $customer_id = $ticket_data["customer_id"];
+        $old_status = $ticket_data["status"];
+		$movie_title = $ticket_data["movie_title"];
+		$seat_number = $ticket_data["seat_number"];
+		$show_date = $ticket_data["show_date"];
+		$show_time = $ticket_data["show_time"];
+
+
+        /* ============================================
+           ONLY UPDATE IF STATUS ACTUALLY CHANGED
+        ============================================ */
+
+        if ($old_status !== $status) {
+
+            /* ================= UPDATE TICKET ================= */
+
+            $sql = "UPDATE ticket
+                    SET status = ?
+                    WHERE ticket_id = ?";
+
+            $stmt = $conn->prepare($sql);
+
+            $stmt->bind_param(
+                "si",
+                $status,
+                $ticket_id
+            );
+
+
+            if ($stmt->execute()) {
+
+
+                /* ============================================
+                   CREATE NOTIFICATION
+                ============================================ */
+
+                if ($status === "Confirmed") {
+
+					$message =
+						"Your ticket #$ticket_id for $movie_title " .
+						"(Seat $seat_number, $show_date at $show_time) " .
+						"has been confirmed.";
+
+				} elseif ($status === "Pending") {
+
+					$message =
+						"Your ticket #$ticket_id for $movie_title " .
+						"(Seat $seat_number, $show_date at $show_time) " .
+						"is now pending.";
+
+				} elseif ($status === "Cancelled") {
+
+					$message =
+						"Your ticket #$ticket_id for $movie_title " .
+						"(Seat $seat_number, $show_date at $show_time) " .
+						"has been cancelled.";
+
+				} else {
+
+					$message =
+						"The status of your ticket #$ticket_id for $movie_title " .
+						"has been changed to $status.";
+
+				}
+
+
+                $notification_sql =
+                    "INSERT INTO notification
+                    (customer_id, ticket_id, message)
+                    VALUES (?, ?, ?)";
+
+                $notification_stmt =
+                    $conn->prepare($notification_sql);
+
+                $notification_stmt->bind_param(
+                    "iis",
+                    $customer_id,
+                    $ticket_id,
+                    $message
+                );
+
+                if ($notification_stmt->execute()) {
+
+                    $success =
+                        "Ticket status updated and customer notified.";
+
+                } else {
+
+                    $success =
+                        "Ticket status updated, but notification could not be created.";
+
+                }
+
+                $notification_stmt->close();
+
+            } else {
+
+                $error = "Failed to update ticket status.";
+
+            }
+
+            $stmt->close();
+
+        } else {
+
+            $success =
+                "Ticket status is already " . $status . ".";
+
+        }
 
     } else {
 
-        $error = "Failed to update ticket status.";
+        $error = "Ticket not found.";
 
     }
 
-    $stmt->close();
+    $check_stmt->close();
 }
+
 
 
 /* ================= GET TICKETS ================= */
@@ -87,6 +216,8 @@ $result = $conn->query($sql);
     <title>Manage Ticket Status</title>
 
     <link rel="stylesheet" href="manageTicketStatus.css">
+	<link rel="stylesheet" href="sidebar.css">
+	
 
     <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -98,66 +229,7 @@ $result = $conn->query($sql);
 <div class="container">
 
 
-    <!-- ================= SIDEBAR ================= -->
-
-    <aside class="sidebar">
-
-        <h2>HiMovie</h2>
-
-        <ul>
-
-            <li>
-                <a href="dashboard.php">
-                    <i class="fa-solid fa-house"></i>
-                    Dashboard
-                </a>
-            </li>
-
-            <li>
-                <a href="manageMovies.php">
-                    <i class="fa-solid fa-film"></i>
-                    Manage Movies
-                </a>
-            </li>
-
-            <li>
-                <a href="manageShowtimes.php">
-                    <i class="fa-solid fa-clock"></i>
-                    Showtimes
-                </a>
-            </li>
-
-            <li>
-                <a href="manageSeats.php">
-                    <i class="fa-solid fa-chair"></i>
-                    Manage Seats
-                </a>
-            </li>
-
-            <li>
-                <a href="manageUsers.php">
-                    <i class="fa-solid fa-users"></i>
-                    Manage Users
-                </a>
-            </li>
-
-            <li class="active">
-                <a href="manageTicketStatus.php">
-                    <i class="fa-solid fa-ticket"></i>
-                    Manage Ticket Status
-                </a>
-            </li>
-
-            <li>
-                <a href="adminLogout.php">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    Logout
-                </a>
-            </li>
-
-        </ul>
-
-    </aside>
+    <?php include "sidebar.php"; ?>
 
 
     <!-- ================= MAIN ================= -->

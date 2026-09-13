@@ -17,22 +17,21 @@ $customer_id = $_SESSION["customer_id"];
 /* ================= GET BOOKINGS ================= */
 
 $sql = "SELECT 
-            t.ticket_id,
-            t.booking_date,
-            t.status,
-            t.payment_status,
-
-            m.title,
-            m.poster,
-
-            st.show_date,
-            st.show_time,
-            st.ticket_price,
-
-            s.seat_number,
-            s.seat_type,
-
-            h.hall_name
+			t.ticket_id,
+			t.booking_date,
+			t.status,
+			t.payment_status,
+			t.refund_percentage,
+			t.refund_amount,
+			t.refund_status,
+			m.title,
+			m.poster,
+			st.show_date,
+			st.show_time,
+			st.ticket_price,
+			s.seat_number,
+			s.seat_type,
+			h.hall_name
 
         FROM ticket t
 
@@ -196,6 +195,46 @@ $result = $stmt->get_result();
                                     </span>
 
                                 </div>
+								<?php if ($booking["status"] === "Confirmed"): ?>
+
+									<a href="cancelTicket.php?id=<?php echo $booking["ticket_id"]; ?>"
+									   class="cancel-ticket-btn"
+									   onclick="return confirm('Are you sure you want to cancel this ticket?');">
+
+										<i class="fa-solid fa-ban"></i>
+										Cancel Ticket
+
+									</a>
+
+								<?php endif; ?>
+								<?php if ($booking["status"] === "Cancelled"): ?>
+
+									<div class="refund-info">
+
+										<div>
+											<span>Refund:</span>
+											<strong>
+												Rs. <?php echo number_format($booking["refund_amount"], 2); ?>
+											</strong>
+										</div>
+
+										<div>
+											<span>Refund Percentage:</span>
+											<strong>
+												<?php echo number_format($booking["refund_percentage"], 0); ?>%
+											</strong>
+										</div>
+
+										<div>
+											<span>Refund Status:</span>
+											<strong class="refund-<?php echo strtolower(str_replace(' ', '-', $booking["refund_status"])); ?>">
+												<?php echo htmlspecialchars($booking["refund_status"]); ?>
+											</strong>
+										</div>
+
+									</div>
+
+								<?php endif; ?>
 
                             </div>
 
