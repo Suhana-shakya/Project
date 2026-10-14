@@ -39,7 +39,17 @@ body {
 
     margin: 0 auto;
 }
-
+.cancellation-error {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+    border: 1px solid #ef4444;
+    padding: 15px 20px;
+    margin: 20px auto;
+    max-width: 1000px;
+    border-radius: 10px;
+    font-size: 15px;
+    text-align: center;
+}
 /* ================= HEADER ================= */
 
 .page-header {

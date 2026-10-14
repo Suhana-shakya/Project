@@ -4,59 +4,81 @@ session_start();
 
 include "db.php";
 
+
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $email = trim($_POST["email"]);
-    $password = $_POST["password"];
+    $email = trim($_POST["email"] ?? "");
+    $password = $_POST["password"] ?? "";
 
-    $sql = "SELECT customer_id, name, email, username, password, status
-            FROM customer
-            WHERE email = ?";
-
-    $stmt = $conn->prepare($sql);
-
-    $stmt->bind_param("s", $email);
-
-    $stmt->execute();
-
-    $result = $stmt->get_result();
-
-    if ($result->num_rows == 1) {
-
-    $customer = $result->fetch_assoc();
-
-    if ($customer["status"] === "Deleted") {
-
-        $error = "Your account has been deleted by the administrator.";
-
-    } elseif (password_verify($password, $customer["password"])) {
-
-            $_SESSION["customer_id"] = $customer["customer_id"];
-            $_SESSION["customer_name"] = $customer["name"];
-            $_SESSION["customer_email"] = $customer["email"];
-            $_SESSION["customer_username"] = $customer["username"];
-
-            header("Location: index.php");
-            exit();
-
-        } else {
-
-            $error = "Invalid email or password.";
-
-        }
-
-    } else {
-
-        $error = "Invalid email or password.";
-
+    // Validate email
+    if ($email === "") {
+        $error = "Email address is required.";
+    } elseif (
+        strlen($email) > 150 ||
+        !filter_var($email, FILTER_VALIDATE_EMAIL)
+    ) {
+        $error = "Please enter a valid email address.";
     }
 
-    $stmt->close();
-}
+    // Validate password
+    if ($error === "") {
+        if ($password === "") {
+            $error = "Password is required.";
+        } elseif (strlen($password) > 4096) {
+            $error = "Invalid email or password.";
+        }
+    }
 
+    // Check credentials only if inputs are valid
+    if ($error === "") {
+
+        $sql = "SELECT customer_id, name, email, username, password, status
+                FROM customer
+                WHERE email = ?";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 1) {
+
+            $customer = $result->fetch_assoc();
+
+            if ($customer["status"] === "Deleted") {
+
+                $error = "Your account has been deleted by the administrator.";
+
+            } elseif (
+                password_verify($password, $customer["password"])
+            ) {
+
+                session_regenerate_id(true);
+
+                $_SESSION["customer_id"] = $customer["customer_id"];
+                $_SESSION["customer_name"] = $customer["name"];
+                $_SESSION["customer_email"] = $customer["email"];
+                $_SESSION["customer_username"] = $customer["username"];
+
+                header("Location: index.php");
+                exit();
+
+            } else {
+                $error = "Invalid email or password.";
+            }
+
+        } else {
+            $error = "Invalid email or password.";
+        }
+
+        $stmt->close();
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,12 +153,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 type="email"
                 name="email"
                 placeholder="Enter your Email"
+                maxlength="150"
+                autocomplete="email"
                 required>
 
             <input
                 type="password"
                 name="password"
                 placeholder="Enter your Password"
+                autocomplete="current-password"
                 required>
 
             <button type="submit" class="submit-btn">

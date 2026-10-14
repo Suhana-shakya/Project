@@ -7,6 +7,7 @@ $error = "";
 $success = "";
 
 
+
 /* ================= UPDATE TICKET STATUS ================= */
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -14,158 +15,140 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ticket_id = (int) $_POST["ticket_id"];
     $status = trim($_POST["status"]);
 
+    $allowed_statuses = ["Pending", "Confirmed", "Cancelled"];
 
-    /* ============================================
-       GET CURRENT STATUS AND CUSTOMER
-    ============================================ */
+    if (!in_array($status, $allowed_statuses, true)) {
 
-    $check_sql = "SELECT
-                  t.customer_id,
-                  t.status,
-                  m.title AS movie_title,
-                  s.seat_number,
-                  st.show_date,
-                  st.show_time
-              FROM ticket t
-              LEFT JOIN movie m
-                  ON t.movie_id = m.movie_id
-              LEFT JOIN seat s
-                  ON t.seat_id = s.seat_id
-              LEFT JOIN showtime st
-                  ON t.showtime_id = st.showtime_id
-              WHERE t.ticket_id = ?";
-
-    $check_stmt = $conn->prepare($check_sql);
-
-    $check_stmt->bind_param("i", $ticket_id);
-
-    $check_stmt->execute();
-
-    $check_result = $check_stmt->get_result();
-
-
-    if ($check_result->num_rows == 1) {
-
-        $ticket_data = $check_result->fetch_assoc();
-
-        $customer_id = $ticket_data["customer_id"];
-        $old_status = $ticket_data["status"];
-		$movie_title = $ticket_data["movie_title"];
-		$seat_number = $ticket_data["seat_number"];
-		$show_date = $ticket_data["show_date"];
-		$show_time = $ticket_data["show_time"];
-
-
-        /* ============================================
-           ONLY UPDATE IF STATUS ACTUALLY CHANGED
-        ============================================ */
-
-        if ($old_status !== $status) {
-
-            /* ================= UPDATE TICKET ================= */
-
-            $sql = "UPDATE ticket
-                    SET status = ?
-                    WHERE ticket_id = ?";
-
-            $stmt = $conn->prepare($sql);
-
-            $stmt->bind_param(
-                "si",
-                $status,
-                $ticket_id
-            );
-
-
-            if ($stmt->execute()) {
-
-
-                /* ============================================
-                   CREATE NOTIFICATION
-                ============================================ */
-
-                if ($status === "Confirmed") {
-
-					$message =
-						"Your ticket #$ticket_id for $movie_title " .
-						"(Seat $seat_number, $show_date at $show_time) " .
-						"has been confirmed.";
-
-				} elseif ($status === "Pending") {
-
-					$message =
-						"Your ticket #$ticket_id for $movie_title " .
-						"(Seat $seat_number, $show_date at $show_time) " .
-						"is now pending.";
-
-				} elseif ($status === "Cancelled") {
-
-					$message =
-						"Your ticket #$ticket_id for $movie_title " .
-						"(Seat $seat_number, $show_date at $show_time) " .
-						"has been cancelled.";
-
-				} else {
-
-					$message =
-						"The status of your ticket #$ticket_id for $movie_title " .
-						"has been changed to $status.";
-
-				}
-
-
-                $notification_sql =
-                    "INSERT INTO notification
-                    (customer_id, ticket_id, message)
-                    VALUES (?, ?, ?)";
-
-                $notification_stmt =
-                    $conn->prepare($notification_sql);
-
-                $notification_stmt->bind_param(
-                    "iis",
-                    $customer_id,
-                    $ticket_id,
-                    $message
-                );
-
-                if ($notification_stmt->execute()) {
-
-                    $success =
-                        "Ticket status updated and customer notified.";
-
-                } else {
-
-                    $success =
-                        "Ticket status updated, but notification could not be created.";
-
-                }
-
-                $notification_stmt->close();
-
-            } else {
-
-                $error = "Failed to update ticket status.";
-
-            }
-
-            $stmt->close();
-
-        } else {
-
-            $success =
-                "Ticket status is already " . $status . ".";
-
-        }
+        $error = "Invalid ticket status.";
 
     } else {
 
-        $error = "Ticket not found.";
+        $check_sql = "SELECT
+                          t.customer_id,
+                          t.status,
+                          t.payment_status,
+                          m.title AS movie_title,
+                          m.status AS movie_status,
+                          s.seat_number,
+                          st.show_date,
+                          st.show_time
+                      FROM ticket t
+                      LEFT JOIN movie m ON t.movie_id = m.movie_id
+                      LEFT JOIN seat s ON t.seat_id = s.seat_id
+                      LEFT JOIN showtime st ON t.showtime_id = st.showtime_id
+                      WHERE t.ticket_id = ?";
 
+        $check_stmt = $conn->prepare($check_sql);
+        $check_stmt->bind_param("i", $ticket_id);
+        $check_stmt->execute();
+
+        $check_result = $check_stmt->get_result();
+
+        if ($check_result->num_rows == 1) {
+
+            $ticket_data = $check_result->fetch_assoc();
+
+            $customer_id = $ticket_data["customer_id"];
+            $old_status = $ticket_data["status"];
+            $payment_status = $ticket_data["payment_status"];
+            $movie_title = $ticket_data["movie_title"];
+            $movie_status = $ticket_data["movie_status"];
+            $seat_number = $ticket_data["seat_number"];
+            $show_date = $ticket_data["show_date"];
+            $show_time = $ticket_data["show_time"];
+
+            
+            if ($old_status === $status) {
+
+                $success = "Ticket status is already " . $status . ".";
+
+            } elseif (
+                $old_status === "Cancelled" &&
+                $status !== "Cancelled"
+            ) {
+
+                $error = "A cancelled ticket cannot be reactivated.";
+
+            } elseif (
+                $old_status === "Confirmed" &&
+                $status === "Cancelled" &&
+                $movie_status === "Archived"
+            ) {
+
+                $error = "Cannot cancel a confirmed ticket for an archived movie.";
+
+            } elseif (
+                $status === "Confirmed" &&
+                $payment_status !== "Paid"
+            ) {
+
+                $error = "Cannot confirm a ticket until payment is verified.";
+
+            } else {
+
+                $sql = "UPDATE ticket SET status = ? WHERE ticket_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("si", $status, $ticket_id);
+
+                if ($stmt->execute()) {
+
+                    if ($status === "Confirmed") {
+
+                        $message = "Your ticket #$ticket_id for $movie_title (Seat $seat_number, $show_date at $show_time) has been confirmed.";
+
+                    } elseif ($status === "Pending") {
+
+                        $message = "Your ticket #$ticket_id for $movie_title (Seat $seat_number, $show_date at $show_time) is now pending.";
+
+                    } else {
+
+                        $message = "Your ticket #$ticket_id for $movie_title (Seat $seat_number, $show_date at $show_time) has been cancelled.";
+
+                    }
+
+                    $notification_sql = "INSERT INTO notification
+                                         (customer_id, ticket_id, message)
+                                         VALUES (?, ?, ?)";
+
+                    $notification_stmt = $conn->prepare($notification_sql);
+                    $notification_stmt->bind_param(
+                        "iis",
+                        $customer_id,
+                        $ticket_id,
+                        $message
+                    );
+
+                    if ($notification_stmt->execute()) {
+
+                        $success = "Ticket status updated and customer notified.";
+
+                    } else {
+
+                        $success = "Ticket status updated, but notification could not be created.";
+
+                    }
+
+                    $notification_stmt->close();
+
+                } else {
+
+                    $error = "Failed to update ticket status.";
+
+                }
+
+                $stmt->close();
+            }
+
+        } else {
+
+            $error = "Ticket not found.";
+
+        }
+
+        $check_stmt->close();
     }
-
-    $check_stmt->close();
 }
+
 
 
 

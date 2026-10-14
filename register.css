@@ -220,7 +220,14 @@ body{
 .login-error i {
     color: #ef4444;
 }
-/* ====================== */
+#usernameMessage {
+    display: block;
+    font-size: 13px;
+    margin-top: -12px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
 
 @media(max-width:768px){
 

@@ -42,15 +42,21 @@ $sql = "SELECT
             t.payment_status,
             t.refund_percentage,
             t.refund_amount,
-
+            m.status AS movie_status,
             st.show_date,
             st.show_time,
+            s.seat_type,
             st.ticket_price
 
         FROM ticket t
 
         INNER JOIN showtime st
             ON t.showtime_id = st.showtime_id
+
+        INNER JOIN seat s
+            ON t.seat_id = s.seat_id
+        INNER JOIN movie m
+            ON t.movie_id = m.movie_id
 
         WHERE t.ticket_id = ?
         AND t.customer_id = ?";
@@ -97,8 +103,16 @@ if ($ticket["status"] !== "Confirmed") {
     header("Location: myBookings.php");
     exit();
 }
+/* BLOCK CANCELLATION FOR ARCHIVED MOVIES */
 
+if ($ticket["movie_status"] === "Archived") {
+    $_SESSION["cancellation_error"] =
+        "Sorry, this ticket cannot be cancelled because the movie is archived.";
 
+    $conn->close();
+    header("Location: myBookings.php");
+    exit();
+}
 /* =====================================================
    CALCULATE SHOW TIME AGAIN
 ===================================================== */
@@ -119,9 +133,10 @@ $seconds_until_show =
 ===================================================== */
 
 if ($seconds_until_show <= 0) {
+    $_SESSION["cancellation_error"] =
+        "Sorry, cancellation is not allowed because this show's date and time have already passed.";
 
     $conn->close();
-
     header("Location: myBookings.php");
     exit();
 }
@@ -158,12 +173,48 @@ if ($hours_until_show > 24) {
 }
 
 
+
+/* =====================================================
+   CALCULATE TICKET PRICE FROM SEAT TYPE AND SHOW TIME
+===================================================== */
+
+$seat_type = $ticket["seat_type"];
+$show_time = $ticket["show_time"];
+
+$hour = (int) date("G", strtotime($show_time));
+
+if ($hour < 12) {
+
+    if ($seat_type === "Regular") {
+        $ticket_price = 350;
+    } elseif ($seat_type === "Premium") {
+        $ticket_price = 400;
+    } elseif ($seat_type === "VIP") {
+        $ticket_price = 450;
+    } else {
+        throw new Exception("Invalid seat type.");
+    }
+
+} else {
+
+    if ($seat_type === "Regular") {
+        $ticket_price = 450;
+    } elseif ($seat_type === "Premium") {
+        $ticket_price = 500;
+    } elseif ($seat_type === "VIP") {
+        $ticket_price = 550;
+    } else {
+        throw new Exception("Invalid seat type.");
+    }
+}
+
 /* =====================================================
    CALCULATE REFUND AMOUNT
 ===================================================== */
 
 $refund_amount =
-    ($ticket["ticket_price"] * $refund_percentage) / 100;
+    ($ticket_price * $refund_percentage) / 100;
+
 
 
 /* =====================================================

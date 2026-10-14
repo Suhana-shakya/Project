@@ -5,6 +5,7 @@ session_start();
 date_default_timezone_set("Asia/Kathmandu");
 
 include "db.php";
+$mailConfig = require "C:/xampp/private/mail_config.php";
 require "PHPMailer/src/Exception.php";
 require "PHPMailer/src/PHPMailer.php";
 require "PHPMailer/src/SMTP.php";
@@ -25,8 +26,10 @@ $success = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $email = trim($_POST["email"]);
+    if (strlen($email) > 150) {
+        $error = "Email address is too long.";
 
-    if (empty($email)) {
+    } elseif (empty($email)) {
 
         $error = "Please enter your email address.";
 
@@ -74,266 +77,262 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $check_stmt->close();
 
-                // Continue with your existing OTP/token generation code here
-            }
+                $customer_id = $customer["customer_id"];
 
-            $customer_id = $customer["customer_id"];
+                /* ==========================================
+                   GENERATE 6-DIGIT OTP
+                ========================================== */
+
+                $otp = str_pad(random_int(0, 999999), 6, "0", STR_PAD_LEFT);
+
+                /* ==========================================
+                   GENERATE SECURE RESET TOKEN
+                ========================================== */
+
+                $token = bin2hex(random_bytes(32));
+
+                /* ==========================================
+                   OTP VALID FOR 10 MINUTES
+                ========================================== */
+                $created_at = date("Y-m-d H:i:s");
+                $expires_at = date(
+                    "Y-m-d H:i:s",
+                    time() + (10 * 60)
+                );
+
+                /* ==========================================
+                   REMOVE OLD RESET REQUESTS
+                ========================================== */
+
+                $delete_sql = "DELETE FROM password_resets
+                               WHERE customer_id = ?";
+
+                $delete_stmt = $conn->prepare($delete_sql);
+
+                $delete_stmt->bind_param(
+                    "i",
+                    $customer_id
+                );
+
+                $delete_stmt->execute();
+
+                $delete_stmt->close();
+
+                /* ==========================================
+                   SAVE RESET REQUEST
+                ========================================== */
+
+                $insert_sql = "INSERT INTO password_resets
+                               (customer_id, email, otp, token, expires_at, created_at)
+                               VALUES (?, ?, ?, ?, ?, ?)";
+
+                $insert_stmt = $conn->prepare($insert_sql);
+
+                $insert_stmt->bind_param(
+                    "isssss",
+                    $customer_id,
+                    $email,
+                    $otp,
+                    $token,
+                    $expires_at,
+                    $created_at
+                );
+
+                if ($insert_stmt->execute()) {
+
+        /* ==========================================
+           CREATE RESET LINK
+        ========================================== */
+
+        $reset_link =
+            "http://localhost/Demo/reset_password.php?token="
+            . urlencode($token);
+
+
+        /* ==========================================
+           SEND EMAIL USING PHPMailer
+        ========================================== */
+
+        $mail = new PHPMailer(true);
+
+        try {
+
+            $mail->isSMTP();
+
+            $mail->Host = "smtp.gmail.com";
+
+            $mail->SMTPAuth = true;
+
+            $mail->Username = $mailConfig["username"];
+            $mail->Password = $mailConfig["password"];
+
+            $mail->SMTPSecure =
+                PHPMailer::ENCRYPTION_STARTTLS;
+
+            $mail->Port = 587;
+
 
             /* ==========================================
-               GENERATE 6-DIGIT OTP
+               SENDER
             ========================================== */
 
-            $otp = str_pad(random_int(0, 999999), 6, "0", STR_PAD_LEFT);
-
-            /* ==========================================
-               GENERATE SECURE RESET TOKEN
-            ========================================== */
-
-            $token = bin2hex(random_bytes(32));
-
-            /* ==========================================
-               OTP VALID FOR 10 MINUTES
-            ========================================== */
-            $created_at = date("Y-m-d H:i:s");
-            $expires_at = date(
-                "Y-m-d H:i:s",
-                time() + (10 * 60)
+            $mail->setFrom(
+                "ajajsjkska@gmail.com",
+                "Movie Booking System"
             );
 
-            /* ==========================================
-               REMOVE OLD RESET REQUESTS
-            ========================================== */
-
-            $delete_sql = "DELETE FROM password_resets
-                           WHERE customer_id = ?";
-
-            $delete_stmt = $conn->prepare($delete_sql);
-
-            $delete_stmt->bind_param(
-                "i",
-                $customer_id
-            );
-
-            $delete_stmt->execute();
-
-            $delete_stmt->close();
 
             /* ==========================================
-               SAVE RESET REQUEST
+               RECEIVER
             ========================================== */
 
-            $insert_sql = "INSERT INTO password_resets
-                           (customer_id, email, otp, token, expires_at, created_at)
-                           VALUES (?, ?, ?, ?, ?, ?)";
-
-            $insert_stmt = $conn->prepare($insert_sql);
-
-            $insert_stmt->bind_param(
-                "isssss",
-                $customer_id,
+            $mail->addAddress(
                 $email,
-                $otp,
-                $token,
-                $expires_at,
-                $created_at
+                $customer["name"]
             );
 
-            if ($insert_stmt->execute()) {
 
-    /* ==========================================
-       CREATE RESET LINK
-    ========================================== */
+            /* ==========================================
+               EMAIL
+            ========================================== */
 
-    $reset_link =
-        "http://localhost/Demo/reset_password.php?token="
-        . urlencode($token);
+            $mail->isHTML(true);
 
-
-    /* ==========================================
-       SEND EMAIL USING PHPMailer
-    ========================================== */
-
-    $mail = new PHPMailer(true);
-
-    try {
-
-        $mail->isSMTP();
-
-        $mail->Host = "smtp.gmail.com";
-
-        $mail->SMTPAuth = true;
-
-        $mail->Username = "ajajsjkska@gmail.com";
-
-        $mail->Password = "wpvkdqekdahaiwcz";
-
-        $mail->SMTPSecure =
-            PHPMailer::ENCRYPTION_STARTTLS;
-
-        $mail->Port = 587;
+            $mail->Subject =
+                "Movie Booking System - Password Reset";
 
 
-        /* ==========================================
-           SENDER
-        ========================================== */
-
-        $mail->setFrom(
-            "ajajsjkska@gmail.com",
-            "Movie Booking System"
-        );
-
-
-        /* ==========================================
-           RECEIVER
-        ========================================== */
-
-        $mail->addAddress(
-            $email,
-            $customer["name"]
-        );
-
-
-        /* ==========================================
-           EMAIL
-        ========================================== */
-
-        $mail->isHTML(true);
-
-        $mail->Subject =
-            "Movie Booking System - Password Reset";
-
-
-        $mail->Body = "
-
-            <div style='
-                font-family: Arial, sans-serif;
-                max-width: 600px;
-                margin: auto;
-                padding: 30px;
-                border: 1px solid #ddd;
-                border-radius: 10px;
-            '>
-
-                <h2 style='text-align:center;'>
-                    Movie Booking System
-                </h2>
-
-                <h3>
-                    Password Reset Request
-                </h3>
-
-                <p>
-                    Hello " .
-                    htmlspecialchars($customer["name"]) .
-                    ",
-                </p>
-
-                <p>
-                    We received a request to reset your
-                    Movie Booking System password.
-                </p>
-
-                <p>
-                    Your OTP is:
-                </p>
+            $mail->Body = "
 
                 <div style='
-                    font-size: 28px;
-                    font-weight: bold;
-                    letter-spacing: 6px;
-                    text-align: center;
-                    padding: 15px;
-                    background: #f3f3f3;
-                    border-radius: 8px;
+                    font-family: Arial, sans-serif;
+                    max-width: 600px;
+                    margin: auto;
+                    padding: 30px;
+                    border: 1px solid #ddd;
+                    border-radius: 10px;
                 '>
-                    " . htmlspecialchars($otp) . "
+
+                    <h2 style='text-align:center;'>
+                        Movie Booking System
+                    </h2>
+
+                    <h3>
+                        Password Reset Request
+                    </h3>
+
+                    <p>
+                        Hello " .
+                        htmlspecialchars($customer["name"]) .
+                        ",
+                    </p>
+
+                    <p>
+                        We received a request to reset your
+                        Movie Booking System password.
+                    </p>
+
+                    <p>
+                        Your OTP is:
+                    </p>
+
+                    <div style='
+                        font-size: 28px;
+                        font-weight: bold;
+                        letter-spacing: 6px;
+                        text-align: center;
+                        padding: 15px;
+                        background: #f3f3f3;
+                        border-radius: 8px;
+                    '>
+                        " . htmlspecialchars($otp) . "
+                    </div>
+
+                    <p>
+                        Click the button below to reset
+                        your password:
+                    </p>
+
+                    <p style='text-align:center;'>
+
+                        <a href='" .
+                            htmlspecialchars($reset_link) .
+                            "'
+                           style='
+                               display:inline-block;
+                               padding:12px 25px;
+                               background:#e50914;
+                               color:white;
+                               text-decoration:none;
+                               border-radius:6px;
+                               font-weight:bold;
+                           '>
+
+                            Reset Password
+
+                        </a>
+
+                    </p>
+
+                    <p>
+                        This OTP and reset link will expire
+                        in <strong>10 minutes</strong>.
+                    </p>
+
+                    <p>
+                        If you did not request a password
+                        reset, you can safely ignore this email.
+                    </p>
+
+                    <hr>
+
+                    <p style='font-size:12px;color:#777;'>
+                        Movie Booking System
+                    </p>
+
                 </div>
 
-                <p>
-                    Click the button below to reset
-                    your password:
-                </p>
-
-                <p style='text-align:center;'>
-
-                    <a href='" .
-                        htmlspecialchars($reset_link) .
-                        "'
-                       style='
-                           display:inline-block;
-                           padding:12px 25px;
-                           background:#e50914;
-                           color:white;
-                           text-decoration:none;
-                           border-radius:6px;
-                           font-weight:bold;
-                       '>
-
-                        Reset Password
-
-                    </a>
-
-                </p>
-
-                <p>
-                    This OTP and reset link will expire
-                    in <strong>10 minutes</strong>.
-                </p>
-
-                <p>
-                    If you did not request a password
-                    reset, you can safely ignore this email.
-                </p>
-
-                <hr>
-
-                <p style='font-size:12px;color:#777;'>
-                    Movie Booking System
-                </p>
-
-            </div>
-
-        ";
+            ";
 
 
-        /* ==========================================
-           PLAIN TEXT VERSION
-        ========================================== */
+            /* ==========================================
+               PLAIN TEXT VERSION
+            ========================================== */
 
-        $mail->AltBody =
-            "Movie Booking System\n\n" .
-            "Your password reset OTP is: " .
-            $otp . "\n\n" .
-            "Reset your password using this link:\n" .
-            $reset_link . "\n\n" .
-            "This link expires in 10 minutes.";
-
-
-        /* ==========================================
-           SEND EMAIL
-        ========================================== */
-
-        $mail->send();
-
-        $success =
-            "A password reset link has been sent to your email.";
+            $mail->AltBody =
+                "Movie Booking System\n\n" .
+                "Your password reset OTP is: " .
+                $otp . "\n\n" .
+                "Reset your password using this link:\n" .
+                $reset_link . "\n\n" .
+                "This link expires in 10 minutes.";
 
 
-    } catch (Exception $e) {
+            /* ==========================================
+               SEND EMAIL
+            ========================================== */
 
-        $error = "Unable to send the reset email. Please try again.";
+            $mail->send();
+
+            $success =
+                "A password reset link has been sent to your email.";
+
+
+        } catch (Exception $e) {
+
+            $error = "Unable to send the reset email. Please try again.";
+
+        }
+
+    } else {
+
+        $error =
+            "Something went wrong. Please try again.";
 
     }
 
-} else {
-
-    $error =
-        "Something went wrong. Please try again.";
-
+    $insert_stmt->close();
 }
-
-$insert_stmt->close();
-
         } else {
 
             /*
@@ -514,6 +513,8 @@ $insert_stmt->close();
                 type="email"
                 name="email"
                 placeholder="Enter your Email"
+                maxlength="150"
+                autocomplete="email"
                 required>
 
             <button

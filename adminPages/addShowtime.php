@@ -1,5 +1,5 @@
 <?php
-
+date_default_timezone_set('Asia/Kathmandu');
 include "adminAuth.php";
 include "../db.php";
 
@@ -12,7 +12,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $show_date = $_POST["show_date"];
     $show_time = trim($_POST["show_time"]);
-    $ticket_price = $_POST["ticket_price"];
     $movie_id = (int) $_POST["movie_id"];
     $hall_id = (int) $_POST["hall_id"];
     $admin_id = $_SESSION["admin_id"];
@@ -61,56 +60,68 @@ if ($movie["status"] != "Now Showing") {
 }
 
 
-/* ================= CHECK SHOW DATE ================= */
+/* ================= CHECK MOVIE RELEASE DATE ================= */
 
-/* Show date cannot be before movie release date */
+$release_date = $movie["release_date"];
 
-if ($show_date < $movie["release_date"]) {
+if ($show_date < $release_date) {
 
     $_SESSION["error"] =
         "Show date cannot be before the movie release date.";
 
     $check_stmt->close();
-
     header("Location: addShowtime.php");
     exit();
-
 }
 
 
 /* ================= CHECK SHOW DATE AND TIME ================= */
 
-/* Showtime cannot be in the past */
+/* Validate date and time formats */
+
+$date_obj = DateTime::createFromFormat('!Y-m-d', $show_date);
+$time_obj = DateTime::createFromFormat('!H:i', $show_time);
+
+if (
+    !$date_obj ||
+    $date_obj->format('Y-m-d') !== $show_date ||
+    !$time_obj ||
+    $time_obj->format('H:i') !== $show_time
+) {
+    $_SESSION["error"] = "Please enter a valid show date and time.";
+
+    $check_stmt->close();
+    header("Location: addShowtime.php");
+    exit();
+}
+
+/* Compare the selected showtime with Nepal's current time */
 
 $show_datetime = strtotime($show_date . " " . $show_time);
 $current_datetime = time();
 
-if ($show_datetime < $current_datetime) {
+if ($show_datetime <= $current_datetime) {
 
-    $_SESSION["error"] =
-        "Showtime cannot be in the past.";
+    $_SESSION["error"] = "Showtime cannot be in the past or at the current time.";
 
     $check_stmt->close();
-
     header("Location: addShowtime.php");
     exit();
-
 }
 
 
     /* ================= INSERT SHOWTIME ================= */
 
     $sql = "INSERT INTO Showtime
-            (show_date, show_time, ticket_price, movie_id, hall_id, admin_id)
-            VALUES (?, ?, ?, ?, ?, ?)";
+            (show_date, show_time, movie_id, hall_id, admin_id)
+            VALUES (?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
 
     $stmt->bind_param(
-        "ssdiii",
+        "ssiii",
         $show_date,
         $show_time,
-        $ticket_price,
         $movie_id,
         $hall_id,
         $admin_id
@@ -298,6 +309,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                 <input
                     type="date"
                     name="show_date"
+                    min="<?php echo date('Y-m-d'); ?>"
                     required>
 
             </div>
@@ -315,23 +327,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                     required>
 
             </div>
-
-
-            <!-- ================= PRICE ================= -->
-
-            <div class="form-group">
-
-                <label>Ticket Price</label>
-
-                <input
-                    type="number"
-                    name="ticket_price"
-                    step="0.01"
-                    min="0"
-                    placeholder="Enter ticket price"
-                    required>
-
-            </div>
+            
 
 
             <button type="submit" class="save-btn">

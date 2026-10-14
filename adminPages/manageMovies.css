@@ -343,6 +343,17 @@ tbody tr:hover{
     transform:translateY(-2px);
 }
 
+.edit-disabled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 38px;
+    color: #9ca3af;
+    background: rgba(156, 163, 175, 0.12);
+    border-radius: 10px;
+    cursor: not-allowed;
+}
 
 /* ================= STATUS ================= */
 

@@ -57,10 +57,40 @@ $movie = $result->fetch_assoc();
 
 $stmt->close();
 
+/* ================= BLOCK ARCHIVED MOVIES ================= */
+
+if ($movie["status"] == "Archived") {
+
+    $_SESSION["error"] = "Archived movies cannot be edited.";
+
+    header("Location: manageMovies.php");
+    exit();
+
+}
 
 /* ================= UPDATE MOVIE ================= */
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    /* CHECK MOVIE STATUS AGAIN */
+
+    $status_sql = "SELECT status FROM Movie WHERE movie_id = ?";
+    $status_stmt = $conn->prepare($status_sql);
+    $status_stmt->bind_param("i", $movie_id);
+    $status_stmt->execute();
+
+    $status_result = $status_stmt->get_result();
+    $current_movie = $status_result->fetch_assoc();
+
+    $status_stmt->close();
+
+    if (!$current_movie || $current_movie["status"] == "Archived") {
+
+        $_SESSION["error"] = "Archived movies cannot be edited.";
+
+        header("Location: manageMovies.php");
+        exit();
+
+    }
 
     $title = trim($_POST["title"]);
     $genre = trim($_POST["genre"]);

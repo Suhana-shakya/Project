@@ -23,143 +23,100 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     } else {
 
-        /* =============================================
-           CHECK REFUND
-        ============================================= */
+        
+/* =============================================
+   CHECK REFUND
+============================================= */
 
-        $check_sql = "SELECT
-                        ticket_id,
-                        refund_status,
-                        refund_amount
-                      FROM ticket
-                      WHERE ticket_id = ?";
+$check_sql = "SELECT
+                customer_id,
+                status,
+                refund_status,
+                refund_amount
+              FROM ticket
+              WHERE ticket_id = ?";
 
-        $check_stmt = $conn->prepare($check_sql);
+$check_stmt = $conn->prepare($check_sql);
+$check_stmt->bind_param("i", $ticket_id);
+$check_stmt->execute();
 
-        $check_stmt->bind_param("i", $ticket_id);
+$check_result = $check_stmt->get_result();
 
-        $check_stmt->execute();
+if ($check_result->num_rows === 1) {
 
-        $check_result = $check_stmt->get_result();
+    $ticket = $check_result->fetch_assoc();
 
+    if ($ticket["status"] !== "Cancelled") {
 
-        if ($check_result->num_rows === 1) {
+        $error = "Only cancelled tickets can be refunded.";
 
-            $ticket = $check_result->fetch_assoc();
+    } elseif ($ticket["refund_status"] !== "Refund Pending") {
 
+        $error = "This ticket does not have a pending refund.";
 
-            if ($ticket["refund_status"] !== "Refund Pending") {
+    } elseif ($ticket["refund_amount"] === null ||
+              (float)$ticket["refund_amount"] <= 0) {
 
-                $error = "This ticket does not have a pending refund.";
+        $error = "The refund amount is invalid.";
 
+    } else {
+
+        $customer_id = (int)$ticket["customer_id"];
+        $refund_amount = (float)$ticket["refund_amount"];
+
+        $update_sql = "UPDATE ticket
+                       SET refund_status = 'Refunded'
+                       WHERE ticket_id = ?
+                         AND status = 'Cancelled'
+                         AND refund_status = 'Refund Pending'
+                         AND refund_amount > 0";
+
+        $update_stmt = $conn->prepare($update_sql);
+        $update_stmt->bind_param("i", $ticket_id);
+
+        if ($update_stmt->execute() &&
+            $update_stmt->affected_rows === 1) {
+
+            $message = "Your refund for ticket #$ticket_id has been processed successfully. Refund amount: Rs. "
+                     . number_format($refund_amount, 2) . ".";
+
+            $notification_sql = "INSERT INTO notification
+                                 (customer_id, ticket_id, message)
+                                 VALUES (?, ?, ?)";
+
+            $notification_stmt = $conn->prepare($notification_sql);
+            $notification_stmt->bind_param(
+                "iis",
+                $customer_id,
+                $ticket_id,
+                $message
+            );
+
+            if ($notification_stmt->execute()) {
+                $success = "Refund marked as completed and customer notified.";
             } else {
-
-                /* =====================================
-                   UPDATE REFUND STATUS
-                ===================================== */
-
-                $update_sql = "UPDATE ticket
-                               SET refund_status = 'Refunded'
-                               WHERE ticket_id = ?
-                               AND refund_status = 'Refund Pending'";
-
-                $update_stmt = $conn->prepare($update_sql);
-
-                $update_stmt->bind_param("i", $ticket_id);
-
-
-                if ($update_stmt->execute()) {
-
-                    /* =================================
-                       GET CUSTOMER ID
-                    ================================= */
-
-                    $customer_sql = "SELECT customer_id
-                                     FROM ticket
-                                     WHERE ticket_id = ?";
-
-                    $customer_stmt = $conn->prepare($customer_sql);
-
-                    $customer_stmt->bind_param(
-                        "i",
-                        $ticket_id
-                    );
-
-                    $customer_stmt->execute();
-
-                    $customer_result =
-                        $customer_stmt->get_result();
-
-
-                    if ($customer_result->num_rows === 1) {
-
-                        $customer_data =
-                            $customer_result->fetch_assoc();
-
-                        $customer_id =
-                            $customer_data["customer_id"];
-
-
-                        /* =============================
-                           CREATE NOTIFICATION
-                        ============================= */
-
-                        $message =
-                            "Your refund for ticket #$ticket_id " .
-                            "has been processed successfully. " .
-                            "Refund amount: Rs. " .
-                            number_format(
-                                $ticket["refund_amount"],
-                                2
-                            ) . ".";
-
-
-                        $notification_sql =
-                            "INSERT INTO notification
-                            (customer_id, ticket_id, message)
-                            VALUES (?, ?, ?)";
-
-                        $notification_stmt =
-                            $conn->prepare(
-                                $notification_sql
-                            );
-
-                        $notification_stmt->bind_param(
-                            "iis",
-                            $customer_id,
-                            $ticket_id,
-                            $message
-                        );
-
-                        $notification_stmt->execute();
-
-                        $notification_stmt->close();
-                    }
-
-                    $customer_stmt->close();
-
-
-                    $success =
-                        "Refund marked as completed and customer notified.";
-
-                } else {
-
-                    $error =
-                        "Failed to update refund status.";
-                }
-
-
-                $update_stmt->close();
+                $success = "Refund marked as completed, but notification could not be created.";
             }
+
+            $notification_stmt->close();
 
         } else {
 
-            $error = "Ticket not found.";
+            $error = "Refund was not updated. It may already have been processed.";
+
         }
 
-
-        $check_stmt->close();
+        $update_stmt->close();
     }
+
+} else {
+
+    $error = "Ticket not found.";
+
+}
+
+$check_stmt->close();
+}
 }
 
 
@@ -206,7 +163,7 @@ $sql = "SELECT
 
         WHERE t.status = 'Cancelled'
 
-        AND t.refund_status != 'Not Applicable'
+        AND t.refund_status IN ('Refund Pending', 'Refunded')
 
         ORDER BY t.cancelled_at DESC";
 

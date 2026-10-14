@@ -10,8 +10,8 @@ $sql = "SELECT
             s.showtime_id,
             s.show_date,
             s.show_time,
-            s.ticket_price,
             m.title AS movie_name,
+            m.status AS movie_status,
             h.hall_name
         FROM Showtime s
         JOIN Movie m
@@ -48,6 +48,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     <main class="main">
 
         <h1>Manage Showtimes</h1>
+
+        <p class="price-note">
+            Ticket prices vary according to seat type and showtime.
+        </p>
 
 
         <?php if (isset($_SESSION["success"])): ?>
@@ -115,7 +119,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                         <th>Hall</th>
                         <th>Date</th>
                         <th>Time</th>
-                        <th>Ticket Price</th>
                         <th>Action</th>
 
                     </tr>
@@ -164,25 +167,31 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                                     $showtime["show_time"]
                                 ); ?>
                             </td>
-                            <td>
-                                Rs. <?php echo number_format(
-                                    $showtime["ticket_price"],
-                                    2
-                                ); ?>
-                            </td>
-
 
                             <td>
 
                                 <div class="actions">
 
-                                    <a
-                                        href="editShowtime.php?id=<?php echo $showtime["showtime_id"]; ?>"
-                                        class="edit">
+                                    <?php if ($showtime["movie_status"] == "Now Showing"): ?>
 
-                                        <i class="fa-solid fa-pen"></i>
+                                        <a
+                                            href="editShowtime.php?id=<?php echo $showtime["showtime_id"]; ?>"
+                                            class="edit"
+                                            title="Edit Showtime"
+                                        >
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
 
-                                    </a>
+                                    <?php else: ?>
+
+                                        <span
+                                            class="edit-disabled"
+                                            title="Only Now Showing movies can be edited"
+                                        >
+                                            <i class="fa-solid fa-lock"></i>
+                                        </span>
+
+                                    <?php endif; ?>
 
 
                                     <a
@@ -205,7 +214,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
                     <tr>
 
-                        <td colspan="7">
+                        <td colspan="6">
 
                             No showtimes found.
 

@@ -1,15 +1,18 @@
 <?php
 
 include "db.php";
-
 $hero_sql = "SELECT movie_id, title, genre, duration, rating, description, poster, trailer_url
              FROM movie
              WHERE status = 'Now Showing'
-             ORDER BY movie_id ASC
-             LIMIT 1";
+             ORDER BY movie_id ASC";
 
 $hero_result = mysqli_query($conn, $hero_sql);
-$hero_movie = mysqli_fetch_assoc($hero_result);
+$hero_movies = [];
+
+while ($row = mysqli_fetch_assoc($hero_result)) {
+    $hero_movies[] = $row;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,75 +36,83 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <?php include "navbar.php"; ?>
 
-<!-- ================= HERO ================= -->
 
-<?php if ($hero_movie) { ?>
+<!-- ================= HERO SLIDER ================= -->
 
-<section class="hero"
-    style="background-image: url('uploads/posters/<?php echo htmlspecialchars($hero_movie['poster']); ?>');">
+<?php if (!empty($hero_movies)) { ?>
 
-    <div class="hero-overlay"></div>
+<section class="hero-slider">
+    <div class="hero-track">
 
-    <div class="hero-content">
+    <?php foreach ($hero_movies as $index => $hero_movie) { ?>
 
-        <span class="badge">
-            NOW SHOWING
-        </span>
+    <div class="hero <?php echo $index === 0 ? 'active' : ''; ?>"
+         style="background-image: url('uploads/posters/<?php echo htmlspecialchars($hero_movie['poster']); ?>');">
 
-        <h1>
-            <?php echo htmlspecialchars($hero_movie['title']); ?>
-        </h1>
+        <div class="hero-overlay"></div>
 
-        <p>
-            <?php echo htmlspecialchars($hero_movie['description']); ?>
-        </p>
+        <div class="hero-content">
 
-        <div class="hero-info">
+            <span class="badge">NOW SHOWING</span>
 
-            <span>
-                <i class="fa-solid fa-star"></i>
-                <?php echo htmlspecialchars($hero_movie['rating']); ?>/10
-            </span>
+            <h1>
+                <?php echo htmlspecialchars($hero_movie['title']); ?>
+            </h1>
 
-            <span>
-                <i class="fa-regular fa-clock"></i>
-                <?php echo htmlspecialchars($hero_movie['duration']); ?> min
-            </span>
+            <p>
+                <?php echo htmlspecialchars($hero_movie['description']); ?>
+            </p>
 
-            <span>
-                <i class="fa-solid fa-film"></i>
-                <?php echo htmlspecialchars($hero_movie['genre']); ?>
-            </span>
+            <div class="hero-info">
 
-        </div>
+                <span>
+                    <i class="fa-solid fa-star"></i>
+                    <?php echo htmlspecialchars($hero_movie['rating']); ?>/10
+                </span>
 
-        <div class="hero-buttons">
+                <span>
+                    <i class="fa-regular fa-clock"></i>
+                    <?php echo htmlspecialchars($hero_movie['duration']); ?> min
+                </span>
 
-            <?php if (!empty($hero_movie['trailer_url'])) { ?>
+                <span>
+                    <i class="fa-solid fa-film"></i>
+                    <?php echo htmlspecialchars($hero_movie['genre']); ?>
+                </span>
 
-            <a href="<?php echo htmlspecialchars($hero_movie['trailer_url']); ?>"
-               class="watch-btn"
-               target="_blank">
+            </div>
 
-                <i class="fa-solid fa-play"></i>
-                Watch Trailer
+            <div class="hero-buttons">
 
-            </a>
+                <?php if (!empty($hero_movie['trailer_url'])) { ?>
 
-            <?php } ?>
+                <a href="<?php echo htmlspecialchars($hero_movie['trailer_url']); ?>"
+                   class="watch-btn"
+                   target="_blank">
 
-            <a href="movieDetail.php?id=<?php echo $hero_movie['movie_id']; ?>"
-               class="book-btn">
+                    <i class="fa-solid fa-play"></i>
+                    Watch Trailer
 
-                <i class="fa-solid fa-ticket"></i>
-                Book Tickets
+                </a>
 
-            </a>
+                <?php } ?>
+
+                <a href="movieDetail.php?id=<?php echo $hero_movie['movie_id']; ?>"
+                   class="book-btn">
+
+                    <i class="fa-solid fa-ticket"></i>
+                    Book Tickets
+
+                </a>
+
+            </div>
 
         </div>
 
     </div>
 
+    <?php } ?>
+</div>
 </section>
 
 <?php } ?>
@@ -282,6 +293,29 @@ while ($movie = mysqli_fetch_assoc($result)) {
 </div>
 
 </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const track = document.querySelector(".hero-track");
+    const slides = document.querySelectorAll(".hero-track .hero");
+
+    if (!track || slides.length <= 1) {
+        return;
+    }
+
+    let currentSlide = 0;
+
+    setInterval(function () {
+        currentSlide = (currentSlide + 1) % slides.length;
+
+        track.style.transform =
+            "translateX(-" + (currentSlide * 100) + "%)";
+
+    }, 5000);
+
+});
+</script>
 
 </body>
 

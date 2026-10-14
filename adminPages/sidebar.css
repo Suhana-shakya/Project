@@ -6,7 +6,7 @@
     position: fixed;
     left: 0;
     top: 0;
-
+    box-sizing: border-box;
     background: rgba(17,24,39,.75);
 
     backdrop-filter: blur(18px);

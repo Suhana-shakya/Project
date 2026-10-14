@@ -16,7 +16,32 @@ if (!isset($_GET["id"])) {
 }
 
 $showtime_id = (int) $_GET["id"];
+/* CHECK CURRENT MOVIE STATUS */
 
+$check_sql = "SELECT m.status
+              FROM Showtime s
+              JOIN Movie m ON s.movie_id = m.movie_id
+              WHERE s.showtime_id = ?";
+
+$check_stmt = $conn->prepare($check_sql);
+$check_stmt->bind_param("i", $showtime_id);
+$check_stmt->execute();
+
+$current_showtime = $check_stmt->get_result()->fetch_assoc();
+$check_stmt->close();
+
+if (!$current_showtime) {
+    header("Location: manageShowtimes.php");
+    exit();
+}
+
+if ($current_showtime["status"] != "Now Showing") {
+    $_SESSION["error"] =
+        "Only showtimes for Now Showing movies can be edited.";
+
+    header("Location: manageShowtimes.php");
+    exit();
+}
 
 /* ================= UPDATE SHOWTIME ================= */
 
@@ -24,13 +49,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $show_date = $_POST["show_date"];
     $show_time = trim($_POST["show_time"]);
-    $ticket_price = $_POST["ticket_price"];
     $movie_id = (int) $_POST["movie_id"];
     $hall_id = (int) $_POST["hall_id"];
+    /* CHECK SELECTED MOVIE STATUS AND RELEASE DATE */
+
+$check_sql = "SELECT status, release_date
+              FROM Movie
+              WHERE movie_id = ?";
+
+$check_stmt = $conn->prepare($check_sql);
+$check_stmt->bind_param("i", $movie_id);
+$check_stmt->execute();
+
+$selected_movie = $check_stmt->get_result()->fetch_assoc();
+$check_stmt->close();
+
+if (
+    !$selected_movie ||
+    $selected_movie["status"] != "Now Showing"
+) {
+    $_SESSION["error"] =
+        "Only Now Showing movies can have their showtimes edited.";
+
+    header("Location: manageShowtimes.php");
+    exit();
+}
+
+if ($show_date < $selected_movie["release_date"]) {
+    $_SESSION["error"] =
+        "Show date cannot be before the movie release date.";
+
+    header("Location: manageShowtimes.php");
+    exit();
+}
+
+if (strtotime($show_date . " " . $show_time) <= time()) {
+    $_SESSION["error"] =
+        "Showtime must be in the future.";
+
+    header("Location: manageShowtimes.php");
+    exit();
+}
     $sql = "UPDATE Showtime
             SET show_date = ?,
                 show_time = ?,
-                ticket_price = ?,
                 movie_id = ?,
                 hall_id = ?
             WHERE showtime_id = ?";
@@ -38,10 +100,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($sql);
 
     $stmt->bind_param(
-        "ssdiii",
+        "ssiii",
         $show_date,
         $show_time,
-        $ticket_price,
         $movie_id,
         $hall_id,
         $showtime_id
@@ -248,23 +309,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                     type="time"
                     name="show_time"
                     value="<?php echo htmlspecialchars($showtime["show_time"]); ?>"
-                    required>
-
-            </div>
-
-
-            <!-- PRICE -->
-
-            <div class="form-group">
-
-                <label>Ticket Price</label>
-
-                <input
-                    type="number"
-                    name="ticket_price"
-                    step="0.01"
-                    min="0"
-                    value="<?php echo htmlspecialchars($showtime["ticket_price"]); ?>"
                     required>
 
             </div>

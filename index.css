@@ -156,6 +156,27 @@ body{
 
 }
 
+/* HERO SLIDER */
+
+.hero-slider {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.hero-track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.8s ease-in-out;
+}
+
+.hero-slider .hero {
+    display: flex;
+    flex: 0 0 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 /* =====================================
             BUTTONS
 ===================================== */

@@ -98,7 +98,15 @@ $result = $stmt->get_result();
 
         </div>
 
+        <?php
+            if (isset($_SESSION["cancellation_error"])) {
+                echo '<div class="cancellation-error">'
+                    . htmlspecialchars($_SESSION["cancellation_error"])
+                    . '</div>';
 
+                unset($_SESSION["cancellation_error"]);
+            }
+        ?>
         <?php if ($result->num_rows > 0): ?>
 
             <div class="booking-list">

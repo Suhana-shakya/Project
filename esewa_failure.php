@@ -42,8 +42,10 @@ $showtime_id =
 
 $hall_id =
     (int)$booking["hall_id"];
+	
 $seat_ids =
     $booking["seat_ids"];
+	
 if (empty($seat_ids)) {
     unset($_SESSION["esewa_booking"]);
     die("No seats were selected.");
@@ -120,10 +122,16 @@ while ($row = $result->fetch_assoc()) {
             $row["expires_at"];
     }
 }
-if (empty($valid_seats)) {
+if (count($valid_seats) !== count($seat_ids)) {
     unset($_SESSION["esewa_booking"]);
 
-    die("Your seat reservation has expired. Please select your seats again.");
+    unset($_SESSION["payment_failed"]);
+    unset($_SESSION["payment_failure"]);
+
+    header("Location: seat.php?movie_id=" . $movie_id .
+           "&showtime_id=" . $showtime_id .
+           "&hall_id=" . $hall_id);
+    exit();
 }
 
 /* =====================================================

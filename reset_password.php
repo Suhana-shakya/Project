@@ -95,115 +95,113 @@ if (empty($error)) {
    PROCESS NEW PASSWORD
 ========================================== */
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && $reset !== null && empty($error)) {
+if (
+    $_SERVER["REQUEST_METHOD"] == "POST" &&
+    $reset !== null &&
+    empty($error)
+) {
+    $otp = trim($_POST["otp"] ?? "");
+    $password = $_POST["password"] ?? "";
+    $confirm_password = $_POST["confirm_password"] ?? "";
 
-    $otp = trim($_POST["otp"]);
-    $password = $_POST["password"];
-    $confirm_password = $_POST["confirm_password"];
-
-
-    /* ==========================================
-       CHECK OTP
-    ========================================== */
-
-    if ($otp !== $reset["otp"]) {
+    // Validate OTP
+    if (!preg_match('/^[0-9]{6}$/', $otp) ||
+        !hash_equals((string)$reset["otp"], $otp)) {
 
         $error = "Invalid OTP.";
 
-    }
+    } elseif (strlen($password) < 8) {
 
-    /* ==========================================
-       CHECK PASSWORD LENGTH
-    ========================================== */
+        $error = "Password must be at least 8 characters long.";
 
-    elseif (strlen($password) < 8) {
+    } elseif (strlen($password) > 128) {
 
-        $error =
-            "Password must be at least 8 characters long.";
+        $error = "Password must not exceed 128 characters.";
 
-    }
+    } elseif (
+        !preg_match('/[A-Z]/', $password) ||
+        !preg_match('/[a-z]/', $password) ||
+        !preg_match('/[0-9]/', $password) ||
+        !preg_match('/[^A-Za-z0-9]/', $password)
+    ) {
 
-    /* ==========================================
-       CHECK PASSWORD MATCH
-    ========================================== */
+        $error = "Password must contain an uppercase letter, a lowercase letter, a number, and a special character.";
 
-    elseif ($password !== $confirm_password) {
+    } elseif ($password !== $confirm_password) {
 
-        $error =
-            "Passwords do not match.";
+        $error = "Passwords do not match.";
 
-    }
+    } else {
 
-    else {
-
-        /* ==========================================
-           HASH NEW PASSWORD
-        ========================================== */
-
-        $hashed_password =
-            password_hash(
-                $password,
-                PASSWORD_DEFAULT
-            );
-
-
-        /* ==========================================
-           UPDATE CUSTOMER PASSWORD
-        ========================================== */
-
-        $update_sql =
-            "UPDATE customer
-             SET password = ?
-             WHERE customer_id = ?";
-
-        $update_stmt =
-            $conn->prepare($update_sql);
-
-        $update_stmt->bind_param(
-            "si",
-            $hashed_password,
-            $reset["customer_id"]
+        $hashed_password = password_hash(
+            $password,
+            PASSWORD_DEFAULT
         );
 
+        // Update password and use the reset request
+        // within one database transaction.
+        $conn->begin_transaction();
 
-        if ($update_stmt->execute()) {
+        try {
+            $used_sql = "
+                UPDATE password_resets
+                SET used = 1
+                WHERE reset_id = ?
+                  AND customer_id = ?
+                  AND otp = ?
+                  AND used = 0
+                  AND expires_at >= NOW()
+            ";
 
-            /* ==========================================
-               MARK RESET TOKEN AS USED
-            ========================================== */
-
-            $used_sql =
-                "UPDATE password_resets
-                 SET used = 1
-                 WHERE reset_id = ?";
-
-            $used_stmt =
-                $conn->prepare($used_sql);
+            $used_stmt = $conn->prepare($used_sql);
 
             $used_stmt->bind_param(
-                "i",
-                $reset["reset_id"]
+                "iis",
+                $reset["reset_id"],
+                $reset["customer_id"],
+                $otp
             );
 
             $used_stmt->execute();
 
+            if ($used_stmt->affected_rows !== 1) {
+                throw new Exception(
+                    "This reset request is invalid, expired, or already used."
+                );
+            }
+
             $used_stmt->close();
 
-            $success =
-                "Your password has been reset successfully.";
+            $update_sql = "
+                UPDATE customer
+                SET password = ?
+                WHERE customer_id = ?
+            ";
 
-        } else {
+            $update_stmt = $conn->prepare($update_sql);
 
-            $error =
-                "Unable to reset password. Please try again.";
+            $update_stmt->bind_param(
+                "si",
+                $hashed_password,
+                $reset["customer_id"]
+            );
 
+            $update_stmt->execute();
+            $update_stmt->close();
+
+            $conn->commit();
+
+            $success = "Your password has been reset successfully.";
+
+        } catch (Throwable $e) {
+
+            $conn->rollback();
+
+            $error = "Unable to reset your password. Please request a new reset link and try again.";
         }
-
-        $update_stmt->close();
-
     }
-
 }
+
 
 ?>
 
@@ -415,13 +413,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $reset !== null && empty($error)) {
                     name="password"
                     placeholder="Enter New Password"
                     minlength="8"
+                    maxlength="128"
+                    autocomplete="new-password"
                     required>
 
 
                 <p class="password-note">
-
-                    Password must contain at least 8 characters.
-
+                    Use 8–128 characters, including uppercase and lowercase
+                    letters, a number, and a special character.
                 </p>
 
 
@@ -430,6 +429,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $reset !== null && empty($error)) {
                     name="confirm_password"
                     placeholder="Confirm New Password"
                     minlength="8"
+                    maxlength="128"
+                    autocomplete="new-password"
                     required>
 
 

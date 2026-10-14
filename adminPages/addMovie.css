@@ -2,264 +2,313 @@
         RESET
 ========================== */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:"Segoe UI",sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
 }
 
-body{
-    min-height:100vh;
-    color:white;
+body {
+    min-height: 100vh;
+    color: white;
     background:
-    radial-gradient(circle at top right,#7c3aed55 0%,transparent 35%),
-    radial-gradient(circle at bottom left,#ec489955 0%,transparent 35%),
-    linear-gradient(135deg,#111827,#1e1b4b,#4c1d95);
-}
-
-.container{
-    display:flex;
+        radial-gradient(circle at top right, #7c3aed55 0%, transparent 35%),
+        radial-gradient(circle at bottom left, #ec489955 0%, transparent 35%),
+        linear-gradient(135deg, #111827, #1e1b4b, #4c1d95);
 }
 
 /* ==========================
-        SIDEBAR
+        CONTAINER
 ========================== */
 
-.sidebar{
-    width:260px;
-    min-height:100vh;
-    background:rgba(17,24,39,.75);
-    backdrop-filter:blur(18px);
-    border-right:1px solid rgba(255,255,255,.08);
-    padding:35px 20px;
-}
-
-.sidebar h2{
-    text-align:center;
-    font-size:34px;
-    margin-bottom:45px;
-}
-
-.sidebar ul{
-    list-style:none;
-}
-
-.sidebar li{
-    margin:12px 0;
-}
-
-.sidebar a{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    text-decoration:none;
-    color:white;
-    padding:15px 18px;
-    border-radius:15px;
-    transition:.3s;
-}
-
-.sidebar a:hover,
-.sidebar .active a{
-    background:linear-gradient(135deg,#ec4899,#9333ea);
-}
-
-.sidebar i{
-    width:22px;
+.container {
+    display: flex;
+    min-height: 100vh;
 }
 
 /* ==========================
         MAIN
 ========================== */
 
-.main{
-    flex:1;
-    padding:45px;
+.main {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    min-height: 100vh;
+    padding: 45px 55px;
 }
 
-.main h1{
-    font-size:42px;
-    margin-bottom:30px;
-}
-/* ================= ERROR MESSAGE ================= */
-
-.error-message{
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    margin-bottom:20px;
-
-    padding:14px 18px;
-
-    border-radius:12px;
-
-    background:rgba(239,68,68,.15);
-
-    border:1px solid rgba(239,68,68,.4);
-
-    color:#fca5a5;
-
-    font-size:14px;
+.main h1 {
+    font-size: 40px;
+    margin-bottom: 30px;
 }
 
-.error-message i{
-    color:#ef4444;
+/* ==========================
+        ERROR MESSAGE
+========================== */
 
-    font-size:17px;
+.error-message {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 22px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+    font-size: 14px;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+.error-message i {
+    color: #ef4444;
+    font-size: 17px;
+    margin-top: 2px;
 }
 
 /* ==========================
         FORM
 ========================== */
 
-form{
-    background:rgba(255,255,255,.08);
-    backdrop-filter:blur(18px);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:25px;
-    padding:35px;
-    box-shadow:0 20px 45px rgba(0,0,0,.25);
+form {
+    width: 100%;
+    max-width: 1000px;
+    padding: 35px 40px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
 }
 
-.form-group{
-    margin-bottom:22px;
+/* ==========================
+        FORM GROUP
+========================== */
+
+.form-group {
+    margin-bottom: 23px;
 }
 
-label{
-    display:block;
-    margin-bottom:10px;
-    font-weight:600;
-    color:white;
+.form-group label {
+    display: block;
+    margin-bottom: 9px;
+    color: #eeeeF5;
+    font-size: 15px;
+    font-weight: 600;
 }
 
 /* ==========================
         INPUTS
 ========================== */
 
-input,
-textarea,
-select{
-    width:100%;
-    padding:14px 18px;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:14px;
-    outline:none;
-    color:white;
-    font-size:15px;
-    transition:.3s;
+.form-group input,
+.form-group select,
+.form-group textarea {
+    display: block;
+    width: 100%;
+    min-height: 52px;
+    padding: 13px 17px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    outline: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    font-size: 15px;
+    transition: 0.3s;
 }
 
-input::placeholder,
-textarea::placeholder{
-    color:#d5d5d5;
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #aaaabd;
 }
 
-select{
-    cursor:pointer;
+/* Focus */
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #ec4899;
+    box-shadow: 0 0 18px rgba(236, 72, 153, 0.25);
 }
 
-select option{
-    background:#1e1b4b;
-    color:white;
+/* Dropdown */
+
+.form-group select {
+    cursor: pointer;
 }
 
-input:focus,
-textarea:focus,
-select:focus{
-    border-color:#ec4899;
-    box-shadow:0 0 0 3px rgba(236,72,153,.2);
+.form-group select option {
+    background: #1e1b4b;
+    color: white;
 }
 
-textarea{
-    resize:none;
-    min-height:140px;
+/* Textarea */
+
+.form-group textarea {
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+/* File input */
+
+.form-group input[type="file"] {
+    height: auto;
+    min-height: 55px;
+    padding: 10px 12px;
+    cursor: pointer;
+}
+
+.form-group input[type="file"]::file-selector-button {
+    margin-right: 12px;
+    padding: 9px 14px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #ec4899, #9333ea);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Date and number inputs */
+
+.form-group input[type="date"],
+.form-group input[type="number"] {
+    color-scheme: dark;
 }
 
 /* ==========================
         ROW
 ========================== */
 
-.row{
-    display:flex;
-    gap:25px;
+.row {
+    display: flex;
+    gap: 25px;
 }
 
-.row .form-group{
-    flex:1;
+.row .form-group {
+    flex: 1;
+    min-width: 0;
 }
 
 /* ==========================
-        BUTTON
+        BUTTONS
 ========================== */
 
-.save-btn{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    padding:15px 30px;
-    border:none;
-    border-radius:50px;
-    background:linear-gradient(135deg,#ec4899,#9333ea);
-    color:white;
-    font-size:16px;
-    font-weight:600;
-    cursor:pointer;
-    transition:.35s;
-}
-
-.save-btn:hover{
-    transform:translateY(-3px);
-    box-shadow:0 15px 30px rgba(236,72,153,.35);
-}
-.form-group textarea {
-    width: 100%;
-    padding: 15px 18px;
-    border: none;
-    outline: none;
+.save-btn,
+.cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 52px;
+    padding: 0 25px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
     font-size: 15px;
-    font-family: "Segoe UI", sans-serif;
-    resize: vertical;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.form-group textarea:focus {
-    border-color: #ec4899;
-    box-shadow: 0 0 18px rgba(236, 72, 153, 0.25);
+/* Save */
+
+.save-btn {
+    border: none;
+    background: linear-gradient(135deg, #ec4899, #9333ea);
+    color: white;
+    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.25);
 }
 
-.form-group textarea::placeholder {
-    color: #aaaabd;
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(168, 85, 247, 0.4);
 }
+
+/* Cancel, if present */
+
+.cancel-btn {
+    margin-left: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #d9d9e5;
+}
+
+.cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: white;
+    transform: translateY(-2px);
+}
+
 /* ==========================
         RESPONSIVE
 ========================== */
 
-@media(max-width:900px){
+@media (max-width: 1000px) {
+    .main {
+        padding: 35px 25px;
+    }
 
-.container{
-    flex-direction:column;
+    form {
+        padding: 30px;
+    }
+
+    .row {
+        gap: 18px;
+    }
 }
 
-.sidebar{
-    width:100%;
-}
+@media (max-width: 700px) {
+    .sidebar {
+        width: 75px;
+        padding: 30px 10px;
+    }
 
-.main{
-    margin-left:0;
-    padding:25px;
-}
+    .sidebar h2 {
+        font-size: 0;
+    }
 
-.row{
-    flex-direction:column;
-    gap:0;
-}
+    .sidebar h2::after {
+        content: "H";
+        font-size: 28px;
+        color: #ec4899;
+    }
 
+    .sidebar li a {
+        justify-content: center;
+        padding: 15px;
+    }
+
+    .sidebar li a i {
+        margin: 0;
+    }
+
+    .main {
+        margin-left: 75px;
+        width: calc(100% - 75px);
+        padding: 30px 18px;
+    }
+
+    .main h1 {
+        font-size: 30px;
+    }
+
+    form {
+        padding: 25px 18px;
+    }
+
+    .row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .save-btn,
+    .cancel-btn {
+        width: 100%;
+        margin: 0 0 10px;
+    }
 }

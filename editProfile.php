@@ -40,33 +40,62 @@ $customer = $result->fetch_assoc();
 $stmt->close();
 
 
+
 /* ================= UPDATE PROFILE ================= */
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $name = trim($_POST["name"]);
-    $email = trim($_POST["email"]);
-    $phone_number = trim($_POST["phone_number"]);
-    $address = trim($_POST["address"]);
-    $username = trim($_POST["username"]);
+    $name = trim($_POST["name"] ?? "");
+    $email = trim($_POST["email"] ?? "");
+    $phone_number = trim($_POST["phone_number"] ?? "");
+    $address = trim($_POST["address"] ?? "");
+    $username = trim($_POST["username"] ?? "");
 
-    /* ================= BASIC VALIDATION ================= */
+    // 1. Validate full name
+    if ($name === "") {
+        $error = "Full name is required.";
+    } elseif (!preg_match("/^[\p{L} .'-]+$/u", $name)) {
+        $error = "Name can contain only letters, spaces, dots, apostrophes and hyphens.";
+    } elseif (strlen($name) > 30) {
+        $error = "Name must not exceed 30 characters.";
+    }
 
-    if (
-        empty($name) ||
-        empty($email) ||
-        empty($username)
-    ) {
+    // 2. Validate email
+    if ($error === "") {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = "Please enter a valid email address.";
+        } elseif (strlen($email) > 40) {
+            $error = "Email must not exceed 40 characters.";
+        }
+    }
 
-        $error = "Name, email and username are required.";
+    // 3. Validate phone number (optional)
+    if ($error === "" && $phone_number !== "") {
 
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        // Allow spaces and hyphens in the entered number
+        $phone_check = preg_replace('/[\s-]+/', '', $phone_number);
 
-        $error = "Please enter a valid email address.";
+        if (!preg_match('/^(?:\+977)?9[678]\d{8}$/', $phone_check)) {
+            $error = "Enter a valid Nepali mobile number, e.g. 98XXXXXXXX or +97798XXXXXXXX.";
+        } elseif (strlen($phone_number) > 15) {
+            $error = "Phone number must not exceed 15 characters.";
+        }
+    }
 
-    } else {
+    // 4. Validate address (optional)
+    if ($error === "" && strlen($address) > 50) {
+        $error = "Address must not exceed 50 characters.";
+    }
 
-        /* ================= CHECK DUPLICATE EMAIL ================= */
+    // 5. Validate username
+    if ($error === "") {
+        if (!preg_match('/^[A-Za-z0-9_]{3,20}$/', $username)) {
+            $error = "Username must be 3–20 characters and contain only letters, numbers and underscores.";
+        }
+    }
+
+    // 6. Check duplicate email
+    if ($error === "") {
 
         $sql = "SELECT customer_id
                 FROM customer
@@ -78,11 +107,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
 
         $email_result = $stmt->get_result();
-
         $stmt->close();
 
+        if ($email_result->num_rows > 0) {
+            $error = "This email is already being used by another account.";
+        }
+    }
 
-        /* ================= CHECK DUPLICATE USERNAME ================= */
+    // 7. Check duplicate username
+    if ($error === "") {
 
         $sql = "SELECT customer_id
                 FROM customer
@@ -94,71 +127,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
 
         $username_result = $stmt->get_result();
-
         $stmt->close();
 
-
-        if ($email_result->num_rows > 0) {
-
-            $error = "This email is already being used by another account.";
-
-        } elseif ($username_result->num_rows > 0) {
-
+        if ($username_result->num_rows > 0) {
             $error = "This username is already taken.";
-
-        } else {
-
-            /* ================= UPDATE DATABASE ================= */
-
-            $sql = "UPDATE customer
-                    SET name = ?,
-                        email = ?,
-                        phone_number = ?,
-                        address = ?,
-                        username = ?
-                    WHERE customer_id = ?";
-
-            $stmt = $conn->prepare($sql);
-
-            $stmt->bind_param(
-                "sssssi",
-                $name,
-                $email,
-                $phone_number,
-                $address,
-                $username,
-                $customer_id
-            );
-
-            if ($stmt->execute()) {
-
-                /* ================= UPDATE SESSION ================= */
-
-                $_SESSION["customer_name"] = $name;
-                $_SESSION["customer_email"] = $email;
-                $_SESSION["customer_username"] = $username;
-
-                header("Location: profile.php");
-                exit();
-
-            } else {
-
-                $error = "Something went wrong. Please try again.";
-
-            }
-
-            $stmt->close();
         }
     }
 
-    /* Keep entered values if validation fails */
+    // 8. Update profile if all validation passes
+    if ($error === "") {
 
+        $sql = "UPDATE customer
+                SET name = ?,
+                    email = ?,
+                    phone_number = ?,
+                    address = ?,
+                    username = ?
+                WHERE customer_id = ?";
+
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bind_param(
+            "sssssi",
+            $name,
+            $email,
+            $phone_number,
+            $address,
+            $username,
+            $customer_id
+        );
+
+        if ($stmt->execute()) {
+
+            $_SESSION["customer_name"] = $name;
+            $_SESSION["customer_email"] = $email;
+            $_SESSION["customer_username"] = $username;
+
+            $stmt->close();
+
+            header("Location: profile.php");
+            exit();
+
+        } else {
+            $error = "Something went wrong. Please try again.";
+        }
+
+        $stmt->close();
+    }
+
+    // Keep entered values if validation fails
     $customer["name"] = $name;
     $customer["email"] = $email;
     $customer["phone_number"] = $phone_number;
     $customer["address"] = $address;
     $customer["username"] = $username;
 }
+
 
 ?>
 
@@ -252,6 +276,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             name="name"
                             value="<?php echo htmlspecialchars($customer["name"]); ?>"
                             maxlength="30"
+                            pattern="[A-Za-zÀ-ÿ .'-]+"
+                            title="Enter a name using letters, spaces, dots, apostrophes or hyphens."
                             required>
 
                     </div>
@@ -276,7 +302,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             id="username"
                             name="username"
                             value="<?php echo htmlspecialchars($customer["username"]); ?>"
+                            minlength="3"
                             maxlength="20"
+                            pattern="[A-Za-z0-9_]+"
+                            title="Use 3–20 letters, numbers or underscores."
+                            autocomplete="username"
                             required>
 
                     </div>
@@ -322,11 +352,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <i class="fa-solid fa-phone"></i>
 
                         <input
-                            type="text"
+                            type="tel"
                             id="phone_number"
                             name="phone_number"
-                            value="<?php echo htmlspecialchars($customer["phone_number"]); ?>"
-                            maxlength="15">
+                            value="<?php echo htmlspecialchars($customer["phone_number"] ?? ""); ?>"
+                            maxlength="15"
+                            pattern="(\+977)?9[678][0-9]{8}"
+                            title="Enter a valid Nepali mobile number, e.g. 98XXXXXXXX or +97798XXXXXXXX. Leave blank if optional.">
 
                     </div>
 

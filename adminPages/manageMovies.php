@@ -321,16 +321,30 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                                 <div class="actions">
 
 
+                                                                        
                                     <!-- EDIT -->
 
-                                    <a
-                                        href="editMovie.php?id=<?php echo $movie["movie_id"]; ?>"
-                                        class="edit"
-                                    >
+                                    <?php if ($movie["status"] != "Archived"): ?>
 
-                                        <i class="fa-solid fa-pen"></i>
+                                        <a
+                                            href="editMovie.php?id=<?php echo $movie["movie_id"]; ?>"
+                                            class="edit"
+                                            title="Edit Movie"
+                                        >
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
 
-                                    </a>
+                                    <?php else: ?>
+
+                                        <span
+                                            class="edit-disabled"
+                                            title="Archived movies cannot be edited"
+                                        >
+                                            <i class="fa-solid fa-lock"></i>
+                                        </span>
+
+                                    <?php endif; ?>
+                                
 
 
                                     <!-- DELETE -->
